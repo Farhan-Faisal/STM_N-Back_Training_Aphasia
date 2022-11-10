@@ -1,6 +1,6 @@
 ######################################################
 - Author: Farhan Bin Faisal
-- Files: preprocess.ipynb, wordListMaker.m
+- Files: preprocess.ipynb, wordListMaker.m, postWuggy.ipynb
 - Date Created: 10 November 2022
 - Meltzer Lab
 ######################################################
@@ -28,5 +28,28 @@
     - Used soft constraints for this
     - Used hard constrains to floor syllable count and frequency
 - Lists can be found in the folder "wordLists"
+
+######################################################
+3.) Wuggy
+######################################################
+- Download from http://crr.ugent.be/programs-data/wuggy
+- Settings used:
+    - Orthographic english
+    - Match syllable length
+    - Match word length
+    - Match transition frequency
+    - Match 2 out of 3 segments
+- Pass each word list through wuggy
+- For each word, ~10 non words appead
+    - Took the first non word for each word
+- 18 non word lists compiled into nonWordList.csv
+
+######################################################
+4.) postWuggy.ipnb
+######################################################
+- Reads nonWordList.csv into a dataframe
+- outputs 18 separate tab delimited csv files
+    - Each corresponds to a respective nonWordList
+- The 18 files are stored in the folder nonWordLists
 
 

@@ -1,7 +1,16 @@
-%% 
-% Make 18 lists of 10 words each
-% Lists should be matched on 2 dimensions
-% Frequency and Syllable count
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Author name: Farhan Bin Faisal		   
+% Date written: November 10, 2022			   
+
+% Example scripts used from SOS manual: 
+% One-way3SamplesGroupwiseStochastic.m and
+% EntropySampleMatchingGreedy.m 
+
+% Description: 
+% 1) The goal is to create 18 samples (lists) of 10 words matched on
+%        Zipfvalue (frequency), and syllables (number of syllables)
+% 2) The optimization currently uses the greedy method of annealing to demonstrate SOS functionality
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 clear
 
@@ -9,98 +18,118 @@ clear
 addpath(genpath("/Users/farhan/Desktop/Baycrest Documents/Aphasia_Study/" + ...
     "Aphasia_STM_stim_generation/stim_creation"));
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%Parameters%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+randomSeedValue = 107;
+nIterations = 10000;
+nSamples = 18;
+nItems = 10;
+outputDirectory = ['/Users/farhan/Desktop/Baycrest Documents/Aphasia_Study/' ...
+    'Aphasia_STM_stim_generation/Syllable_Project/wordLists/'];
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 % Set a random seed
 setSeed(107);
 
-% for samp = 1:size(p.sampcomb,2)
 % Create a population from the sos_input wordlist file
-inputTextPath = "sos_input.txt";
 lemmaPopulation = population('sos_input.txt','name','lemmaPopulation', ...
     'isHeader',true,'isFormatting',true);
 
 % Create 18 samples of 10 words each
-wordList0 = sample(18, 'name', 'wordList0', 'outFile', 'wordList0.txt');
-wordList1 = sample(18, 'name', 'wordList1', 'outFile', 'wordList1.txt');
-wordList2 = sample(18, 'name', 'wordList2', 'outFile', 'wordList2.txt');
-wordList3 = sample(18, 'name', 'wordList3', 'outFile', 'wordList3.txt');
-wordList4 = sample(18, 'name', 'wordList4', 'outFile', 'wordList4.txt');
-wordList5 = sample(18, 'name', 'wordList5', 'outFile', 'wordList5.txt');
-wordList6 = sample(18, 'name', 'wordList6', 'outFile', 'wordList6.txt');
-wordList7 = sample(18, 'name', 'wordList7', 'outFile', 'wordList7.txt');
-wordList8 = sample(18, 'name', 'wordList8', 'outFile', 'wordList8.txt');
-wordList9 = sample(18, 'name', 'wordList9', 'outFile', 'wordList9.txt');
+% Link each sample to population
+samples(1:nSamples, 1)  = sample(nItems, 'name', 'x', 'outFile', 'y');
+for i = 1:nSamples
+    tempSampleName = ['wordList', num2str(i)];
+    tempOutputName = ['wordList', num2str(i), '.txt'];
 
-% Link samples to population from which samples would be drawn
-wordList0.setPop(lemmaPopulation);
-wordList1.setPop(lemmaPopulation);
-wordList2.setPop(lemmaPopulation);
-wordList3.setPop(lemmaPopulation);
-wordList4.setPop(lemmaPopulation);
-wordList5.setPop(lemmaPopulation);
-wordList6.setPop(lemmaPopulation);
-wordList7.setPop(lemmaPopulation);
-wordList8.setPop(lemmaPopulation);
-wordList9.setPop(lemmaPopulation);
+    samples(i) = sample(nItems, 'name', tempSampleName, 'outFile', ...
+        [outputDirectory, tempOutputName]);
+    samples(i).setPop(lemmaPopulation);
+end
+
 
 % Create a new SOS optimazation
-mySOS = sos();
+GreedySOS = sos('maxIt', nIterations);
 
-% Add the 10 samples to the optimization
-mySOS = mySOS.addSample(wordList0);
-mySOS = mySOS.addSample(wordList1);
-mySOS = mySOS.addSample(wordList2);
-mySOS = mySOS.addSample(wordList3);
-mySOS = mySOS.addSample(wordList4);
-mySOS = mySOS.addSample(wordList5);
-mySOS = mySOS.addSample(wordList6);
-mySOS = mySOS.addSample(wordList7);
-mySOS = mySOS.addSample(wordList8);
-mySOS = mySOS.addSample(wordList9);
-
-% Create the constrains
-% The lists should be matched on Zipfvalue
-
-sampcomb = combnk(1:10,2);
-
-% Combine all samples into a list
-samples = [wordList0, wordList1, wordList2, wordList3, wordList4, wordList5,... 
-    wordList6, wordList7, wordList8, wordList9];
-
-% , wordList10, wordList11,... 
-%     wordList12, wordList13, wordList14, wordList15, wordList16, wordList17,...
-%     wordList18];
+% Add the 18 samples to the optimization
+for i = 1:nSamples
+    GreedySOS = GreedySOS.addSample(samples(i));
+end
 
 % Function to establish the constrain
-% Match two samples based on the selected varName
-constraintMinFunc = @(nameConc, firstSamp, secondSamp, varName)...
-    mySOS.addConstraint('sosObj', mySOS, 'name', nameConc,...
+constraintMinFunc = @(nameConc, firstSamp, secondSamp, varName) GreedySOS.addConstraint('sosObj', GreedySOS, 'name', nameConc,...
     'constraintType', 'soft', 'fnc', 'min', 'stat', 'mean',...
     'sample1', firstSamp, 'sample2', secondSamp,...
     's1ColName', varName, 'S2ColName', varName,...
     'exponent', 2, 'paired', true, 'weight', 1);
 
 
-% Match the 18 lists for Zipfvalue and syllables
-for samp = 1:size(sampcomb, 2)
-    fprintf('========= For Samples %1.f and %1.f =========\n', sampcomb(1,samp), sampcomb(2,samp));
-    disp(sampcomb(1,samp))
-    disp(sampcomb(2,samp))
+constraintFreqFloorFunc = @(nameConc, sample) GreedySOS.addConstraint('sosObj', ...
+    GreedySOS, 'name', nameConc, 'constraintType', 'hard', 'fnc', 'floor', ...
+    'sample1', sample, 's1ColName', 'Zipfvalue', 'value', 4.0);
 
-    s1 = samples(sampcomb(1,samp)); % randomly obtain a list from the 18
-    s2 = samples(sampcomb(2,samp)); % Randomly obtain another list from the 18
-           
-    % Generate a name for this constrain
-    matchConstraintName = [num2str(sampcomb(1,samp)), 'vs', num2str(sampcomb(2,samp))];
-    
-    % Match the two lists on 'cmu_sylls'
-    constraintMinFunc(['syllableConstraint' matchConstraintName], s1, s2, 'syllables');
+constraintSyllFloorFunc = @(nameConc, sample) GreedySOS.addConstraint('sosObj', ...
+    GreedySOS, 'name', nameConc, 'constraintType', 'hard', 'fnc', 'floor', ...
+    'sample1', sample, 's1ColName', 'syllables', 'value', 1.0);
 
-    % Match the two lists on 'Zipfvalue'
-    constraintMinFunc(['frequencyConstraint' matchConstraintName], s1, s2, 'Zipfvalue');
+
+% Establish the freq and zipvalue range xonstrains for the 18 lists
+for samp = 1:nSamples
+    freqConstraintName = ['freqConstraint',  num2str(samp)];
+    syllConstraintName = ['syllConstraint',  num2str(samp)];
+
+    constraintFreqFloorFunc(freqConstraintName, samples(samp));
+    constraintSyllFloorFunc(syllConstraintName, samples(samp));
 end
 
+
+% This variable will enable creating contraints to match all possible
+% combination of 2 samples among the 18 samples
+sampcomb = combnk(1:nSamples,2)';
+
+% Match the 18 lists for Zipfvalue and syllables
+s1= [];
+s2= [];
+for samp = 1:size(sampcomb,2)
+    fprintf('========= For Samples %1.f and %1.f =========\n', sampcomb(1,samp), sampcomb(2,samp));
+    s1 = samples(sampcomb(1,samp));
+    s2 = samples(sampcomb(2,samp));
+    
+    matchConstraintName = [num2str(sampcomb(1,samp)), 'vs', num2str(sampcomb(2,samp))];
+
+    % Match the two lists on 'cmu_sylls'
+    constraintMinFunc(['cmu_syllsConstraint' matchConstraintName], s1, s2, 'syllables');
+
+    % Match the two lists on 'Zipfvalue'
+    constraintMinFunc(['ZipfvalueConstraint' matchConstraintName], s1, s2, 'Zipfvalue');
+end
+
+% Create TTest to see whether the lists are matched on freq and cmusyll
+myTTest = @(testName, s1, s2, varName) GreedySOS.addttest('name', testName, 'type', ...
+    'independent', 'sample1', s1, 'sample2', s2, 's1ColName', varName, ...
+    's2ColName', varName, 'desiredpvalCondition', '=>', 'desiredpVal', 0.05);
+
 % Fill the 18 lists with randomly selected words from the population
-mySOS.initFillSamples();
+GreedySOS.initFillSamples();
 
 % Normalize the values with dimensions of interest
-mySOS.normalizeData();
+GreedySOS.normalizeData();
+
+% Add the TTests
+for samp = 1:size(sampcomb,2)
+    fprintf('========= TTest for Samples %1.f and %1.f =========\n', sampcomb(1,samp), sampcomb(2,samp));
+    s1 = samples(sampcomb(1,samp));
+    s2 = samples(sampcomb(2,samp));
+    
+    freqTestName = [num2str(sampcomb(1,samp)), 'vs', num2str(sampcomb(2,samp)), '_ZipfValue'];
+    syllTestName = [num2str(sampcomb(1,samp)), 'vs', num2str(sampcomb(2,samp)), '_syllable'];
+
+    myTTest(freqTestName, s1, s2, 'syllables')
+    myTTest(syllTestName, s1, s2, 'Zipfvalue')
+end
+
+% Anneal and optimize the SOS
+GreedySOS.setAnnealSchedule('schedule', 'greedy');
+GreedySOS.optimize();
+
+% Write the samples
+GreedySOS.writeSamples();

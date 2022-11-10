@@ -1,0 +1,11 @@
+Word|s	FREQcount|f	CDcount|f	FREQlow|f	Cdlow|f	SUBTLWF|f	Lg10WF|f	SUBTLCD|f	Lg10CD|f	Dom_PoS_SUBTLEX|s	Freq_dom_PoS_SUBTLEX|f	Percentage_dom_PoS|f	All_PoS_SUBTLEX|s	All_freqs_SUBTLEX|f	Zipfvalue|f	syllables|f	
+penis	684	345	645	337	13.41	2.8357	4.11	2.5391	Noun	684	1	Noun	684	4.1275	2	
+miller	1165	342	3	3	22.84	3.0667	4.08	2.5353	Name	1138	0.98	Name.Noun	1138.2	4.3585	2	
+chandler	750	143	0	0	14.71	2.8756	1.7	2.1584	Name	759	1	Name.Noun	759.1	4.1675	2	
+behave	828	652	721	585	16.24	2.9186	7.77	2.8149	Verb	828	1	Verb	828	4.2104	2	
+lousy	1210	884	1107	822	23.73	3.0831	10.54	2.9469	Adjective	1207	1	Adjective.Adverb	1207.5	4.375	2	
+wounded	992	594	937	576	19.45	2.9969	7.08	2.7745	Adjective	531	0.53	Adjective.Verb	531.463	4.2888	2	
+confused	1653	1268	1600	1239	32.41	3.2185	15.12	3.1035	Verb	917	0.55	Verb.Adjective	917.736	4.5104	2	
+loaded	948	760	916	741	18.59	2.9773	9.06	2.8814	Verb	685	0.72	Verb.Adjective	685.262	4.2691	2	
+earl	1042	225	19	13	20.43	3.0183	2.68	2.3541	Noun	958	0.92	Noun.Name	958.78	4.3101	1	
+talent	1332	883	1279	867	26.12	3.1248	10.53	2.9465	Noun	1331	1	Noun	1331	4.4167	2	

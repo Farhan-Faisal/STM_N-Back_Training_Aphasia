@@ -1,0 +1,11 @@
+Word|s	FREQcount|f	CDcount|f	FREQlow|f	Cdlow|f	SUBTLWF|f	Lg10WF|f	SUBTLCD|f	Lg10CD|f	Dom_PoS_SUBTLEX|s	Freq_dom_PoS_SUBTLEX|f	Percentage_dom_PoS|f	All_PoS_SUBTLEX|s	All_freqs_SUBTLEX|f	Zipfvalue|f	syllables|f	
+beneath	593	465	518	417	11.63	2.7738	5.54	2.6684	Preposition	567	0.96	Preposition.Adverb	567.25	4.0656	2	
+china	1268	631	168	122	24.86	3.1035	7.52	2.8007	Name	1048	0.83	Name.Noun	1048.218	4.3953	2	
+aaron	747	162	0	0	14.65	2.8739	1.93	2.2122	Name	744	1	Name	744	4.1657	2	
+francis	876	212	5	1	17.18	2.943	2.53	2.3284	Name	870	0.99	Name.Noun	870.5	4.2348	2	
+outfit	1280	838	1278	838	25.1	3.1075	9.99	2.9238	Noun	1279	1	Noun	1279	4.3994	2	
+supply	952	700	873	652	18.67	2.9791	8.35	2.8457	Noun	695	0.73	Noun.Verb	695.256	4.2709	2	
+destroyed	1573	1084	1546	1073	30.84	3.197	12.92	3.0354	Verb	1554	0.99	Verb.Adjective	1554.18	4.4888	2	
+crisis	849	611	805	581	16.65	2.9294	7.28	2.7868	Noun	850	1	Noun	850	4.2213	2	
+launch	1018	395	885	364	19.96	3.0082	4.71	2.5977	Verb	538	0.53	Verb.Noun	538.48	4.3	1	
+ashamed	1396	1031	1366	1023	27.37	3.1452	12.29	3.0137	Adjective	1394	1	Adjective	1394	4.437	2	

@@ -1,0 +1,32 @@
+######################################################
+- Author: Farhan Bin Faisal
+- Files: preprocess.ipynb, wordListMaker.m
+- Date Created: 10 November 2022
+- Meltzer Lab
+######################################################
+
+######################################################
+1.) preprocess.ipynb
+######################################################
+- Loads word csv file into a pandas dataframe
+- Filters rows for frequency (4.0 Zipfvalue < 5.0)
+- Gets syllables of each word
+    - Uses cmudict from nltk
+- Filters rows for syllables (1 < syllable < 2)
+- Replaces each word with its correcponding lemma
+    - Uses WordNetLemmatizer for this
+- Discards rows not found in cmudict
+- Formats dataframe into SOS compatible input
+- Outputs dataframe as a tab delimited txt file
+    - File Named "sos_input.txt"
+
+######################################################
+2.) wordListMaker.m
+######################################################
+- Uses SOS to make 18 lists of 10 words each
+- Lists matched on ZipfValue and syllables
+    - Used soft constraints for this
+    - Used hard constrains to floor syllable count and frequency
+- Lists can be found in the folder "wordLists"
+
+

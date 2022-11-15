@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "################################################################################\n# CODE TO CREATE A LIST OF WORDS FOR REPLACING BAD WORDS IN WORD REP TASK\n################################################################################\n\n# load in the population of words that the word rep task list was created from\npopulation <- read.table(\"../2017-02-27_updated_population_allvars_lemmatized_manualcheck.txt\", \n                         header = TRUE, stringsAsFactors = FALSE)\n\n# load in the subpopulation of words including in the word rep task list\nsubpopulation <- read.table(\"../2017-02-27_subpopulation_allvars.txt\",\n                            header = TRUE, stringsAsFactors = FALSE)\n\n## remove subpopulation words from population\n\n# loop over subpopulation list\nfor (i in 1:length(subpopulation$Word.s)) {\n      # print progress\n      print(cat(\"Processing item \", i,\n                       round((i / length(subpopulation$Word.s) * 100), 3),\n                       \"% completed\"))\n      # look for subpop word in population list, remove if present\n      for (j in 1:length(population$Word.s)) {\n            if (subpopulation$Word.s[i] == population$Word.s[j]) {\n                  population <- population[-j, ]\n                  break\n            }\n      }\n}\n\n# write the extra words out to a text file\nwrite.table(population, \"../extra_words.txt\")\n\n\n\n\n################################################################################\n# What if we just take the bad words out of the population and try to create\n# a new subpopulation?\n################################################################################\n# load in the population of words that the word rep task list was created from\npopulation <- read.table(\"../2017-02-27_updated_population_allvars_lemmatized_manualcheck.txt\", \n                         header = TRUE, stringsAsFactors = FALSE)\n\n# load in the list of bad words from the current task list\nbadwords <- read.csv(\"../2017-03-28_badwords_from_stimuli.csv\", header = TRUE)\n\n\n## remove the bad words words from population\n\n# loop over subpopulation list\nfor (i in 1:length(badwords$Word)) {\n      # print progress\n      print(cat(\"Processing item \", i,\n                round((i / length(badwords$Word) * 100), 3),\n                \"% completed\"))\n      # look for subpop word in population list, remove if present\n      for (j in 1:length(population$Word.s)) {\n            if (badwords$Word[i] == population$Word.s[j]) {\n                  population <- population[-j, ]\n                  break\n            }\n      }\n}\n\n# write out new edited population\ntable(population$cmu_sylls.f, population$Zipfvalue_cat.s)\n##     high low\n##   1  752 324\n##   3  349 402",
+    "created" : 1490709236428.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2865525816",
+    "id" : "5B6D7B15",
+    "lastKnownWriteTime" : 1490723065,
+    "last_content_update" : 1490723065113,
+    "path" : "~/NIBS_treatment/word_rep_paradigm/stimuli_creation/2017-03-28_fixing_stim/2017_03_28_fixing_stim/2017_03_28_fixing_stim.R",
+    "project_path" : "2017_03_28_fixing_stim.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

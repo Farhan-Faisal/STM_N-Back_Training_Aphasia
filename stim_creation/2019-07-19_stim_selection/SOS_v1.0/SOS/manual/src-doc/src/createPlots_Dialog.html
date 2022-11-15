@@ -1,0 +1,242 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of createPlots_Dialog</title>
+  <meta name="keywords" content="createPlots_Dialog">
+  <meta name="description" content="- create sosplots dialog">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="#">src</a> &gt; createPlots_Dialog.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for .\src&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>createPlots_Dialog
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>- create sosplots dialog</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function varargout = createPlots_Dialog(varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> - create sosplots dialog
+
+ copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut
+
+    This file is part of SOS
+
+    SOS is free software: you can redistribute it and/or modify
+    it for academic and non-commercial purposes
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.  For commercial or for-profit
+    uses, please contact the authors (sos@cnbc.cmu.edu).
+
+    SOS is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="getdfName.html" class="code" title="function dfName = getdfName(handle,dfType)">getdfName</a>	-  extracts a dataframe name selected in the GUI</li><li><a href="sos_gui.html" class="code" title="function varargout = sos_gui(varargin)">sos_gui</a>	- sos main GUI</li><li><a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>	- master print function that regulates cmd line output based on verbosity flags</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="sos_gui.html" class="code" title="function varargout = sos_gui(varargin)">sos_gui</a>	- sos main GUI</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function createPlots_Dialog_OpeningFcn(hObject, eventdata, handles, varargin)</a></li><li><a href="#_sub2" class="code">function varargout = createPlots_Dialog_OutputFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub3" class="code">function pushbutton_createPlots_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub4" class="code">function edit_dispIt_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub5" class="code">function edit_dispIt_CreateFcn(hObject, eventdata, handles)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% - create sosplots dialog</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%    This file is part of SOS</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%    SOS is free software: you can redistribute it and/or modify</span>
+0008 <span class="comment">%    it for academic and non-commercial purposes</span>
+0009 <span class="comment">%    under the terms of the GNU General Public License as published by</span>
+0010 <span class="comment">%    the Free Software Foundation, either version 3 of the License, or</span>
+0011 <span class="comment">%    (at your option) any later version.  For commercial or for-profit</span>
+0012 <span class="comment">%    uses, please contact the authors (sos@cnbc.cmu.edu).</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%    SOS is distributed in the hope that it will be useful,</span>
+0015 <span class="comment">%    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+0016 <span class="comment">%    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+0017 <span class="comment">%    GNU General Public License for more details.</span>
+0018 
+0019 <span class="comment">%    You should have received a copy of the GNU General Public License</span>
+0020 <span class="comment">%    along with SOS (see COPYING.txt).</span>
+0021 <span class="comment">%    If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+0022 
+0023 
+0024 
+0025 
+0026 <a name="_sub0" href="#_subfunctions" class="code">function varargout = createPlots_Dialog(varargin)</a>
+0027 <span class="comment">% CREATEPLOTS_DIALOG M-file for createPlots_Dialog.fig</span>
+0028 <span class="comment">%      CREATEPLOTS_DIALOG, by itself, creates a new CREATEPLOTS_DIALOG or raises the existing</span>
+0029 <span class="comment">%      singleton*.</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">%      H = CREATEPLOTS_DIALOG returns the handle to a new CREATEPLOTS_DIALOG or the handle to</span>
+0032 <span class="comment">%      the existing singleton*.</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">%      CREATEPLOTS_DIALOG('CALLBACK',hObject,eventData,handles,...) calls the local</span>
+0035 <span class="comment">%      function named CALLBACK in CREATEPLOTS_DIALOG.M with the given input arguments.</span>
+0036 <span class="comment">%</span>
+0037 <span class="comment">%      CREATEPLOTS_DIALOG('Property','Value',...) creates a new CREATEPLOTS_DIALOG or raises the</span>
+0038 <span class="comment">%      existing singleton*.  Starting from the left, property value pairs are</span>
+0039 <span class="comment">%      applied to the GUI before createPlots_Dialog_OpeningFcn gets called.  An</span>
+0040 <span class="comment">%      unrecognized property name or invalid value makes property application</span>
+0041 <span class="comment">%      stop.  All inputs are passed to createPlots_Dialog_OpeningFcn via varargin.</span>
+0042 <span class="comment">%</span>
+0043 <span class="comment">%      *See GUI Options on GUIDE's Tools menu.  Choose &quot;GUI allows only one</span>
+0044 <span class="comment">%      instance to run (singleton)&quot;.</span>
+0045 <span class="comment">%</span>
+0046 <span class="comment">% See also: GUIDE, GUIDATA, GUIHANDLES</span>
+0047 
+0048 <span class="comment">% Edit the above text to modify the response to help createPlots_Dialog</span>
+0049 
+0050 <span class="comment">% Last Modified by GUIDE v2.5 09-Sep-2010 11:49:00</span>
+0051 
+0052 <span class="comment">% Begin initialization code - DO NOT EDIT</span>
+0053 gui_Singleton = 1;
+0054 gui_State = struct(<span class="string">'gui_Name'</span>,       mfilename, <span class="keyword">...</span>
+0055                    <span class="string">'gui_Singleton'</span>,  gui_Singleton, <span class="keyword">...</span>
+0056                    <span class="string">'gui_OpeningFcn'</span>, @<a href="#_sub1" class="code" title="subfunction createPlots_Dialog_OpeningFcn(hObject, eventdata, handles, varargin)">createPlots_Dialog_OpeningFcn</a>, <span class="keyword">...</span>
+0057                    <span class="string">'gui_OutputFcn'</span>,  @<a href="#_sub2" class="code" title="subfunction varargout = createPlots_Dialog_OutputFcn(hObject, eventdata, handles)">createPlots_Dialog_OutputFcn</a>, <span class="keyword">...</span>
+0058                    <span class="string">'gui_LayoutFcn'</span>,  [] , <span class="keyword">...</span>
+0059                    <span class="string">'gui_Callback'</span>,   []);
+0060 <span class="keyword">if</span> nargin &amp;&amp; ischar(varargin{1})
+0061     gui_State.gui_Callback = str2func(varargin{1});
+0062 <span class="keyword">end</span>
+0063 
+0064 <span class="keyword">if</span> nargout
+0065     [varargout{1:nargout}] = gui_mainfcn(gui_State, varargin{:});
+0066 <span class="keyword">else</span>
+0067     gui_mainfcn(gui_State, varargin{:});
+0068 <span class="keyword">end</span>
+0069 <span class="comment">% End initialization code - DO NOT EDIT</span>
+0070 
+0071 
+0072 
+0073 <span class="comment">% --- Executes just before createPlots_Dialog is made visible.</span>
+0074 <a name="_sub1" href="#_subfunctions" class="code">function createPlots_Dialog_OpeningFcn(hObject, eventdata, handles, varargin)</a>
+0075 <span class="comment">% This function has no output args, see OutputFcn.</span>
+0076 <span class="comment">% hObject    handle to figure</span>
+0077 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0078 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0079 <span class="comment">% varargin   command line arguments to createPlots_Dialog (see VARARGIN)</span>
+0080 
+0081 <span class="comment">% Choose default command line output for createPlots_Dialog</span>
+0082 handles.output = hObject;
+0083 
+0084 <span class="comment">% Update handles structure</span>
+0085 guidata(hObject, handles);
+0086 
+0087 <span class="comment">% UIWAIT makes createPlots_Dialog wait for user response (see UIRESUME)</span>
+0088 <span class="comment">% uiwait(handles.figure_createPlots);</span>
+0089 
+0090 
+0091 <span class="comment">% --- Outputs from this function are returned to the command line.</span>
+0092 <a name="_sub2" href="#_subfunctions" class="code">function varargout = createPlots_Dialog_OutputFcn(hObject, eventdata, handles) </a>
+0093 <span class="comment">% varargout  cell array for returning output args (see VARARGOUT);</span>
+0094 <span class="comment">% hObject    handle to figure</span>
+0095 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0096 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0097 
+0098 <span class="comment">% Get default command line output from handles structure</span>
+0099 varargout{1} = handles.output;
+0100 
+0101 
+0102 <span class="comment">% --- Executes on button press in pushbutton_createPlots.</span>
+0103 <a name="_sub3" href="#_subfunctions" class="code">function pushbutton_createPlots_Callback(hObject, eventdata, handles)</a>
+0104 <span class="comment">% hObject    handle to pushbutton_createPlots (see GCBO)</span>
+0105 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0106 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0107 
+0108     <span class="comment">% validate the number of iterations to display</span>
+0109     
+0110     create = true;
+0111     
+0112     dispIt = get(handles.edit_dispIt,<span class="string">'String'</span>);
+0113     
+0114     <span class="comment">%check to make sure that the name is a valid variable name:</span>
+0115     valid = regexp(dispIt,<span class="string">'^[1-9]+[0-9]*$'</span>);
+0116     
+0117 
+0118     <span class="keyword">if</span> isempty(valid)
+0119         <span class="comment">% name is not currently valid, tell the user.</span>
+0120         msgbox(<span class="string">'Sample size must be a whole number &gt; 0'</span>,<span class="keyword">...</span>
+0121                 <span class="string">'Invalid sample size!'</span>);
+0122         create = false;
+0123     <span class="keyword">end</span>
+0124 
+0125     <span class="comment">% if the first variable passed, proceed to check the second</span>
+0126     <span class="keyword">if</span> create == true
+0127         mainWindowHandle = <a href="sos_gui.html" class="code" title="function varargout = sos_gui(varargin)">sos_gui</a>;
+0128         mainWindowData = guidata(mainWindowHandle);
+0129 
+0130         sosObjName = <a href="getdfName.html" class="code" title="function dfName = getdfName(handle,dfType)">getdfName</a>(mainWindowData.popupmenu_SOSSelector,<span class="string">'SOS'</span>);
+0131 
+0132         <span class="keyword">if</span> isempty(sosObjName) == 0
+0133             <span class="comment">% we have a valid name, run the command</span>
+0134             command = [sosObjName,<span class="string">'.createPlots('</span>,dispIt,<span class="string">');'</span>];
+0135 
+0136             <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">'Executing command: '</span>,<span class="string">''''</span>,command,<span class="string">''''</span>],<span class="string">'createPlots_Dialog_create'</span>);
+0137             evalin(<span class="string">'base'</span>,command);         
+0138 
+0139             close(handles.figure_createPlots);
+0140         <span class="keyword">else</span>
+0141            <span class="comment">% if it was empty, a warning message will have been triggered by getdfName;</span>
+0142            <span class="comment">% no need to do anything here.</span>
+0143         <span class="keyword">end</span>
+0144     <span class="keyword">end</span>
+0145         
+0146 
+0147 
+0148 <a name="_sub4" href="#_subfunctions" class="code">function edit_dispIt_Callback(hObject, eventdata, handles)</a>
+0149 <span class="comment">% hObject    handle to edit_dispIt (see GCBO)</span>
+0150 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0151 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0152 
+0153 <span class="comment">% Hints: get(hObject,'String') returns contents of edit_dispIt as text</span>
+0154 <span class="comment">%        str2double(get(hObject,'String')) returns contents of edit_dispIt as a double</span>
+0155     varName = get(hObject,<span class="string">'String'</span>);
+0156     
+0157     <span class="comment">%check to make sure that the name is a valid variable name:</span>
+0158     valid = regexp(varName,<span class="string">'^[1-9]+[0-9]*$'</span>, <span class="string">'once'</span>);
+0159     
+0160 
+0161     <span class="keyword">if</span> isempty(valid)
+0162         <span class="comment">% name is not currently valid, tell the user.</span>
+0163         msgbox(<span class="string">'Number of iterations to display must be &gt; 0'</span>,<span class="keyword">...</span>
+0164                 <span class="string">'Invalid dispIt!'</span>);
+0165     <span class="keyword">end</span>
+0166 
+0167 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0168 <a name="_sub5" href="#_subfunctions" class="code">function edit_dispIt_CreateFcn(hObject, eventdata, handles)</a>
+0169 <span class="comment">% hObject    handle to edit_dispIt (see GCBO)</span>
+0170 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0171 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0172 
+0173 <span class="comment">% Hint: edit controls usually have a white background on Windows.</span>
+0174 <span class="comment">%       See ISPC and COMPUTER.</span>
+0175 <span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+0176     set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0177 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Fri 27-Jan-2012 16:18:41 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

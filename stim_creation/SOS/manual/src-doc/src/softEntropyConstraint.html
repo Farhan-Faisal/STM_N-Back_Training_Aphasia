@@ -1,0 +1,813 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of softEntropyConstraint</title>
+  <meta name="keywords" content="softEntropyConstraint">
+  <meta name="description" content="- soft entropy constraint object">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="#">src</a> &gt; softEntropyConstraint.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for .\src&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>softEntropyConstraint
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>- soft entropy constraint object</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> - soft entropy constraint object 
+
+ copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut
+
+    This file is part of SOS
+
+    SOS is free software: you can redistribute it and/or modify
+    it for academic and non-commercial purposes
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.  For commercial or for-profit
+    uses, please contact the authors (sos@cnbc.cmu.edu).
+
+    SOS is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="genericConstraint.html" class="code" title="">genericConstraint</a>	- parent class for constraints</li><li><a href="softConstraint.html" class="code" title="">softConstraint</a>	- parent class for soft constraints</li><li><a href="softEntropyConstraint.html" class="code" title="">softEntropyConstraint</a>	- soft entropy constraint object</li><li><a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>	- master print function that regulates cmd line output based on verbosity flags</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="genericConstraint.html" class="code" title="">genericConstraint</a>	- parent class for constraints</li><li><a href="softEntropyConstraint.html" class="code" title="">softEntropyConstraint</a>	- soft entropy constraint object</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function obj = softEntropyConstraint(varargin)</a></li><li><a href="#_sub2" class="code">function cost = initCost(obj)</a></li><li><a href="#_sub3" class="code">function initEnt(obj)</a></li><li><a href="#_sub4" class="code">function cost = minEnt(obj,curEnt)</a></li><li><a href="#_sub5" class="code">function cost = maxEnt(obj,curEnt)</a></li><li><a href="#_sub6" class="code">function swCost = swapCost(obj,targSample,targSampleIndex, feederdf,feederdfIndex)</a></li><li><a href="#_sub7" class="code">function swEntropy(obj,targSample,targSampleIndex, feederdf,feederdfIndex)</a></li><li><a href="#_sub8" class="code">function cost = acceptSwap(obj)</a></li><li><a href="#_sub9" class="code">function cost = rejectSwap(obj)</a></li><li><a href="#_sub10" class="code">function plotDistribution(obj)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% - soft entropy constraint object</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%    This file is part of SOS</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%    SOS is free software: you can redistribute it and/or modify</span>
+0008 <span class="comment">%    it for academic and non-commercial purposes</span>
+0009 <span class="comment">%    under the terms of the GNU General Public License as published by</span>
+0010 <span class="comment">%    the Free Software Foundation, either version 3 of the License, or</span>
+0011 <span class="comment">%    (at your option) any later version.  For commercial or for-profit</span>
+0012 <span class="comment">%    uses, please contact the authors (sos@cnbc.cmu.edu).</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%    SOS is distributed in the hope that it will be useful,</span>
+0015 <span class="comment">%    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+0016 <span class="comment">%    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+0017 <span class="comment">%    GNU General Public License for more details.</span>
+0018 
+0019 <span class="comment">%    You should have received a copy of the GNU General Public License</span>
+0020 <span class="comment">%    along with SOS (see COPYING.txt).</span>
+0021 <span class="comment">%    If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+0022 
+0023 
+0024 classdef <a href="softEntropyConstraint.html" class="code" title="">softEntropyConstraint</a> &lt; <a href="softConstraint.html" class="code" title="">softConstraint</a>
+0025     <span class="comment">%% creates and supports soft entropy constraints</span>
+0026     <span class="comment">%</span>
+0027     <span class="comment">% Objects of this class measure the cost in terms of minimizing or</span>
+0028     <span class="comment">% maximizing a measure of entropy, or degree to which items have been</span>
+0029     <span class="comment">% randomly distributed on a particular dimension.</span>
+0030     <span class="comment">%</span>
+0031     <span class="comment">% Additional functionality is inherited from parent softConstraint</span>
+0032     <span class="comment">%</span>
+0033     <span class="comment">% The particular measure of entropy used in the class takes its</span>
+0034     <span class="comment">% inspiration from the standard version of Gibbs entropy:</span>
+0035     <span class="comment">%</span>
+0036     <span class="comment">%   -k*[Sigma(p)*ln(p)];</span>
+0037     <span class="comment">%</span>
+0038     <span class="comment">%  In this formula, k is a positive constant, and p is the probability</span>
+0039     <span class="comment">%  of choosing an item with a particular value on the</span>
+0040     <span class="comment">%  dimension of interest.  The sum of p*ln(p) is summed across all</span>
+0041     <span class="comment">%  values of the dimension of interest.</span>
+0042     <span class="comment">%</span>
+0043     <span class="comment">%  In this standard version of entropy, the values of Entropy increase</span>
+0044     <span class="comment">%  as the 'randomness' of the distribution of items increases.  That</span>
+0045     <span class="comment">%  is, the highest values of entropy are obtained when a randomly</span>
+0046     <span class="comment">%  selected item has an equal chance of having any one of the values on</span>
+0047     <span class="comment">%  the dimension of interest.  This also corresponds to having a</span>
+0048     <span class="comment">%  uniform distribution of items across values on the dimension of</span>
+0049     <span class="comment">%  interest.  In contrast, when items are not randomly distributed in</span>
+0050     <span class="comment">%  this uniform fashion, lower values of entropy are obtained.  The</span>
+0051     <span class="comment">%  lowest possible entropy would occur when all items shared the same</span>
+0052     <span class="comment">%  value.</span>
+0053     <span class="comment">%</span>
+0054     <span class="comment">%  Maximizing entropy thus provides one means of randomly distributing</span>
+0055     <span class="comment">%  items across a range of values, whereas minimizing entropy can serve</span>
+0056     <span class="comment">%  to force units to all take on the same value.</span>
+0057     <span class="comment">%</span>
+0058     <span class="comment">%  Though the standard Gibbs entropy formula has the desirable</span>
+0059     <span class="comment">%  characteristics outlined above, for present purposes in one main</span>
+0060     <span class="comment">%  respect: the domain of the results of the entropy formula are not</span>
+0061     <span class="comment">%  well constrainted to a particular range.  This problem is due to two</span>
+0062     <span class="comment">%  main aspects of the formula.  First, if a particular value of a</span>
+0063     <span class="comment">%  dimension literally has no item representing it, its probability</span>
+0064     <span class="comment">%  would be zero, and ln(0) = -Inf.  Second, the amount of entropy in</span>
+0065     <span class="comment">%  the standard formula varies as a function of the number of items.</span>
+0066     <span class="comment">%  Neither of these characteristics are desirable in the present</span>
+0067     <span class="comment">%  context where it is useful to have the standard output of a cost</span>
+0068     <span class="comment">%  function consistently have standardized values in the range -1 - 1</span>
+0069     <span class="comment">%   (or at least within an order of magnitude thereof).</span>
+0070     <span class="comment">%</span>
+0071     <span class="comment">%  This additional desirable characteristic resulted in the development</span>
+0072     <span class="comment">%  of a new 'entropy' formula, as follows:</span>
+0073     <span class="comment">%</span>
+0074     <span class="comment">%     ent = (-1*Sigma(1:N)[p*log((p+1)')/Sum(N)] -1/(N)*ln((1/N)+1)) /</span>
+0075     <span class="comment">%           (ln(2)/N - 1/N * ln((1/N) +1));</span>
+0076     <span class="comment">%</span>
+0077     <span class="comment">%  Don't let the complexity of this formula scare you though, as in</span>
+0078     <span class="comment">%  principle it's quite straightforward.  First, to avoid the case</span>
+0079     <span class="comment">%  where values with p=0 generated -Inf, it was necessary to add some</span>
+0080     <span class="comment">%  constant value to the ln() term.  A value of 1 was selected as this</span>
+0081     <span class="comment">%  results in only positive numbers being generated from the equation,</span>
+0082     <span class="comment">%  since log(1) == 0 and log(1+positiveN) &gt; 0.  Next, this equation is</span>
+0083     <span class="comment">%  divided by N, the number of different possible items, which renders</span>
+0084     <span class="comment">%  the output of the equation relatively insensitive to the number of</span>
+0085     <span class="comment">%  items for which entropy is being calculated.  The theoretical</span>
+0086     <span class="comment">%  minimum entropy for this particular dataset is then subtracted away</span>
+0087     <span class="comment">%  from the result of hte previous step (1/N*ln((1/N)+1) corresponding</span>
+0088     <span class="comment">%  to the case where all items are distributed uniformally across</span>
+0089     <span class="comment">%  values) giving the equation a bound a bound of zero when maximum</span>
+0090     <span class="comment">%  entropy is acheived.  The result of this entire calculation</span>
+0091     <span class="comment">%  subsequently serves as the dividend in a division which</span>
+0092     <span class="comment">%  standardizes the equation so that the maximum possible entropy that</span>
+0093     <span class="comment">%  could result will always have a value of 1.0, thus bounding the</span>
+0094     <span class="comment">%  formula to the 0-1 domain.  Finally, to conserve the property that</span>
+0095     <span class="comment">%  entropy is maximized as randomness increases, the result of the</span>
+0096     <span class="comment">%  previous calculation is multiplied by -1, thus yielding an entropy</span>
+0097     <span class="comment">%  formula that is bounded at [-1, 0], where -1 corresponds to the</span>
+0098     <span class="comment">%  least randomly distributed state, and 0 corresponds to the most</span>
+0099     <span class="comment">%  randomly distributed state.</span>
+0100     <span class="comment">%</span>
+0101     <span class="comment">%</span>
+0102     <span class="comment">%     s1 % sample entropy is calculated on</span>
+0103     <span class="comment">%     s1Col   % data column entropy is calculated on</span>
+0104     <span class="comment">%     nbin    % number of bins to subdivide data into</span>
+0105     <span class="comment">%     pdSpread % type of spread of scores desired.  Options currently are 'sample' and 'allItems'.</span>
+0106     <span class="comment">%     ent % current entropy value</span>
+0107     <span class="comment">%     swEnt % swap entropy value</span>
+0108     <span class="comment">%     comparison %handle to comparison calculator (to minimize or max entropy)</span>
+0109     <span class="comment">%     initStats % handle to method that initializes stats</span>
+0110     <span class="comment">%     swStats % handle to method that calculates swap stats</span>
+0111     <span class="comment">%     scores % copy of scores in the column entropy is calucated for.</span>
+0112     <span class="comment">%     swScores % copy of scores if a swap occured</span>
+0113     <span class="comment">%     bins % mid-point of bins data is divided into</span>
+0114     <span class="comment">%     swBins % mid-point of bins data is divided into after a swap</span>
+0115     <span class="comment">%     pd % probability distribution of scores</span>
+0116     <span class="comment">%     swpd % probability distribution of swap socres</span>
+0117     <span class="comment">%     minScore % min score in set</span>
+0118     <span class="comment">%     swMinScore % min score in swap set</span>
+0119     <span class="comment">%     maxScore % max score in set</span>
+0120     <span class="comment">%     swMaxScore % max score in swap set.</span>
+0121     <span class="comment">%</span>
+0122     <span class="comment">%PROPERTIES</span>
+0123     <span class="comment">%     s1 % sample entropy is calculated on</span>
+0124     <span class="comment">%     s1Col   % data column entropy is calculated on</span>
+0125     <span class="comment">%     nbin    % number of bins to subdivide data into</span>
+0126     <span class="comment">%     pdSpread % type of spread of scores desired.  Options currently are 'sample' and 'allItems'.</span>
+0127     <span class="comment">%     ent % current entropy value</span>
+0128     <span class="comment">%     swEnt % swap entropy value</span>
+0129     <span class="comment">%     comparison %handle to comparison calculator (to minimize or max entropy)</span>
+0130     <span class="comment">%     initStats % handle to method that initializes stats</span>
+0131     <span class="comment">%     swStats % handle to method that calculates swap stats</span>
+0132     <span class="comment">%     scores % copy of scores in the column entropy is calucated for.</span>
+0133     <span class="comment">%     swScores % copy of scores if a swap occured</span>
+0134     <span class="comment">%     bins % mid-point of bins data is divided into</span>
+0135     <span class="comment">%     swBins % mid-point of bins data is divided into after a swap</span>
+0136     <span class="comment">%     pd % probability distribution of scores</span>
+0137     <span class="comment">%     swpd % probability distribution of swap socres</span>
+0138     <span class="comment">%     minScore % min score in set</span>
+0139     <span class="comment">%     swMinScore % min score in swap set</span>
+0140     <span class="comment">%     maxScore % max score in set</span>
+0141     <span class="comment">%     swMaxScore % max score in swap set.</span>
+0142     <span class="comment">%</span>
+0143     <span class="comment">%PROPERTIES (Constant)</span>
+0144     <span class="comment">%    s2 = NaN; % s2 = NaN; for consistency with other methods, there is a swap2 property, but it is just set to a null-like value.</span>
+0145     <span class="comment">%   smallVal = 0.00000001 % small value added to avoid case where a value is exactly equal the min or max range of the distribution</span>
+0146     <span class="comment">%</span>
+0147     <span class="comment">%METHODS</span>
+0148     <span class="comment">%   obj = softEntropyConstraint(varargin) % CONSTRUCTOR</span>
+0149     <span class="comment">%   cost = initCost() METHOD</span>
+0150     <span class="comment">%   initEnt() % calculates the initial entropy value for the scores in sample1&lt;sample1Col&gt;</span>
+0151     <span class="comment">%   cost = minEnt(curEnt) % calculates the cost associated with curEnt, when minimal Entropy is desired</span>
+0152     <span class="comment">%   cost = maxEnt(curEnt)  % calculates the cost associated with curEnt, when maximal entropy is desired</span>
+0153     <span class="comment">%   swCost = swapCost(targSample,targSampleIndex, feederdf,feederdfIndex)  % Calculates the new cost if items from targSample and feederdf were swapped.</span>
+0154     <span class="comment">%   swEntropy(obj,targSample,targSampleIndex, feederdf,feederdfIndex)  % Calculates the new (swap) entropy if items from targSample and feederdf were swapped.</span>
+0155     <span class="comment">%   cost = acceptSwap()  % alter internal variables to reflect accepted swap</span>
+0156     <span class="comment">%   cost = rejectSwap() % set internal variables to reflect rejection of proposed swap</span>
+0157     <span class="comment">%   plotDistribution() % plots the probability distribution used to calculate entropy</span>
+0158     
+0159 
+0160     <span class="comment">%% Properties</span>
+0161     properties
+0162         s1 <span class="comment">% sample entropy is calculated on</span>
+0163         s1Col   <span class="comment">% data column entropy is calculated on</span>
+0164         s1ColName <span class="comment">%name of column entropy is being calculated on</span>
+0165         nbin    <span class="comment">% number of bins to subdivide data into</span>
+0166         pdSpread <span class="comment">% type of spread of scores desired.  Options currently are 'sample' and 'allItems'.</span>
+0167         ent <span class="comment">% current entropy value</span>
+0168         swEnt <span class="comment">% swap entropy value</span>
+0169         comparison <span class="comment">%handle to comparison calculator (to minimize or max entropy)</span>
+0170         initStats <span class="comment">% handle to method that initializes stats</span>
+0171         swStats <span class="comment">% handle to method that calculates swap stats</span>
+0172         scores <span class="comment">% copy of scores in the column entropy is calucated for.</span>
+0173         swScores <span class="comment">% copy of scores if a swap occured</span>
+0174         bins <span class="comment">% mid-point of bins data is divided into</span>
+0175         swBins <span class="comment">% mid-point of bins data is divided into after a swap</span>
+0176         pd <span class="comment">% probability distribution of scores</span>
+0177         swpd <span class="comment">% probability distribution of swap socres</span>
+0178         minScore <span class="comment">% min score in set</span>
+0179         swMinScore <span class="comment">% min score in swap set</span>
+0180         maxScore <span class="comment">% max score in set</span>
+0181         swMaxScore <span class="comment">% max score in swap set.</span>
+0182         figHandle <span class="comment">% handle to figure for plotting entropy</span>
+0183     <span class="keyword">end</span>
+0184     
+0185     <span class="comment">%% Properties (Constant)</span>
+0186     properties (Constant)
+0187         s2 = NaN; <span class="comment">% s2 = NaN; for consistency with other methods, there is a swap2 property, but it is just set to a null-like value.</span>
+0188         smallVal = 0.00000001 <span class="comment">% small value added to avoid case where a value is exactly equal the min or max range of the distribution</span>
+0189     <span class="keyword">end</span>
+0190         
+0191     
+0192     methods
+0193         <span class="comment">%% obj = softEntropyConstraint(varargin) CONSTRUCTOR</span>
+0194         <a name="_sub0" href="#_subfunctions" class="code">function obj = softEntropyConstraint(varargin)</a>
+0195             <span class="comment">% Constructs a softEntropy constraint object</span>
+0196             <span class="comment">%</span>
+0197             <span class="comment">% PARAMETERS:</span>
+0198             <span class="comment">% REQUIRED:</span>
+0199             <span class="comment">%   'sosObj'/sos object - the SOS object the constraint will be linked to, and which contains the sample the constraint operates on.</span>
+0200             <span class="comment">%   'constraintType'/'soft' - the type of contraint - must be 'soft'</span>
+0201             <span class="comment">%   'fnc'/'minEnt'|'maxEnt' the entropy cost to calculate.</span>
+0202             <span class="comment">%   'sample1'/sample - the first sample</span>
+0203             <span class="comment">%   's1ColName'/string - name of column in 1st sample</span>
+0204             <span class="comment">%   'pSpread'/'sample'|'allItems'  Should entropy be maximized relative to sample items only, or to the theoretical min and max values in the population?</span>
+0205             <span class="comment">%</span>
+0206             <span class="comment">%</span>
+0207             <span class="comment">% OPTIONAL:</span>
+0208             <span class="comment">%   'nbin'/integer - number of bins to divide data into for</span>
+0209             <span class="comment">%       purposes of calculating probability distribution.  Defaults</span>
+0210             <span class="comment">%       to number of items in the sample.  Must be greater than 2</span>
+0211             <span class="comment">%       and &lt;= number of items in the sample</span>
+0212             <span class="comment">%   'exponent'/numeric - defaults to 2 (quadratic difference)</span>
+0213             <span class="comment">%   'weight'/numeric - defaults to 1 (equal weighting of all soft costs)</span>
+0214             
+0215             p = inputParser;
+0216 
+0217             p.addParamValue(<span class="string">'sosObj'</span>,<span class="string">'null'</span>,@(sosObj)strcmp(class(sosObj),<span class="string">'sos'</span>));
+0218             p.addParamValue(<span class="string">'constraintType'</span>, <span class="string">'null'</span>, <span class="keyword">...</span>
+0219                 @(constraintType)any(strcmp({<span class="string">'soft'</span>},constraintType)));
+0220             p.addParamValue(<span class="string">'fnc'</span>,<span class="string">'null'</span>, <span class="keyword">...</span>
+0221                  @(fnc)any(strcmp({<span class="string">'minEnt'</span> <span class="string">'maxEnt'</span>},fnc)));
+0222             p.addParamValue(<span class="string">'nbin'</span>,2,@(nbin)validateattributes(nbin, {<span class="string">'numeric'</span>}, <span class="keyword">...</span>
+0223                 {<span class="string">'scalar'</span>, <span class="string">'integer'</span>, <span class="string">'positive'</span>, <span class="string">'&gt;'</span>, 0}));
+0224             p.addParamValue(<span class="string">'pdSpread'</span>,<span class="string">'null'</span>, <span class="keyword">...</span>
+0225                  @(pdSpread)any(strcmp({<span class="string">'sample'</span> <span class="string">'allItems'</span>},pdSpread)));
+0226             p.addParamValue(<span class="string">'sample1'</span>,<span class="string">'null'</span>,@(sample1)strcmp(class(sample1),<span class="string">'sample'</span>));
+0227             p.addParamValue(<span class="string">'s1ColName'</span>,<span class="string">''</span>,@(s1ColName)ischar(s1ColName));
+0228             p.addParamValue(<span class="string">'exponent'</span>,2,@(exponent)isnumeric(exponent));
+0229             p.addParamValue(<span class="string">'weight'</span>,1,@(weight)isnumeric(weight));
+0230             p.addParamValue(<span class="string">'name'</span>,<span class="string">'noname'</span>,@(name)ischar(name));
+0231             
+0232             p.parse(varargin{:});
+0233             
+0234             <span class="comment">% check additional constraints on values submitted to the</span>
+0235             <span class="comment">% constructor</span>
+0236             <span class="keyword">if</span>(p.Results.sosObj.containsSample(p.Results.sample1) == false)
+0237                 error(<span class="string">'Cannot create soft distance constraint: sos Object does not contain the sample1'</span>);
+0238             <span class="keyword">end</span>
+0239             
+0240             col1 = p.Results.sample1.colName2colNum(p.Results.s1ColName);           
+0241             <span class="keyword">if</span>(col1 == -1)
+0242                 error(<span class="string">'Specified column name not found in sample1'</span>);
+0243             <span class="keyword">end</span>         
+0244             
+0245             <span class="keyword">if</span>(strcmp(p.Results.sample1.format{col1},<span class="string">'%f'</span>) == 0)
+0246                 error(<span class="string">'Specified column is not of numeric (%f) format, so cannot use as hard bound'</span>);
+0247             <span class="keyword">end</span>   
+0248             
+0249             <span class="keyword">if</span> any(strcmp(p.UsingDefaults,<span class="string">'nbin'</span>))
+0250                 obj.nbin = p.Results.sample1.n;
+0251             <span class="keyword">else</span>
+0252                 <span class="keyword">if</span> p.Results.nbin &lt;= p.Results.sample1.n
+0253                     obj.nbin = p.Results.nbin;
+0254                 <span class="keyword">else</span>
+0255                     error(<span class="string">'Number of bins must be &lt;= number of observations in the sample'</span>);
+0256                 <span class="keyword">end</span>
+0257             <span class="keyword">end</span>
+0258             
+0259             <span class="keyword">if</span> obj.nbin &lt; 2
+0260                 error (<span class="string">'There must be at least 2 bins in the entropy calculation'</span>);
+0261             <span class="keyword">end</span>
+0262             
+0263             
+0264             <span class="comment">%assign the appropriate handles for the calculation.</span>
+0265             obj.sosObj = p.Results.sosObj;
+0266             obj.constraintType = p.Results.constraintType;
+0267             obj.fnc = p.Results.fnc;           
+0268             obj.weight = p.Results.weight;
+0269             obj.s1 = p.Results.sample1;     
+0270             obj.s1ColName = p.Results.s1ColName;
+0271             obj.s1Col = col1;   
+0272             obj.exp = p.Results.exponent;      
+0273             
+0274             obj.initStats = @obj.initEnt;
+0275             obj.swStats = @obj.swEntropy;
+0276             
+0277             <span class="keyword">if</span>(strcmp(p.Results.fnc,<span class="string">'minEnt'</span>))
+0278                 obj.comparison = @obj.minEnt;
+0279             <span class="keyword">elseif</span>(strcmp(p.Results.fnc,<span class="string">'maxEnt'</span>))
+0280                obj.comparison = @obj.maxEnt;
+0281             <span class="keyword">else</span>
+0282                 error(<span class="string">'Entropy &lt;fnc&gt; must be either &quot;minEnt&quot; or &quot;maxEnt&quot;'</span>);
+0283             <span class="keyword">end</span>
+0284 
+0285             <span class="keyword">if</span>(any(strcmp({<span class="string">'sample'</span> <span class="string">'allItems'</span>},p.Results.pdSpread)))
+0286                 obj.pdSpread = p.Results.pdSpread;
+0287             <span class="keyword">else</span>
+0288                 error(<span class="string">'pdSpread must be either &quot;sample&quot; or &quot;allItems&quot;'</span>);
+0289             <span class="keyword">end</span>
+0290              
+0291             obj.cost = NaN;
+0292             obj.swCost = NaN;
+0293             
+0294             <span class="comment">% add the name and the label</span>
+0295             obj.label = [obj.constraintType,<span class="string">'_'</span>,obj.fnc,<span class="keyword">...</span>
+0296                     <span class="string">'_pd_'</span>,obj.pdSpread,<span class="string">'_nbin'</span>,num2str(obj.nbin),<span class="string">'_'</span>,<span class="keyword">...</span>
+0297                     obj.s1.name,<span class="string">'_'</span>,<span class="keyword">...</span>
+0298                     obj.s1ColName,<span class="string">'_w'</span>,<span class="keyword">...</span>
+0299                     num2str(obj.weight),<span class="string">'_e'</span>,num2str(obj.exp)];              
+0300             <span class="keyword">if</span> any(strcmp(p.UsingDefaults,<span class="string">'name'</span>))                 
+0301                 obj.name = obj.label;
+0302             <span class="keyword">else</span>
+0303                  obj.name = p.Results.name;  
+0304             <span class="keyword">end</span>     
+0305             
+0306             
+0307             <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>(<span class="string">'Soft Entropy Constraint has been created'</span>, <span class="keyword">...</span>
+0308                     <span class="string">'softEntropyConstraint_Constructor_endObjCreation'</span>);
+0309         <span class="keyword">end</span> <span class="comment">% constructor</span>
+0310         
+0311             
+0312         <span class="comment">%% cost = initCost() METHOD</span>
+0313         <a name="_sub1" href="#_subfunctions" class="code">function cost = initCost(obj)</a>
+0314             <span class="comment">% Calculates, saves, and returns the cost value for the current items in the sample.</span>
+0315           
+0316             <span class="comment">%init the stats, then compare them.  Return the calculated cost</span>
+0317             obj.initStats(); 
+0318             cost = obj.comparison(obj.ent);
+0319             
+0320             obj.swEnt = NaN;
+0321             obj.swScores = NaN;
+0322             obj.swpd = NaN;
+0323             obj.swMinScore = NaN;
+0324             obj.swMaxScore = NaN;
+0325                        
+0326             obj.cost = cost;
+0327             
+0328         <span class="keyword">end</span> <span class="comment">%initCost</span>
+0329         
+0330         <span class="comment">%% initEnt() METHOD</span>
+0331         <a name="_sub2" href="#_subfunctions" class="code">function initEnt(obj)</a>
+0332             <span class="comment">% calculates the initial entropy value for the scores in</span>
+0333             <span class="comment">% sample1&lt;sample1Col&gt;</span>
+0334             
+0335             obj.scores = (obj.s1.zdata{obj.s1Col})';
+0336             
+0337             
+0338             <span class="comment">% get min and max values for the probability distribution:</span>
+0339             <span class="comment">%this procedure is different depending on whether we are using</span>
+0340             <span class="comment">%the sample as the range or allItems</span>
+0341             
+0342             <span class="keyword">if</span> strcmp(obj.pdSpread,<span class="string">'sample'</span>)
+0343                 minVal = min(obj.scores);
+0344                 maxVal = max(obj.scores);    
+0345             <span class="keyword">elseif</span> strcmp(obj.pdSpread,<span class="string">'allItems'</span>)
+0346                 <span class="comment">%check in the population</span>
+0347                 minVal = min([obj.s1.population.zdata{obj.s1Col}]);
+0348                 maxVal = max([obj.s1.population.zdata{obj.s1Col}]);
+0349 
+0350                 <span class="comment">%check in all samples associated with the population (this</span>
+0351                 <span class="comment">%includes the original one</span>
+0352                 <span class="keyword">for</span> i=1:length(obj.s1.population.samples)
+0353                     minVal = min([minVal; <span class="keyword">...</span>
+0354                         obj.s1.population.samples(i).zdata{obj.s1Col}]);
+0355                     maxVal = max([maxVal; <span class="keyword">...</span>
+0356                         obj.s1.population.samples(i).zdata{obj.s1Col}]);                
+0357                 <span class="keyword">end</span>
+0358             <span class="keyword">else</span>
+0359                 error(<span class="string">'Unsupported pdSpread in initEnt.  pdSpread must be &quot;sample&quot; or &quot;allItems&quot;'</span>);
+0360             <span class="keyword">end</span>
+0361                 
+0362             <span class="comment">% add a smallVal to avoid boundary cases</span>
+0363             minVal = minVal - obj.smallVal;
+0364             maxVal = maxVal + obj.smallVal;
+0365             
+0366             <span class="comment">%now have min and max values, determine size of each bin:</span>
+0367             obj.minScore = minVal;
+0368             obj.maxScore = maxVal;
+0369             
+0370             spread  = maxVal - minVal;            
+0371             binSize = spread/obj.nbin;
+0372             
+0373             <span class="comment">%smallVal added so that the last score is included (simulating</span>
+0374             <span class="comment">%&lt;= rather than &lt;</span>
+0375             obj.bins = (minVal+0.5*binSize):binSize:(maxVal-0.5*binSize)+obj.smallVal;
+0376               
+0377             <span class="comment">% scale values to 0-1</span>
+0378             obj.pd = hist(obj.scores,obj.bins)/length(obj.scores);
+0379            
+0380             
+0381             <span class="comment">% calculate entropy</span>
+0382             obj.ent = obj.pd*log((obj.pd+1)')/length(obj.pd);     
+0383             obj.ent = -1* (obj.ent - 1/length(obj.pd)*log(1/length(obj.pd)+1)) / <span class="keyword">...</span>
+0384                 (1*log(2)/length(obj.pd) - 1/length(obj.pd)*log(1/length(obj.pd)+1));
+0385            
+0386         <span class="keyword">end</span> <span class="comment">% initEnt</span>
+0387         
+0388         <span class="comment">%% cost = minEnt(curEnt) METHOD</span>
+0389         <a name="_sub3" href="#_subfunctions" class="code">function cost = minEnt(obj,curEnt)</a>
+0390             <span class="comment">% calculates the cost associated with curEnt, when minimal entropy is desired</span>
+0391             cost = -(abs((curEnt))^obj.exp)*obj.weight;
+0392         <span class="keyword">end</span>
+0393         
+0394         <span class="comment">%% cost = maxEnt(curEnt)</span>
+0395         <a name="_sub4" href="#_subfunctions" class="code">function cost = maxEnt(obj,curEnt)</a>
+0396             <span class="comment">% calculates the cost associated with curEnt, when maximal entropy is desired</span>
+0397             cost = (abs((curEnt))^obj.exp)*obj.weight;
+0398         <span class="keyword">end</span>        
+0399 
+0400         <span class="comment">%%  swCost(targSample,targSampleIndex, feederdf,feederdfIndex) METHOD</span>
+0401         <a name="_sub5" href="#_subfunctions" class="code">function swCost = swapCost(obj,targSample,targSampleIndex, feederdf,feederdfIndex)</a>
+0402             <span class="comment">% Calculates the new cost if items from targSample and feederdf were swapped.</span>
+0403             <span class="comment">%</span>
+0404             <span class="comment">%By definition, if this method is called it means that at least</span>
+0405             <span class="comment">% one of the two swap objects is implicated in this function</span>
+0406             <span class="comment">%</span>
+0407             <span class="comment">%PARAMETERS:</span>
+0408             <span class="comment">%   targSample - the target sample (i.e., the object that will call it's swapSample() method if a swap later occurs).</span>
+0409             <span class="comment">%   targSampleIndex - row index of item to swap</span>
+0410             <span class="comment">%   feederdf - dataframe (sample/pop) containin the other item to swap</span>
+0411             <span class="comment">%   feederdfIndex - row index of item to swap.</span>
+0412  
+0413             
+0414            <span class="keyword">if</span> (obj.s1 ~= targSample &amp;&amp; obj.s1 ~= feederdf)
+0415                error(<span class="string">'swCost called, but no sample part of this cost function'</span>);
+0416            <span class="keyword">end</span>
+0417 
+0418            <span class="comment">% update the stats, then calculate cost of new stats</span>
+0419            obj.swStats(targSample,targSampleIndex, feederdf,feederdfIndex);
+0420            
+0421            swCost = obj.comparison(obj.swEnt);
+0422             
+0423            obj.swCost = swCost;
+0424               
+0425         <span class="keyword">end</span>
+0426 
+0427         <span class="comment">%% swEnt(targSample,targSampleIndex,feederdf,feederdfIndex) METHOD</span>
+0428         <a name="_sub6" href="#_subfunctions" class="code">function swEntropy(obj,targSample,targSampleIndex, feederdf,feederdfIndex)</a>
+0429            <span class="comment">% Calculates the new (swap) entropy if items from targSample and feederdf were swapped.</span>
+0430            <span class="comment">%</span>
+0431            <span class="comment">% Inputs are the same as for swapCost()</span>
+0432  
+0433            
+0434            
+0435            obj.swScores = obj.scores;
+0436            obj.swpd = obj.pd;
+0437            obj.swMinScore = obj.minScore;
+0438            obj.swMaxScore = obj.maxScore;
+0439            obj.swBins = obj.bins;
+0440            
+0441            <span class="comment">% re-extract the raw, unnormalized entropy value from the</span>
+0442            <span class="comment">% current entropy</span>
+0443            rawEnt = obj.ent;
+0444            rawEnt = rawEnt *(1*log(2)/length(obj.pd) - 1/length(obj.pd)*log(1/length(obj.pd)+1));
+0445            rawEnt = rawEnt*-1;
+0446            rawEnt = rawEnt + 1/length(obj.pd)*log(1/length(obj.pd)+1);
+0447       
+0448            spread  = obj.swMaxScore - obj.swMinScore;            
+0449            binSize = spread/obj.nbin;
+0450                 
+0451            recalculate = false;
+0452 
+0453             <span class="keyword">if</span> targSample == obj.s1
+0454                 
+0455                 obj.swScores(targSampleIndex) = <span class="keyword">...</span>
+0456                     feederdf.zdata{obj.s1Col}(feederdfIndex);
+0457                 
+0458                 <span class="comment">% if the min and max bounds may change and we're only</span>
+0459                 <span class="comment">% calculating the entropy of the sample and letting the</span>
+0460                 <span class="comment">% range of the sample vary dynamically, recalculate entropy</span>
+0461                 <span class="comment">% from scratch</span>
+0462                 <span class="keyword">if</span>(strcmp(obj.pdSpread,<span class="string">'sample'</span>) &amp;&amp; <span class="keyword">...</span>
+0463                     (lt(obj.swScores(targSampleIndex)-obj.smallVal, obj.minScore) || <span class="keyword">...</span>
+0464                      gt(obj.swScores(targSampleIndex)+obj.smallVal, obj.maxScore) || <span class="keyword">...</span>
+0465                      obj.scores(targSampleIndex)-obj.smallVal == obj.minScore || <span class="keyword">...</span>
+0466                      obj.scores(targSampleIndex)+obj.smallVal == obj.maxScore))
+0467                 
+0468                     recalculate = true;
+0469                 <span class="keyword">else</span>
+0470                    <span class="comment">%we can do a local update</span>
+0471                 
+0472                    found = false;
+0473                    
+0474                    <span class="comment">% find the old bin:</span>
+0475                    <span class="keyword">for</span> i=1:(length(obj.swBins))
+0476                      
+0477                        
+0478                        <span class="keyword">if</span> (obj.scores(targSampleIndex) &gt;= obj.swBins(i) - 0.5*binSize <span class="keyword">...</span>
+0479                                &amp;&amp; obj.scores(targSampleIndex) &lt; obj.swBins(i)+0.5*binSize) 
+0480                                
+0481                            <span class="comment">%remove the old score</span>
+0482                            rawEnt = rawEnt - obj.swpd(i)*log(obj.swpd(i)+1)/length(obj.pd);
+0483                            obj.swpd(i) = obj.swpd(i) - 1/length(obj.scores);
+0484                            rawEnt = rawEnt + obj.swpd(i)*log(obj.swpd(i)+1)/length(obj.pd);
+0485                            found = true; 
+0486                            <span class="keyword">break</span>;
+0487                        <span class="keyword">end</span>
+0488                    <span class="keyword">end</span>
+0489                    
+0490                    <span class="keyword">if</span> found == false
+0491                        error(<span class="string">'unable to find the swap bin'</span>);
+0492                    <span class="keyword">end</span>
+0493                    
+0494                    found = false;
+0495                   
+0496                     <span class="keyword">for</span> i=1:(length(obj.swBins))
+0497                        <span class="keyword">if</span> obj.swScores(targSampleIndex) &gt;= obj.swBins(i) - 0.5*binSize <span class="keyword">...</span>
+0498                                &amp;&amp; obj.swScores(targSampleIndex) &lt; obj.swBins(i) + 0.5*binSize
+0499                            <span class="comment">%add the new score</span>
+0500                            
+0501                            rawEnt = rawEnt - obj.swpd(i)*log(obj.swpd(i)+1)/length(obj.pd);
+0502                            obj.swpd(i) = obj.swpd(i) + 1/length(obj.scores);
+0503                            rawEnt = rawEnt + obj.swpd(i)*log(obj.swpd(i)+1)/length(obj.pd);
+0504                            
+0505                             found = true;
+0506                            <span class="keyword">break</span>;
+0507                        <span class="keyword">end</span>
+0508                     <span class="keyword">end</span>  
+0509                    
+0510                    <span class="keyword">if</span> found == false
+0511                        error(<span class="string">'unable to find the swap bin'</span>);
+0512                    <span class="keyword">end</span>
+0513                    
+0514                 <span class="keyword">end</span>                
+0515              <span class="keyword">end</span>
+0516                                
+0517              <span class="keyword">if</span> feederdf == obj.s1
+0518                 
+0519                 obj.swScores(feederdfIndex) =  <span class="keyword">...</span>
+0520                     targSample.zdata{obj.s1Col}(targSampleIndex);
+0521  
+0522                 <span class="comment">% if using the sample's spread and the new score could</span>
+0523                 <span class="comment">% exceed the existing bounds, recalculate from sractch</span>
+0524                 <span class="keyword">if</span>(strcmp(obj.pdSpread,<span class="string">'sample'</span>) &amp;&amp; <span class="keyword">...</span>
+0525                         (lt(obj.swScores(feederdfIndex)-obj.smallVal, obj.minScore) || <span class="keyword">...</span>
+0526                          gt(obj.swScores(feederdfIndex)+obj.smallVal, obj.maxScore) || <span class="keyword">...</span>
+0527                          obj.scores(feederdfIndex)-obj.smallVal == obj.minScore || <span class="keyword">...</span>
+0528                          obj.scores(feederdfIndex)+obj.smallVal == obj.maxScore))
+0529                 
+0530                     recalculate = true;
+0531                 <span class="keyword">else</span>
+0532                    <span class="comment">%we can do a local update</span>
+0533                   
+0534                    found = false;
+0535                    
+0536 
+0537                    
+0538                    <span class="comment">% find the old bin:</span>
+0539                    <span class="keyword">for</span> i=1:(length(obj.swBins))
+0540                        <span class="keyword">if</span> obj.scores(feederdfIndex) &gt;= obj.swBins(i) - 0.5*binSize <span class="keyword">...</span>
+0541                                &amp;&amp; obj.scores(feederdfIndex) &lt; obj.swBins(i) + 0.5*binSize
+0542                            <span class="comment">%remove the old score</span>
+0543                            rawEnt = rawEnt - obj.swpd(i)*log(obj.swpd(i)+1)/length(obj.pd);
+0544                            obj.swpd(i) = obj.swpd(i) - 1/length(obj.scores);
+0545                            rawEnt = rawEnt + obj.swpd(i)*log(obj.swpd(i)+1)/length(obj.pd);
+0546                             
+0547                            found = true;
+0548                            <span class="keyword">break</span>;
+0549                        <span class="keyword">end</span>
+0550                    <span class="keyword">end</span>
+0551                    
+0552                    <span class="keyword">if</span> found == false
+0553                        error(<span class="string">'Unable to find the old bin'</span>);
+0554                    <span class="keyword">end</span>
+0555                    
+0556                    found = false;
+0557                     <span class="keyword">for</span> i=1:(length(obj.swBins))
+0558                        <span class="keyword">if</span> obj.swScores(feederdfIndex) &gt;= obj.swBins(i) - 0.5*binSize <span class="keyword">...</span>
+0559                                &amp;&amp; obj.swScores(feederdfIndex) &lt; obj.swBins(i) + 0.5*binSize
+0560                            <span class="comment">%add the new score</span>
+0561                            rawEnt = rawEnt - obj.swpd(i)*log(obj.swpd(i)+1)/length(obj.pd);
+0562                            obj.swpd(i) = obj.swpd(i) + 1/length(obj.scores);
+0563                            rawEnt = rawEnt + obj.swpd(i)*log(obj.swpd(i)+1)/length(obj.pd);
+0564                          
+0565                            found = true;
+0566                            <span class="keyword">break</span>;
+0567                        <span class="keyword">end</span>
+0568                     <span class="keyword">end</span>    
+0569                     
+0570                     <span class="keyword">if</span> found == false
+0571                        error(<span class="string">'Unable to find an appropriate swbin for the data'</span>);
+0572                     <span class="keyword">end</span>
+0573                    
+0574                 <span class="keyword">end</span>                
+0575             <span class="keyword">end</span>
+0576             
+0577             <span class="comment">% a local update is possible if neither of the swap scores</span>
+0578             <span class="comment">% exceeds the current spread.</span>
+0579             
+0580             <span class="comment">%recalculate = true;</span>
+0581             
+0582             <span class="keyword">if</span> recalculate == true
+0583                 <span class="comment">%re-derive all measures</span>
+0584                 minVal = min(obj.swScores);
+0585                 maxVal = max(obj.swScores);  
+0586                 
+0587                 minVal = minVal - obj.smallVal;
+0588                 maxVal = maxVal + obj.smallVal;
+0589                 
+0590                 <span class="comment">%now have min and max values, determine size of each bin:</span>
+0591                 obj.swMinScore = minVal;
+0592                 obj.swMaxScore = maxVal;
+0593 
+0594                 spread  = maxVal - minVal;            
+0595                 binSize = spread/obj.nbin;
+0596                 <span class="comment">% remove the small -1.0e-14 value to avoid rounding errors</span>
+0597                 <span class="comment">% that result in non-overlapping bins.  So long as this</span>
+0598                 <span class="comment">% number is &lt; e-16 then this appears to prevent these</span>
+0599                 <span class="comment">% rounding errors.  And so long as this number is</span>
+0600                 <span class="comment">% substantially smaller than smallVal it will not interfere</span>
+0601                 <span class="comment">% with the actual bin sizes (currently smallVal is &lt;</span>
+0602                 <span class="comment">% 1.0-e10)</span>
+0603                 obj.swBins = (minVal + 0.5*binSize):binSize:(maxVal - 0.5*binSize)+obj.smallVal;
+0604 
+0605                 <span class="keyword">for</span> i=1:length(obj.swBins)
+0606                     obj.swBins(i) = obj.swBins(i) - 1.0e-14;
+0607                 <span class="keyword">end</span>
+0608 
+0609                 obj.swpd = hist(obj.swScores,obj.swBins)/length(obj.scores);
+0610                 obj.swEnt = obj.swpd*log((obj.swpd+1)')/length(obj.pd);     
+0611                 obj.swEnt = -1* (obj.swEnt - 1/length(obj.pd)*log(1/length(obj.pd)+1)) / <span class="keyword">...</span>
+0612                     (1*log(2)/length(obj.pd) - 1/length(obj.pd)*log(1/length(obj.pd)+1));
+0613             
+0614             <span class="keyword">else</span>
+0615                 <span class="comment">% cannot exceed bounds because min and max were taken from</span>
+0616                 <span class="comment">% the population.  Proceed with local update</span>
+0617                 obj.swEnt = -1* (rawEnt - 1/length(obj.pd)*log(1/length(obj.pd)+1)) / <span class="keyword">...</span>
+0618                     (1*log(2)/length(obj.pd) - 1/length(obj.pd)*log(1/length(obj.pd)+1));
+0619                             
+0620             <span class="keyword">end</span>
+0621                
+0622             <span class="keyword">if</span> isnan(obj.swEnt)
+0623                 error(<span class="string">'NaN obtained during swEnt computation (perhaps there is missing data for an item?)'</span>);
+0624             <span class="keyword">end</span>
+0625       
+0626         <span class="keyword">end</span> <span class="comment">%swEntropy()</span>
+0627 
+0628         
+0629        <span class="comment">%% cost = acceptSwap() METHOD</span>
+0630         <a name="_sub7" href="#_subfunctions" class="code">function cost = acceptSwap(obj)</a>
+0631             <span class="comment">% alter internal variables to reflect accepted swap</span>
+0632             
+0633             
+0634             <span class="keyword">if</span> isnan(obj.swEnt) 
+0635                 <span class="comment">%do nothing, no need to swap</span>
+0636             <span class="keyword">else</span>
+0637                 obj.ent = obj.swEnt;
+0638                 obj.swEnt = NaN;
+0639                 obj.scores = obj.swScores;
+0640                 obj.swScores = NaN;
+0641 
+0642                obj.pd = obj.swpd;
+0643                obj.swpd = NaN;
+0644 
+0645                obj.minScore = obj.swMinScore;
+0646                obj.swMinScore = NaN;
+0647                obj.maxScore = obj.swMaxScore;
+0648                obj.swMaxScore = NaN;
+0649                
+0650                obj.bins = obj.swBins;
+0651                obj.swBins = NaN;
+0652                       
+0653             <span class="keyword">end</span>
+0654             
+0655             cost = <a href="#_sub8" class="code" title="subfunction cost = acceptSwap(obj)">acceptSwap</a>@<a href="genericConstraint.html" class="code" title="">genericConstraint</a>(obj);
+0656         <span class="keyword">end</span>
+0657 
+0658         <span class="comment">%% cost = rejectSwap() METHOD</span>
+0659         <a name="_sub8" href="#_subfunctions" class="code">function cost = rejectSwap(obj)</a>
+0660             <span class="comment">% set internal variables to reflect rejection of proposed swap</span>
+0661             obj.swEnt = NaN;
+0662             obj.swScores = NaN;
+0663             obj.swpd = NaN;
+0664             obj.swMinScore = NaN;
+0665             obj.swMaxScore = NaN;
+0666             
+0667             obj.swBins = NaN;
+0668                         
+0669             cost = <a href="#_sub9" class="code" title="subfunction cost = rejectSwap(obj)">rejectSwap</a>@<a href="genericConstraint.html" class="code" title="">genericConstraint</a>(obj);
+0670         <span class="keyword">end</span>
+0671         
+0672         <span class="comment">%% plotDistribution() METHOD</span>
+0673         <a name="_sub9" href="#_subfunctions" class="code">function plotDistribution(obj)</a>
+0674             <span class="comment">% plots the probability distribution used to calculate entropy</span>
+0675             
+0676             <span class="comment">% make the entropy figure the active figure</span>
+0677             <span class="keyword">if</span> isempty(obj.figHandle)
+0678                 obj.figHandle = figure(<span class="string">'Name'</span>,[<span class="string">'Entropy - '</span>,obj.s1.name, <span class="keyword">...</span>
+0679                     <span class="string">'|'</span>,obj.s1ColName],<span class="string">'NumberTitle'</span>,<span class="string">'off'</span>);
+0680                 
+0681             <span class="keyword">end</span>
+0682             
+0683             figure(obj.figHandle);
+0684             
+0685             <span class="keyword">if</span> isempty(obj.cost) == false &amp;&amp; isnan(obj.cost) == false <span class="comment">%the constraints have not been initialized</span>
+0686                 clf();
+0687                 
+0688 
+0689                 <span class="keyword">if</span> strcmp(obj.pdSpread,<span class="string">'sample'</span>)
+0690                     minVal = min(obj.s1.data{obj.s1Col});
+0691                     maxVal = max(obj.s1.data{obj.s1Col});
+0692                 <span class="keyword">elseif</span> strcmp(obj.pdSpread,<span class="string">'allItems'</span>)
+0693                     <span class="comment">%check in the population</span>
+0694                     minVal = min([obj.s1.population.data{obj.s1Col}]);
+0695                     maxVal = max([obj.s1.population.data{obj.s1Col}]);
+0696 
+0697                     <span class="comment">%check in all samples associated with the population (this</span>
+0698                     <span class="comment">%includes the original one</span>
+0699                     <span class="keyword">for</span> i=1:length(obj.s1.population.samples)
+0700                         minVal = min([minVal; <span class="keyword">...</span>
+0701                             obj.s1.population.samples(i).data{obj.s1Col}]);
+0702                         maxVal = max([maxVal; <span class="keyword">...</span>
+0703                             obj.s1.population.samples(i).data{obj.s1Col}]);                
+0704                     <span class="keyword">end</span>
+0705                 <span class="keyword">else</span>
+0706                     error(<span class="string">'Unsupported pdSpread in initEnt.  pdSpread must be &quot;sample&quot; or &quot;allItems&quot;'</span>);
+0707                 <span class="keyword">end</span>
+0708 
+0709                 <span class="comment">% add a smallVal to avoid boundary cases</span>
+0710                 minVal = minVal - obj.smallVal;
+0711                 maxVal = maxVal + obj.smallVal;
+0712 
+0713                 spread  = maxVal - minVal;            
+0714                 binSize = spread/obj.nbin;
+0715 
+0716                 <span class="comment">%smallVal added so that the last score is included (simulating</span>
+0717                 <span class="comment">%&lt;= rather than &lt;</span>
+0718                 tmpbins = (minVal+0.5*binSize):binSize:(maxVal-0.5*binSize)+obj.smallVal;
+0719 
+0720                 <span class="comment">% scale values to 0-1</span>
+0721                 tmppd = hist(obj.s1.data{obj.s1Col},obj.nbin)/length(obj.s1.data{obj.s1Col});
+0722                 
+0723                 bar(tmpbins,tmppd,<span class="string">'hist'</span>);
+0724                 ylim([0 1]);
+0725                 title([<span class="string">'Entropy - '</span>,obj.s1.name, <span class="keyword">...</span>
+0726                     <span class="string">'|'</span>,obj.s1ColName]);
+0727                  xlabel([obj.s1ColName, ]);<span class="comment">%' - each bar is centered on bin mid-point']);</span>
+0728                 ylabel(<span class="string">'p(item from a particular bin)'</span>);
+0729             <span class="keyword">else</span>
+0730                 clf();
+0731                 ylim([0 1]);
+0732                 title([<span class="string">'Entropy - '</span>,obj.s1.name, <span class="keyword">...</span>
+0733                     <span class="string">'|'</span>,obj.s1ColName]);
+0734                 xlabel([obj.s1ColName, ]);<span class="comment">%' - each bar is centered on bin mid-point']);</span>
+0735                 ylabel(<span class="string">'p(item from a particular bin)'</span>);
+0736                 text(0.5,0.5,<span class="string">'Cost must be initialized before data is plotted'</span>, <span class="keyword">...</span>
+0737                     <span class="string">'HorizontalAlignment'</span>,<span class="string">'center'</span>);
+0738             <span class="keyword">end</span>
+0739             
+0740 
+0741                       
+0742           
+0743         <span class="keyword">end</span>
+0744         
+0745     <span class="keyword">end</span>
+0746     
+0747 <span class="keyword">end</span>
+0748</pre></div>
+<hr><address>Generated on Fri 27-Jan-2012 16:18:41 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

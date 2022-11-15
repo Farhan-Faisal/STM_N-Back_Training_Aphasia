@@ -1,0 +1,652 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of softMatchCorrelConstraint</title>
+  <meta name="keywords" content="softMatchCorrelConstraint">
+  <meta name="description" content="- soft correlation matching constraint object">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="#">src</a> &gt; softMatchCorrelConstraint.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for .\src&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>softMatchCorrelConstraint
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>- soft correlation matching constraint object</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> - soft correlation matching constraint object
+
+ copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut
+
+    This file is part of SOS
+
+    SOS is free software: you can redistribute it and/or modify
+    it for academic and non-commercial purposes
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.  For commercial or for-profit
+    uses, please contact the authors (sos@cnbc.cmu.edu).
+
+    SOS is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="genericConstraint.html" class="code" title="">genericConstraint</a>	- parent class for constraints</li><li><a href="softConstraint.html" class="code" title="">softConstraint</a>	- parent class for soft constraints</li><li><a href="softMatchCorrelConstraint.html" class="code" title="">softMatchCorrelConstraint</a>	- soft correlation matching constraint object</li><li><a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>	- master print function that regulates cmd line output based on verbosity flags</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="genericConstraint.html" class="code" title="">genericConstraint</a>	- parent class for constraints</li><li><a href="softMatchCorrelConstraint.html" class="code" title="">softMatchCorrelConstraint</a>	- soft correlation matching constraint object</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function obj = softMatchCorrelConstraint(varargin)</a></li><li><a href="#_sub2" class="code">function cost = initCost(obj)</a></li><li><a href="#_sub3" class="code">function swCost = swapCost(obj,targSample,targSampleIndex, feederdf,feederdfIndex)</a></li><li><a href="#_sub4" class="code">function obj = initCorrel(obj)</a></li><li><a href="#_sub5" class="code">function swCorrel(obj,targSample,targSampleIndex, feederdf,feederdfIndex)</a></li><li><a href="#_sub6" class="code">function cost = matchCorrel(obj,x1,x2)</a></li><li><a href="#_sub7" class="code">function cost = acceptSwap(obj)</a></li><li><a href="#_sub8" class="code">function cost = rejectSwap(obj)</a></li><li><a href="#_sub9" class="code">function acceptSwapCorrel(obj)</a></li><li><a href="#_sub10" class="code">function rejectSwapCorrel(obj)</a></li><li><a href="#_sub11" class="code">function obj = constructSoftMatchCorrelConstraint(obj,varargin)</a></li><li><a href="#_sub12" class="code">function p = softMatchCorrelConstraintInputParserMatchCorrel()</a></li><li><a href="#_sub13" class="code">function p = parseMatchCorrelConstructorArgs(varargin)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% - soft correlation matching constraint object</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%    This file is part of SOS</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%    SOS is free software: you can redistribute it and/or modify</span>
+0008 <span class="comment">%    it for academic and non-commercial purposes</span>
+0009 <span class="comment">%    under the terms of the GNU General Public License as published by</span>
+0010 <span class="comment">%    the Free Software Foundation, either version 3 of the License, or</span>
+0011 <span class="comment">%    (at your option) any later version.  For commercial or for-profit</span>
+0012 <span class="comment">%    uses, please contact the authors (sos@cnbc.cmu.edu).</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%    SOS is distributed in the hope that it will be useful,</span>
+0015 <span class="comment">%    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+0016 <span class="comment">%    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+0017 <span class="comment">%    GNU General Public License for more details.</span>
+0018 
+0019 <span class="comment">%    You should have received a copy of the GNU General Public License</span>
+0020 <span class="comment">%    along with SOS (see COPYING.txt).</span>
+0021 <span class="comment">%    If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+0022 
+0023 classdef <a href="softMatchCorrelConstraint.html" class="code" title="">softMatchCorrelConstraint</a> &lt; <a href="softConstraint.html" class="code" title="">softConstraint</a>
+0024     <span class="comment">%% creates and supports soft matchCorrel constraints</span>
+0025     <span class="comment">%</span>
+0026     <span class="comment">% This class creates softMatchCorrelConstraint objects that measure the</span>
+0027     <span class="comment">% cost (in terms of matching a correlation across two variables)</span>
+0028     <span class="comment">% associated with the current items in a set, and subsequent to</span>
+0029     <span class="comment">% swapping a particular item with another items.</span>
+0030     <span class="comment">%</span>
+0031     <span class="comment">% Additional functionality and interface requirements are inherited</span>
+0032     <span class="comment">% from softConstraint.</span>
+0033     <span class="comment">%</span>
+0034     <span class="comment">% a beautiful property:</span>
+0035     <span class="comment">% correlation == covariance / stdev(x)stdev(y)</span>
+0036     <span class="comment">% BUT because both numerator and denominators standardize for number of</span>
+0037     <span class="comment">% observations, this cancels each other out, so also:</span>
+0038     <span class="comment">%   cor = SPxy / sqrt(SSx)*sqrt(SSy), where SP = sum of products</span>
+0039     <span class="comment">% This can be reduced to a set of very computationally efficient</span>
+0040     <span class="comment">% equations:</span>
+0041     <span class="comment">% SSx = Sum(x^2) - (Sum(x))^2/N  --- i.e., subtract correction factor</span>
+0042     <span class="comment">% AND: SPxy = Sum(xy) - Sum(x)*Sum(y)/N</span>
+0043     <span class="comment">% Gotta love algebra.  Pythagoras would be all over this...</span>
+0044     <span class="comment">%</span>
+0045     <span class="comment">% PROPERTIES</span>
+0046     <span class="comment">%     stat % the statistic to calculate (correlation)</span>
+0047     <span class="comment">%     comparison % handle to specific comparison calculator</span>
+0048     <span class="comment">%     initStats % handle to global stat initialization method</span>
+0049     <span class="comment">%     swStats % handle to local stat update method</span>
+0050     <span class="comment">%     acceptsw % handle to local accept swap method</span>
+0051     <span class="comment">%     rejectsw % handle to local reject swap method</span>
+0052     <span class="comment">%     s1 % sample1</span>
+0053     <span class="comment">%     s2 % sample2</span>
+0054     <span class="comment">%     s1Col %s1 column index</span>
+0055     <span class="comment">%     s2Col %s2 column index</span>
+0056     <span class="comment">%     s1ColName % name of column in s1</span>
+0057     <span class="comment">%     s2ColName % name of column in s2</span>
+0058     <span class="comment">%     targVal % target value to match for 1 sample-to-value matching</span>
+0059     <span class="comment">%     sumx1sq % sum of squares in sample 1</span>
+0060     <span class="comment">%     sumx1 % sum of sample 1</span>
+0061     <span class="comment">%     n1 % number of observations in sample 1</span>
+0062     <span class="comment">%     sumx2sq % same for sample 2</span>
+0063     <span class="comment">%     sumx2 % same for sample 2</span>
+0064     <span class="comment">%     n2 % same for sample 2</span>
+0065     <span class="comment">%     sumx1x2 % sum of product of x1 and x2, across all items</span>
+0066     <span class="comment">%     swpsumx1sq % same as above for swap set</span>
+0067     <span class="comment">%     swpsumx2sq % same as above for swap set</span>
+0068     <span class="comment">%     swpsumx1 % same as above for swap set</span>
+0069     <span class="comment">%     swpsumx2 % same as above for swap set</span>
+0070     <span class="comment">%     swpsumx1x2 % same as above for swap set</span>
+0071     <span class="comment">%     cor % the correlation between the two sets</span>
+0072     <span class="comment">%     swpcor % the correlation if the swap was applied.</span>
+0073     <span class="comment">%</span>
+0074     <span class="comment">% METHODS</span>
+0075     <span class="comment">%   function obj = softMatchCorrelConstraint(varargin) % constructor</span>
+0076     <span class="comment">%   cost = initCost() - Calculates, saves, and returns the cost value for the current items in the sample.</span>
+0077     <span class="comment">%   swCost = swapCost(targSample,targSampleIndex, feederdf,feederdfIndex) % Calculates the new cost if items from targSample and feederdf were swapped.</span>
+0078     <span class="comment">%   initCorrel() FUNCTION calculates the correlation and initializes the parameters needed for local stat updates</span>
+0079     <span class="comment">%   swCorrel(targSample,targSampleIndex, feederdf,feederdfIndex) % calculates the correlation if the swap were applied</span>
+0080     <span class="comment">%   matchCorrel(x1,x2) % cost function minimized by reduced differences on the statistic</span>
+0081     <span class="comment">%   acceptSwap() % generic acceptSwap function</span>
+0082     <span class="comment">%   cost = rejectSwap() % generic reject function</span>
+0083     <span class="comment">%   acceptSwapCorrel() % updates variables when the proposed swap is accepted for means</span>
+0084     <span class="comment">%   rejectSwapCorrel() % resets swap variables</span>
+0085     <span class="comment">%   constructSoftMatchCorrelConstraint(varargin)  % creates a constraint object</span>
+0086     <span class="comment">%</span>
+0087     <span class="comment">% METHODS (Static)</span>
+0088     <span class="comment">%   softMatchCorrelConstraintInputParserMatchCorrel() % generates an input parser with parameter / value pairs and validators for the constructor args</span>
+0089     <span class="comment">%</span>
+0090     <span class="comment">% METHODS (Static, Access = private)</span>
+0091     <span class="comment">%   p = parseMatchCorrelConstructorArgs(varargin) % parses the constructor args</span>
+0092 
+0093     <span class="comment">%% PROPERTIES</span>
+0094     properties
+0095         stat <span class="comment">% the statistic to calculate (correlation)</span>
+0096         comparison <span class="comment">% handle to specific comparison calculator</span>
+0097         initStats <span class="comment">% handle to global stat initialization method</span>
+0098         swStats <span class="comment">% handle to local stat update method</span>
+0099         acceptsw <span class="comment">% handle to local accept swap method</span>
+0100         rejectsw <span class="comment">% handle to local reject swap method</span>
+0101         s1 <span class="comment">% sample1</span>
+0102         s2 <span class="comment">% sample2</span>
+0103         s1Col <span class="comment">%s1 column index</span>
+0104         s2Col <span class="comment">%s2 column index</span>
+0105         s1ColName <span class="comment">% name of column in s1</span>
+0106         s2ColName <span class="comment">% name of column in s2</span>
+0107         targVal <span class="comment">% target value to match for 1 sample-to-value matching</span>
+0108         sumx1sq <span class="comment">% sum of squares in sample 1</span>
+0109         sumx1 <span class="comment">% sum of sample 1</span>
+0110         n1 <span class="comment">% number of observations in sample 1</span>
+0111         sumx2sq <span class="comment">% same for sample 2</span>
+0112         sumx2 <span class="comment">% same for sample 2</span>
+0113         n2 <span class="comment">% same for sample 2</span>
+0114         sumx1x2 <span class="comment">% sum of product of x1 and x2, across all items</span>
+0115         swpsumx1sq <span class="comment">% same as above for swap set</span>
+0116         swpsumx2sq <span class="comment">% same as above for swap set</span>
+0117         swpsumx1 <span class="comment">% same as above for swap set</span>
+0118         swpsumx2 <span class="comment">% same as above for swap set</span>
+0119         swpsumx1x2 <span class="comment">% same as above for swap set</span>
+0120         cor <span class="comment">% the correlation between the two sets</span>
+0121         swpcor <span class="comment">% the correlation if the swap was applied.</span>
+0122         
+0123     <span class="keyword">end</span>
+0124     
+0125     
+0126     <span class="comment">%% METHODS</span>
+0127     methods
+0128         
+0129         <span class="comment">%% softMatchCorrelConstraint CONSTRUCTOR</span>
+0130         <a name="_sub0" href="#_subfunctions" class="code">function obj = softMatchCorrelConstraint(varargin)</a>
+0131             <span class="comment">% Creates a soft distance constraint.  See the parse</span>
+0132             <span class="comment">% constructor args functions for parameters.</span>
+0133             
+0134             p = inputParser;
+0135             p.addParamValue(<span class="string">'fnc'</span>,<span class="string">'null'</span>, <span class="keyword">...</span>
+0136                 @(fnc)any(strcmp({<span class="string">'matchCorrel'</span>},fnc)));
+0137             p.KeepUnmatched = true;
+0138             p.parse(varargin{:});
+0139             
+0140             <span class="keyword">if</span> any(strcmp(p.Results.fnc,<span class="string">'matchCorrel'</span>))
+0141                 <span class="comment">% can create the matchCorrel constraint</span>
+0142                 obj = <a href="#_sub11" class="code" title="subfunction obj = constructSoftMatchCorrelConstraint(obj,varargin)">constructSoftMatchCorrelConstraint</a>(obj,varargin);
+0143             <span class="keyword">else</span>
+0144                 error([<span class="string">'Could not create a soft constraint with &lt;fnc&gt;: '</span>, <span class="keyword">...</span>
+0145                         p.Results.fnc]); 
+0146             <span class="keyword">end</span>
+0147             
+0148             obj.cost = NaN;
+0149             obj.swCost = NaN;
+0150             
+0151             
+0152             <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>(<span class="string">'Soft matchCorrel Constraint has been created'</span>, <span class="keyword">...</span>
+0153                     <span class="string">'softMatchCorrelConstraint_Constructor_endObjCreation'</span>);
+0154                     
+0155         <span class="keyword">end</span> <span class="comment">%constructor</span>
+0156         
+0157         
+0158         <span class="comment">%% cost = initCost() METHOD</span>
+0159         <a name="_sub1" href="#_subfunctions" class="code">function cost = initCost(obj)</a>
+0160             <span class="comment">% Calculates, saves, and returns the cost value for the current items in the sample.</span>
+0161             <span class="comment">%</span>
+0162             <span class="comment">%CALL:</span>
+0163             <span class="comment">%   &lt;softDistanceConstraint&gt;.initCost();</span>
+0164             <span class="comment">%</span>
+0165             <span class="comment">%SYNOPSIS:</span>
+0166             <span class="comment">% Calculates the cost for the current items in the sample based</span>
+0167             <span class="comment">% on the specified constraint.  This calculation is done on the</span>
+0168             <span class="comment">% global dataset, rather than using the differential local</span>
+0169             <span class="comment">% computation used when calculating swap costs.</span>
+0170             <span class="comment">%</span>
+0171           
+0172             <span class="comment">%init the stats, then compare them.  Return the calculated cost</span>
+0173             obj = obj.initStats(); 
+0174             cost = obj.comparison(obj.targVal,obj.cor); <span class="comment">%where we match the correlation...</span>
+0175             
+0176             obj.swpcor = NaN;
+0177             obj.swpsumx1sq = NaN;
+0178             obj.swpsumx2sq = NaN;
+0179             obj.swpsumx1 = NaN;
+0180             obj.swpsumx2 = NaN;
+0181             obj.swpsumx1x2 = NaN;
+0182             
+0183             obj.cost = cost;
+0184             obj.swCost = NaN;
+0185         <span class="keyword">end</span>
+0186         
+0187         <span class="comment">%%  swCost(targSample,targSampleIndex, feederdf,feederdfIndex) METHOD</span>
+0188         <a name="_sub2" href="#_subfunctions" class="code">function swCost = swapCost(obj,targSample,targSampleIndex, feederdf,feederdfIndex)</a>
+0189             <span class="comment">% Calculates the new cost if items from targSample and feederdf were swapped.</span>
+0190             <span class="comment">%</span>
+0191             <span class="comment">%By definition, if this method is called it means that at least</span>
+0192             <span class="comment">% one of the two swap objects is implicated in this function</span>
+0193             <span class="comment">%</span>
+0194             <span class="comment">%PARAMETERS:</span>
+0195             <span class="comment">%   targSample - the target sample (i.e., the object that will call it's swapSample() method if a swap later occurs).</span>
+0196             <span class="comment">%   targSampleIndex - row index of item to swap</span>
+0197             <span class="comment">%   feederdf - dataframe (sample/pop) containin the other item to swap</span>
+0198             <span class="comment">%   feederdfIndex - row index of item to swap.</span>
+0199                        
+0200            <span class="keyword">if</span> (obj.s1 ~= targSample &amp;&amp; obj.s2 ~= targSample <span class="keyword">...</span><span class="comment"> </span>
+0201                    &amp;&amp; obj.s1 ~= feederdf &amp;&amp; obj.s2  ~= feederdf)
+0202                error(<span class="string">'swCost called, but no sample part of this cost function'</span>);
+0203            <span class="keyword">end</span>
+0204 
+0205            
+0206            <span class="comment">% update the stats, then calculate cost of new stats</span>
+0207            obj.swStats(targSample,targSampleIndex, feederdf,feederdfIndex);
+0208  
+0209 
+0210             swCost = obj.comparison(obj.targVal,obj.swpcor);
+0211             obj.swCost = swCost;
+0212               
+0213         <span class="keyword">end</span>
+0214 
+0215         <span class="comment">%% obj = initCorrel() METHOD</span>
+0216         <a name="_sub3" href="#_subfunctions" class="code">function obj = initCorrel(obj)</a>
+0217             <span class="comment">%  calculates the correlation and initializes the parameters</span>
+0218             <span class="comment">%  needed for local stat updates</span>
+0219            
+0220             obj.sumx1sq = sum((obj.s1.zdata{obj.s1Col}).^2);
+0221             obj.sumx1 = sum((obj.s1.zdata{obj.s1Col}));
+0222             obj.n1 = length(obj.s1.zdata{obj.s1Col});
+0223             
+0224             obj.sumx2sq = sum((obj.s2.zdata{obj.s2Col}).^2);
+0225             obj.sumx2 = sum((obj.s2.zdata{obj.s2Col}));
+0226             obj.n2 = length(obj.s2.zdata{obj.s2Col});
+0227             
+0228             obj.sumx1x2 = (obj.s1.zdata{obj.s1Col})' * (obj.s2.zdata{obj.s2Col});
+0229             
+0230             ssx1 = obj.sumx1sq - ((obj.sumx1)^2)/obj.n1;
+0231             ssx2 = obj.sumx2sq - ((obj.sumx2)^2)/obj.n2;
+0232             
+0233             spx1x2 = obj.sumx1x2 - obj.sumx1*obj.sumx2/obj.n1;
+0234             
+0235             
+0236             <span class="keyword">if</span>(ssx1 == 0 &amp;&amp; ssx2 == 0) <span class="comment">% no variance in either condition, define correlation as being perfect in this case</span>
+0237                 obj.cor = 1;
+0238             <span class="keyword">elseif</span>(ssx1 == 0 || ssx2 == 0)
+0239                 obj.cor = 0;
+0240             <span class="keyword">else</span> <span class="comment">% compute correlation normally</span>
+0241                 obj.cor = spx1x2/(sqrt(ssx1)*sqrt(ssx2));
+0242             <span class="keyword">end</span>
+0243                        
+0244             obj.swpcor = NaN;
+0245             obj.swpsumx1sq = NaN;
+0246             obj.swpsumx2sq = NaN;
+0247             obj.swpsumx1 = NaN;
+0248             obj.swpsumx2 = NaN;
+0249             obj.swpsumx1x2 = NaN;
+0250         <span class="keyword">end</span>
+0251         
+0252         
+0253         <span class="comment">%% swCorrel(targSample,targSampleIndex,feederdf,feederdfIndex) METHOD</span>
+0254         <a name="_sub4" href="#_subfunctions" class="code">function swCorrel(obj,targSample,targSampleIndex, feederdf,feederdfIndex)</a>
+0255             <span class="comment">% calculates the correlation if the swap were applied</span>
+0256             obj.swpsumx1sq = obj.sumx1sq;
+0257             obj.swpsumx2sq = obj.sumx2sq;
+0258             obj.swpsumx1 = obj.sumx1;
+0259             obj.swpsumx2 = obj.sumx2;
+0260             obj.swpsumx1x2 = obj.sumx1x2;
+0261                        
+0262             <span class="comment">%NOTE: if both target and feeder are identical, swapping items</span>
+0263             <span class="comment">%within those two samples will not change the correlation.</span>
+0264             <span class="comment">%This could be leveraged to simplify the conditionalization.</span>
+0265             
+0266              <span class="keyword">if</span> targSample == obj.s1
+0267                 <span class="comment">%must update 2 params %first, take out the old observation, then add in thew new</span>
+0268                 obj.swpsumx1sq = obj.swpsumx1sq - (targSample.zdata{obj.s1Col}(targSampleIndex))^2;
+0269                 obj.swpsumx1 = obj.swpsumx1 - (targSample.zdata{obj.s1Col}(targSampleIndex));                
+0270                 obj.swpsumx1sq = obj.swpsumx1sq + (feederdf.zdata{obj.s1Col}(feederdfIndex))^2;
+0271                 obj.swpsumx1 = obj.swpsumx1 + (feederdf.zdata{obj.s1Col}(feederdfIndex));
+0272              <span class="keyword">end</span>
+0273              
+0274              <span class="keyword">if</span> targSample == obj.s2
+0275                 obj.swpsumx2sq = obj.swpsumx2sq - (targSample.zdata{obj.s2Col}(targSampleIndex))^2;
+0276                 obj.swpsumx2 = obj.swpsumx2 - (targSample.zdata{obj.s2Col}(targSampleIndex));                
+0277                 obj.swpsumx2sq = obj.swpsumx2sq + (feederdf.zdata{obj.s2Col}(feederdfIndex))^2;
+0278                 obj.swpsumx2 = obj.swpsumx2 + (feederdf.zdata{obj.s2Col}(feederdfIndex)); 
+0279              <span class="keyword">end</span>
+0280             
+0281           
+0282             <span class="keyword">if</span> feederdf == obj.s1
+0283                 obj.swpsumx1sq = obj.swpsumx1sq -  (feederdf.zdata{obj.s1Col}(feederdfIndex))^2;
+0284                 obj.swpsumx1 = obj.swpsumx1 - (feederdf.zdata{obj.s1Col}(feederdfIndex));                
+0285                 obj.swpsumx1sq = obj.swpsumx1sq + (targSample.zdata{obj.s1Col}(targSampleIndex))^2;
+0286                 obj.swpsumx1 = obj.swpsumx1 + (targSample.zdata{obj.s1Col}(targSampleIndex));                   
+0287             <span class="keyword">end</span>
+0288             
+0289             <span class="keyword">if</span> feederdf == obj.s2
+0290                 obj.swpsumx2sq = obj.swpsumx2sq -  (feederdf.zdata{obj.s2Col}(feederdfIndex))^2;
+0291                 obj.swpsumx2 = obj.swpsumx2 - (feederdf.zdata{obj.s2Col}(feederdfIndex));                
+0292                 obj.swpsumx2sq = obj.swpsumx2sq + (targSample.zdata{obj.s2Col}(targSampleIndex))^2;
+0293                 obj.swpsumx2 = obj.swpsumx2 + (targSample.zdata{obj.s2Col}(targSampleIndex)); 
+0294             <span class="keyword">end</span>  
+0295 
+0296             <span class="comment">% Special overrides</span>
+0297             
+0298             <span class="keyword">if</span> targSample == obj.s1 &amp;&amp; targSample ~= obj.s2
+0299                 obj.swpsumx1x2 = obj.swpsumx1x2 - (targSample.zdata{obj.s1Col}(targSampleIndex)) * obj.s2.zdata{obj.s2Col}(targSampleIndex);
+0300                 obj.swpsumx1x2 = obj.swpsumx1x2 + (feederdf.zdata{obj.s1Col}(feederdfIndex))     * obj.s2.zdata{obj.s2Col}(targSampleIndex);
+0301             <span class="keyword">elseif</span> targSample == obj.s2 &amp;&amp; targSample ~= obj.s1               
+0302                 obj.swpsumx1x2 = obj.swpsumx1x2 - (targSample.zdata{obj.s2Col}(targSampleIndex)) * obj.s1.zdata{obj.s1Col}(targSampleIndex);
+0303                 obj.swpsumx1x2 = obj.swpsumx1x2 + (feederdf.zdata{obj.s2Col}(feederdfIndex))     * obj.s1.zdata{obj.s1Col}(targSampleIndex);                
+0304             <span class="keyword">elseif</span> targSample == obj.s1 &amp;&amp; targSample == obj.s2
+0305                 obj.swpsumx1x2 = obj.swpsumx1x2 - (obj.s1.zdata{obj.s1Col}(targSampleIndex)) * obj.s2.zdata{obj.s2Col}(targSampleIndex);
+0306                 obj.swpsumx1x2 = obj.swpsumx1x2 + (feederdf.zdata{obj.s1Col}(feederdfIndex))     * feederdf.zdata{obj.s2Col}(feederdfIndex);                
+0307             <span class="keyword">end</span>
+0308             
+0309             
+0310              <span class="keyword">if</span> feederdf == obj.s1 &amp;&amp; feederdf ~= obj.s2
+0311                 obj.swpsumx1x2 = obj.swpsumx1x2 - (feederdf.zdata{obj.s1Col}(feederdfIndex))     * obj.s2.zdata{obj.s2Col}(feederdfIndex);
+0312                 obj.swpsumx1x2 = obj.swpsumx1x2 + (targSample.zdata{obj.s1Col}(targSampleIndex)) * obj.s2.zdata{obj.s2Col}(feederdfIndex); 
+0313              <span class="keyword">elseif</span> feederdf == obj.s2 &amp;&amp; feederdf ~= obj.s1               
+0314                 obj.swpsumx1x2 = obj.swpsumx1x2 - (feederdf.zdata{obj.s2Col}(feederdfIndex))     * obj.s1.zdata{obj.s1Col}(feederdfIndex);
+0315                 obj.swpsumx1x2 = obj.swpsumx1x2 + (targSample.zdata{obj.s2Col}(targSampleIndex)) * obj.s1.zdata{obj.s1Col}(feederdfIndex); 
+0316                <span class="keyword">elseif</span> feederdf == obj.s1 &amp;&amp; feederdf == obj.s2
+0317                 obj.swpsumx1x2 = obj.swpsumx1x2 - (obj.s1.zdata{obj.s1Col}(feederdfIndex)) * obj.s2.zdata{obj.s2Col}(feederdfIndex);
+0318                 obj.swpsumx1x2 = obj.swpsumx1x2 + (targSample.zdata{obj.s1Col}(targSampleIndex))     * targSample.zdata{obj.s2Col}(targSampleIndex);                
+0319              <span class="keyword">end</span>           
+0320             
+0321             <span class="keyword">if</span>((targSample ~= feederdf) &amp;&amp; <span class="keyword">...</span>
+0322                     (targSample == obj.s1 || targSample == obj.s2) &amp;&amp; <span class="keyword">...</span>
+0323                     (feederdf == obj.s1 || feederdf == obj.s2) &amp;&amp; <span class="keyword">...</span>
+0324                     targSampleIndex == feederdfIndex  &amp;&amp; <span class="keyword">...</span>
+0325                     obj.s1Col == obj.s2Col)
+0326                 obj.swpsumx1x2 = obj.sumx1x2;
+0327             <span class="keyword">end</span>
+0328                 
+0329                 
+0330            <span class="keyword">if</span>((targSample ~= feederdf) &amp;&amp; <span class="keyword">...</span>
+0331                     (targSample == obj.s1 || targSample == obj.s2) &amp;&amp; <span class="keyword">...</span>
+0332                     (feederdf == obj.s1 || feederdf == obj.s2) &amp;&amp; <span class="keyword">...</span>
+0333                     targSampleIndex == feederdfIndex  &amp;&amp; <span class="keyword">...</span>
+0334                     obj.s1Col ~= obj.s2Col)
+0335                 
+0336                     obj.swpsumx1x2 = obj.sumx1x2 - obj.s1.zdata{obj.s1Col}(targSampleIndex) * obj.s2.zdata{obj.s2Col}(feederdfIndex) + <span class="keyword">...</span>
+0337                         obj.s2.zdata{obj.s1Col}(feederdfIndex) * obj.s1.zdata{obj.s2Col}(targSampleIndex);             
+0338            <span class="keyword">end</span> 
+0339 
+0340             
+0341             swpssx1 = obj.swpsumx1sq - ((obj.swpsumx1)^2)/obj.n1;
+0342             swpssx2 = obj.swpsumx2sq - ((obj.swpsumx2)^2)/obj.n2;
+0343             
+0344             swpspx1x2 = obj.swpsumx1x2 - obj.swpsumx1*obj.swpsumx2/obj.n1;
+0345             
+0346             
+0347             <span class="keyword">if</span>(swpssx1 == 0 &amp;&amp; swpssx2 == 0) <span class="comment">% no variance in either condition, define correlation as being perfect in this case</span>
+0348                 obj.swpcor = 1;
+0349             <span class="keyword">elseif</span>(swpssx1 == 0 || swpssx2 == 0)
+0350                 obj.swpcor = 0;
+0351             <span class="keyword">else</span> <span class="comment">% compute correlation normally</span>
+0352                 obj.swpcor = swpspx1x2/(sqrt(swpssx1)*sqrt(swpssx2));
+0353             <span class="keyword">end</span>       
+0354             
+0355             
+0356         <span class="keyword">end</span>
+0357         
+0358 
+0359         
+0360         <span class="comment">%% matchCorrel() METHOD</span>
+0361         <a name="_sub5" href="#_subfunctions" class="code">function cost = matchCorrel(obj,x1,x2)</a>
+0362             <span class="comment">% cost function minimized by reduced differences on the statistic</span>
+0363             cost = ((abs(x2-x1)/2)^obj.exp)*obj.weight;
+0364             
+0365         <span class="keyword">end</span> <span class="comment">% matchCorrel</span>
+0366         
+0367         
+0368         <span class="comment">%% cost = acceptSwap() METHOD</span>
+0369         <a name="_sub6" href="#_subfunctions" class="code">function cost = acceptSwap(obj)        </a>
+0370             <span class="comment">%generic acceptSwap function</span>
+0371             obj.acceptsw();
+0372             cost = <a href="#_sub7" class="code" title="subfunction cost = acceptSwap(obj)">acceptSwap</a>@<a href="genericConstraint.html" class="code" title="">genericConstraint</a>(obj);
+0373         <span class="keyword">end</span>
+0374         
+0375         <span class="comment">%% cost = rejectSwap()  METHOD</span>
+0376         <a name="_sub7" href="#_subfunctions" class="code">function cost = rejectSwap(obj)</a>
+0377             <span class="comment">%generic reject function</span>
+0378             obj.rejectsw();
+0379             cost = <a href="#_sub8" class="code" title="subfunction cost = rejectSwap(obj)">rejectSwap</a>@<a href="genericConstraint.html" class="code" title="">genericConstraint</a>(obj);
+0380         <span class="keyword">end</span>
+0381         
+0382         <span class="comment">%% acceptSwapCorrel() METHOD</span>
+0383         <a name="_sub8" href="#_subfunctions" class="code">function acceptSwapCorrel(obj)</a>
+0384             <span class="comment">% updates variables when the proposed swap is accepted for</span>
+0385             <span class="comment">% means</span>
+0386             
+0387             <span class="keyword">if</span>(isnan(obj.swpcor))
+0388                 <span class="comment">%do nothing, this method does not need to update</span>
+0389             <span class="keyword">else</span>
+0390             obj.sumx1sq = obj.swpsumx1sq;
+0391             obj.sumx2sq = obj.swpsumx2sq;
+0392             obj.sumx1 = obj.swpsumx1;
+0393             obj.sumx2 = obj.swpsumx2;
+0394             obj.sumx1x2 = obj.swpsumx1x2;
+0395             obj.cor = obj.swpcor;
+0396             
+0397             
+0398             obj.rejectSwapCorrel();
+0399             
+0400             <span class="keyword">end</span>
+0401         <span class="keyword">end</span>      
+0402         
+0403         <span class="comment">%% rejectSwapCorrel() METHOD</span>
+0404         <a name="_sub9" href="#_subfunctions" class="code">function rejectSwapCorrel(obj)</a>
+0405             <span class="comment">%resets swap variables</span>
+0406             obj.swpcor = NaN;
+0407             obj.swpsumx1sq = NaN;
+0408             obj.swpsumx2sq = NaN;
+0409             obj.swpsumx1 = NaN;
+0410             obj.swpsumx2 = NaN;
+0411             obj.swpsumx1x2 = NaN;                        
+0412         <span class="keyword">end</span>
+0413         
+0414         <span class="comment">%% obj = constructSoftMatchCorrelConstraint(varargin) METHOD</span>
+0415         <a name="_sub10" href="#_subfunctions" class="code">function obj = constructSoftMatchCorrelConstraint(obj,varargin)</a>
+0416             <span class="comment">% creates a constraint object</span>
+0417             <span class="comment">% CONSTRUCTOR - Creates a softDistanceConstraint object</span>
+0418             <span class="comment">%</span>
+0419             <span class="comment">% CALL:</span>
+0420             <span class="comment">% softDistanceConstraint(varargin&lt;defined below&gt;)</span>
+0421             <span class="comment">%</span>
+0422             <span class="comment">% PARAMETERS:</span>
+0423             <span class="comment">% REQUIRED:</span>
+0424             <span class="comment">%   'sosObj'/sos object - the SOS object the constraint will be linked to, and which contains the samples the constraint operates on.</span>
+0425             <span class="comment">%   'constraintType'/'soft' - the type of contraint - must be 'soft'</span>
+0426             <span class="comment">%   'fnc'/'matchCorrel' the distance function to create.</span>
+0427             <span class="comment">%   'sample1'/sample - the first sample</span>
+0428             <span class="comment">%   'sample2'/sample - the second sample</span>
+0429             <span class="comment">%   's1ColName'/string - name of column in 1st sample</span>
+0430             <span class="comment">%   's2ColName'/string - name of column in 2nd sample</span>
+0431             <span class="comment">%   'targVal'/integer [-1,1] - target correlation to match</span>
+0432 
+0433             <span class="comment">% OPTIONAL:</span>
+0434             <span class="comment">%   'exponent'/numeric - defaults to 2 (quadratic difference)</span>
+0435             <span class="comment">%   'weight'/numeric - defaults to 1 (equal weighting of all soft costs)</span>
+0436             <span class="comment">%</span>
+0437             <span class="comment">% EXAMPLE:</span>
+0438             <span class="comment">%     c2 = mySOS.addConstraint('sosObj',mySOS,'name','matchFreqCorrelConstraint','constraintType', ...</span>
+0439             <span class="comment">%     'soft','fnc','matchCorrel',...</span>
+0440             <span class="comment">%     'sample1',mySample1,'s1ColName','KFfrequency', ...</span>
+0441             <span class="comment">%     'sample2',mySample2,'s2ColName','KFfrequency','targVal',1,'exponent',2,'weight',1);</span>
+0442             
+0443                         
+0444             p = softMatchCorrelConstraint.parseMatchCorrelConstructorArgs(varargin{:});
+0445             
+0446             <span class="keyword">if</span>(p.Results.sosObj.containsSample(p.Results.sample1) == false)
+0447                 error(<span class="string">'Cannot create soft distance constraint: sos Object does not contain the sample1'</span>);
+0448             <span class="keyword">end</span>
+0449             
+0450             <span class="keyword">if</span>(p.Results.sosObj.containsSample(p.Results.sample2) == false)
+0451                 error(<span class="string">'Cannot create soft distance constraint: sos Object does not contain sample2'</span>);
+0452             <span class="keyword">end</span>
+0453             
+0454             
+0455             col1 = p.Results.sample1.colName2colNum(p.Results.s1ColName);           
+0456             <span class="keyword">if</span>(col1 == -1)
+0457                 error(<span class="string">'Specified column name not found in sample1'</span>);
+0458             <span class="keyword">end</span>
+0459             
+0460             <span class="keyword">if</span>(strcmp(p.Results.sample1.format{col1},<span class="string">'%f'</span>) == 0)
+0461                 error(<span class="string">'Specified column is not of numeric (%f) format, so cannot use as soft constraint'</span>);
+0462             <span class="keyword">end</span>           
+0463                        
+0464             col2 = p.Results.sample2.colName2colNum(p.Results.s2ColName);            
+0465             <span class="keyword">if</span>(col2 == -1)
+0466                 error(<span class="string">'Specified column name not found in sample'</span>);
+0467             <span class="keyword">end</span>
+0468             
+0469             <span class="keyword">if</span>(strcmp(p.Results.sample2.format{col2},<span class="string">'%f'</span>) == 0)
+0470                 error(<span class="string">'Specified column is not of numeric (%f) format, so cannot use as soft constraint; 2nd sample'</span>);
+0471             <span class="keyword">end</span>           
+0472             
+0473             <span class="comment">%if the lengths are not going to be identical, do not run the</span>
+0474             <span class="comment">%correlation.  The init and swap methods will ensure</span>
+0475             <span class="comment">%that if practically the data are NaN, the optimization will</span>
+0476             <span class="comment">%stop.</span>
+0477 
+0478             <span class="keyword">if</span> length(p.Results.sample1.n) ~= length(p.Results.sample2.n)
+0479                 error(<span class="string">'Sample sizes must be equal if using paired matching'</span>);
+0480             <span class="keyword">end</span>
+0481 
+0482             <span class="comment">% Assign the comparison function appropriate for the constraint</span>
+0483             
+0484             <span class="comment">%ASSIGN HANDLE TO STAT CALCULATION METHOD</span>
+0485 
+0486             obj.initStats = @obj.initCorrel;
+0487             obj.swStats = @obj.swCorrel;
+0488             obj.acceptsw = @obj.acceptSwapCorrel;
+0489             obj.rejectsw = @obj.rejectSwapCorrel;
+0490             
+0491             <span class="comment">% ASSIGN HANDLE TO DIFFERENCE COMPARISON METHOD</span>
+0492             <span class="comment">% Group differences:</span>
+0493             <span class="keyword">if</span>(strcmp(p.Results.fnc,<span class="string">'matchCorrel'</span>))
+0494                 obj.comparison = @obj.matchCorrel;
+0495             <span class="keyword">else</span>
+0496                 error(<span class="string">'function not yet supported'</span>);
+0497             <span class="keyword">end</span>
+0498             
+0499             <span class="comment">% parent properties</span>
+0500             obj.sosObj = p.Results.sosObj;
+0501             obj.constraintType = p.Results.constraintType;
+0502             obj.fnc = p.Results.fnc;
+0503             
+0504             
+0505             obj.weight = p.Results.weight;
+0506             obj.exp = p.Results.exponent;  
+0507             
+0508             <span class="keyword">if</span>(p.Results.targVal &lt; -1 || p.Results.targVal &gt; 1 || isnan(p.Results.targVal))
+0509                 error(<span class="string">'Target correlation value must be a number -1 &lt;= targ &lt;= 1'</span>);
+0510             <span class="keyword">end</span>
+0511             
+0512             obj.targVal = p.Results.targVal;
+0513             
+0514             obj.s1 = p.Results.sample1;
+0515             obj.s2 = p.Results.sample2;
+0516             obj.s1Col = col1;
+0517             obj.s2Col = col2;           
+0518             obj.s1ColName = p.Results.s1ColName;
+0519             obj.s2ColName = p.Results.s2ColName;           
+0520             
+0521             <span class="comment">% add the name and the label</span>
+0522             obj.label = [obj.constraintType,<span class="string">'_'</span>,obj.fnc,<span class="string">'_'</span>,<span class="keyword">...</span>
+0523                     obj.targVal,<span class="string">'_'</span>,<span class="keyword">...</span>
+0524                     obj.s1.name,<span class="string">'_'</span>,obj.s1ColName,<span class="string">'_'</span>,<span class="keyword">...</span>
+0525                     obj.s2.name,<span class="string">'_'</span>,obj.s2ColName,<span class="string">'_'</span>,<span class="keyword">...</span>
+0526                     <span class="string">'p'</span>,<span class="string">'1'</span>,<span class="string">'_w'</span>,<span class="keyword">...</span>
+0527                     num2str(obj.weight),<span class="string">'_e'</span>,num2str(obj.exp)];              
+0528             <span class="keyword">if</span> any(strcmp(p.UsingDefaults,<span class="string">'name'</span>))                 
+0529                 obj.name = obj.label;
+0530             <span class="keyword">else</span>
+0531                  obj.name = p.Results.name;  
+0532             <span class="keyword">end</span>               
+0533         <span class="keyword">end</span> <span class="comment">%construct2SampleSoftDistanceConstraint</span>
+0534         
+0535         
+0536     <span class="keyword">end</span>
+0537     
+0538     methods (Static)
+0539         <span class="comment">%% p = softMatchCorrelConstraintInputParserMatchCorrel() STATIC METHOD</span>
+0540         <a name="_sub11" href="#_subfunctions" class="code">function p = softMatchCorrelConstraintInputParserMatchCorrel()</a>
+0541             <span class="comment">% generates an input parser with parameter / value pairs and validators for the constructor args</span>
+0542             <span class="comment">%</span>
+0543             <span class="comment">% See constructor help/doc for more details</span>
+0544             
+0545             p = inputParser;
+0546 
+0547             <span class="comment">%NOTE: though these technically are 'optional' according to</span>
+0548             <span class="comment">%MATLAB's definition of what an input parser does, the fact</span>
+0549             <span class="comment">%that most of their default values will fail validation in all cases</span>
+0550             <span class="comment">%makes them de facto required parameters.</span>
+0551             
+0552             p.addParamValue(<span class="string">'sosObj'</span>,<span class="string">'null'</span>,@(sosObj)strcmp(class(sosObj),<span class="string">'sos'</span>));
+0553             p.addParamValue(<span class="string">'constraintType'</span>, <span class="string">'null'</span>, <span class="keyword">...</span>
+0554                 @(constraintType)any(strcmp({<span class="string">'soft'</span>},constraintType)));
+0555             p.addParamValue(<span class="string">'fnc'</span>,<span class="string">'null'</span>, <span class="keyword">...</span>
+0556                  @(fnc)any(strcmp({<span class="string">'matchCorrel'</span>},fnc)));
+0557             p.addParamValue(<span class="string">'sample1'</span>,<span class="string">'null'</span>,@(sample1)strcmp(class(sample1),<span class="string">'sample'</span>));
+0558             p.addParamValue(<span class="string">'sample2'</span>,<span class="string">'null'</span>,@(sample2)strcmp(class(sample2),<span class="string">'sample'</span>));
+0559             p.addParamValue(<span class="string">'s1ColName'</span>,<span class="string">''</span>,@(s1ColName)ischar(s1ColName));
+0560             p.addParamValue(<span class="string">'s2ColName'</span>,<span class="string">''</span>,@(s2ColName)ischar(s2ColName));
+0561             p.addParamValue(<span class="string">'targVal'</span>,NaN,@(targVal)isnumeric(targVal));
+0562             p.addParamValue(<span class="string">'exponent'</span>,2,@(exponent)isnumeric(exponent));
+0563             p.addParamValue(<span class="string">'weight'</span>,1,@(weight)isnumeric(weight));
+0564             p.addParamValue(<span class="string">'name'</span>,<span class="string">'noname'</span>,@(name)ischar(name));
+0565             
+0566         <span class="keyword">end</span>
+0567         
+0568         
+0569     <span class="keyword">end</span>
+0570     
+0571     methods (Static, Access = private)
+0572         
+0573         <span class="comment">%% p = parseMatchCorrelConstructorArgs(varargin) STATIC PRIVATE FUNCTION</span>
+0574         <a name="_sub12" href="#_subfunctions" class="code">function p = parseMatchCorrelConstructorArgs(varargin)</a>
+0575             <span class="comment">% parses the constructor args</span>
+0576             <span class="comment">%</span>
+0577             <span class="comment">% See constructor help/doc for more info</span>
+0578                         
+0579             varargin = varargin{1};
+0580             p = softMatchCorrelConstraint.softMatchCorrelConstraintInputParserMatchCorrel();
+0581             p.parse(varargin{:});
+0582         <span class="keyword">end</span>
+0583         
+0584     <span class="keyword">end</span>
+0585     
+0586     
+0587 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Fri 27-Jan-2012 16:18:41 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,115 @@
+orderID,run,list,file_num,,cond_code,trigger_code,len,corr_resp,fix_code,word_code,delay_code,audioresp_code,jittered_ISI,total_time,Word,Zipfvalue,cmu_sylls,BF_TP,LEN_L
+12,run1,1,list1_2051_bravery_low3,2 syllable word,4,40,1,2,41,42,43,44,3400,11400,bravery,3.4621,3,109.33,7
+42,run2,1,list1_18532_underworld_low3,negative connotation,4,40,1,2,41,42,43,44,3200,11200,underworld,3.5519,3,47.11,10
+56,run2,1,list1_7210_gasoline_high3,"move this or ""gas"" to another list",2,20,1,2,21,22,23,24,3350,11350,gasoline,3.8156,3,178.86,8
+72,run2,1,list1_7202_gas_high1,"move this or ""gasoline"" to another list",1,10,1,2,11,12,13,14,3250,11250,gas,4.8307,1,5,3
+155,run4,1,list1_8009_hangover_low3,negative connotation,4,40,1,2,41,42,43,44,3300,11300,hangover,3.5929,3,66.86,8
+167,run5,1,list1_16018_silicon_low3,"I only really know this word as part of ""Silicon Valley""...",4,40,1,2,41,42,43,44,3450,11450,silicon,3.2363,3,42,7
+185,run5,1,list1_17008_strife_low1,negative connotation,3,30,1,2,31,32,33,34,3450,11450,strife,3.2263,1,48,6
+216,run1,2,list2_3947_corruption_low3,negative connotation,4,40,1,2,41,42,43,44,3350,11350,corruption,3.6323,3,136.33,10
+221,run1,2,list2_4108_crash_high1,negative connotation,1,10,1,2,11,12,13,14,3400,11400,crash,4.4568,1,48.75,5
+234,run1,2,list2_4358_curse_high1,negative connotation,1,10,1,2,11,12,13,14,3200,11200,curse,4.2603,1,31.75,5
+250,run2,2,list2_8631_hump_low1,alternate meaning is inappropriate,3,30,1,2,31,32,33,34,3250,11250,hump,3.6459,1,16,4
+270,run2,2,list2_11205_modeling_low3,verb,4,40,1,2,41,42,43,44,3250,11250,modeling,3.5613,3,289.71,8
+299,run3,2,list2_5220_doom_high1,negative connotation,1,10,1,2,11,12,13,14,3350,11350,doom,3.7497,1,28,4
+303,run3,2,list2_13300_pneumonia_high3,negative connotation,2,20,1,2,21,22,23,24,3400,11400,pneumonia,3.7035,3,11.38,9
+309,run3,2,list2_6674_flick_high1,verb,1,10,1,2,11,12,13,14,3400,11400,flick,3.7035,1,37,5
+323,run4,2,list2_17800_threat_high1,negative connotation,1,10,1,2,11,12,13,14,3350,11350,threat,4.3171,1,33.8,6
+326,run4,2,list2_8064_hash_low1,drugs?,3,30,1,2,31,32,33,34,3500,11500,hash,3.5495,1,30,4
+328,run4,2,list2_9681_landlady_low3,weird compound word,4,40,1,2,41,42,43,44,3450,11450,landlady,3.3212,3,48.14,8
+345,run4,2,list2_4012_coup_low1,I think this will consistently elicit mispronunciations,3,30,1,2,31,32,33,34,3300,11300,coup,3.4189,1,20.33,4
+387,run5,2,list2_17437_tad_high1,what even is a tad? lol,1,10,1,2,11,12,13,14,3450,11450,tad,3.6702,1,9,3
+412,run1,3,list3_10742_maverick_low3,2 syllable word,4,40,1,2,41,42,43,44,3450,11450,maverick,3.4222,3,75.14,8
+413,run1,3,list3_5984_eulogy_low3,negative connotation,4,40,1,2,41,42,43,44,3250,11250,eulogy,3.2213,3,14.4,6
+453,run2,3,list3_15754_sham_low1,"I feel like we'll be saying ""sham"" a lot in this study, so its frequency is going to be off...",3,30,1,2,31,32,33,34,3350,11350,sham,3.1839,1,14.67,4
+491,run3,3,list3_19070_warp_high1,verb,1,10,1,2,11,12,13,14,3450,11450,warp,3.7405,1,32.33,4
+511,run3,3,list3_4480_dane_low1,not an appropriate noun - only refers to a nationality,3,30,1,2,31,32,33,34,3300,11300,dane,3.4932,1,33.33,4
+533,run4,3,list3_17587_tech_high1,not an appropriate noun - only used as an abbreviation,1,10,1,2,11,12,13,14,3200,11200,tech,3.8064,1,12.33,4
+548,run4,3,list3_15387_schmuck_high1,inappropriate,1,10,1,2,11,12,13,14,3450,11450,schmuck,3.6629,1,18,7
+549,run4,3,list3_10060_limp_low1,negative connotation,3,30,1,2,31,32,33,34,3350,11350,limp,3.566,1,18,4
+561,run5,3,list3_13551_pox_low1,negative connotation,3,30,1,2,31,32,33,34,3300,11300,pox,3.1726,1,4.5,3
+562,run5,3,list3_7978_handicap_low3,negative connotation,4,40,1,2,41,42,43,44,3500,11500,handicap,3.438,3,49,8
+573,run5,3,list3_945_autopsy_high3,negative connotation,2,20,1,2,21,22,23,24,3350,11350,autopsy,3.982,3,15.17,7
+586,run5,3,list3_4_abduction_low3,negative connotation,4,40,1,2,41,42,43,44,3200,11200,abduction,3.5613,3,93.38,9
+610,run1,4,list4_5079_disrespect_high3,negative connotation,2,20,1,2,21,22,23,24,3200,11200,disrespect,3.72,3,46.11,10
+612,run1,4,list4_1886_boom_high1,not really a word?,1,10,1,2,11,12,13,14,3350,11350,boom,4.3383,1,30.67,4
+613,run1,4,list4_2344_burial_high3,negative connotation,2,20,1,2,21,22,23,24,3350,11350,burial,3.6774,3,62.2,6
+618,run1,4,list4_11353_morgue_high1,negative connotation,1,10,1,2,11,12,13,14,3250,11250,morgue,3.9363,1,38.4,6
+646,run2,4,list4_4202_crock_low1,negative connotation,3,30,1,2,31,32,33,34,3400,11400,crock,3.3089,1,43.5,5
+663,run2,4,list4_13173_plague_high1,negative connotation,1,10,1,2,11,12,13,14,3500,11500,plague,3.9202,1,30.8,6
+664,run2,4,list4_13204_plaque_low1,"if you keep plague, move to another run; if you don't, it's fine",3,30,1,2,31,32,33,34,3500,11500,plaque,3.3212,1,29.2,6
+677,run2,4,list4_5504_dwarf_low1,negative connotation,3,30,1,2,31,32,33,34,3300,11300,dwarf,3.4905,1,21.5,5
+738,run4,4,list4_6830_fore_low1,...I just don't like this word?,3,30,1,2,31,32,33,34,3250,11250,fore,3.4254,1,32.33,4
+743,run4,4,list4_6262_faraway_low3,weird compound word,4,40,1,2,41,42,43,44,3250,11250,faraway,3.265,3,58.17,7
+751,run4,4,list4_9474_kidnapper_low3,negative connotation,4,40,1,2,41,42,43,44,3250,11250,kidnapper,3.6078,3,23.88,9
+752,run4,4,list4_4049_coverage_high3,2 syllable word,2,20,1,2,21,22,23,24,3450,11450,coverage,3.7956,3,80.43,8
+755,run4,4,list4_18698_varsity_low3,adjective,4,40,1,2,41,42,43,44,3300,11300,varsity,3.2461,3,74.5,7
+781,run5,4,list4_11331_moor_low1,weird word,3,30,1,2,31,32,33,34,3250,11250,moor,3.3004,1,26.33,4
+785,run5,4,list4_17737_theatre_high3,"can keep this one (Canadian spelling) or ""theater"" (American spelling), but not both",2,20,1,2,21,22,23,24,3350,11350,theatre,4.0575,3,48.33,7
+794,run5,4,list4_8966_injection_low3,negative connotation,4,40,1,2,41,42,43,44,3250,11250,injection,3.6182,3,115.75,9
+846,run2,5,list5_18609_urn_low1,negative connotation,3,30,1,2,31,32,33,34,3350,11350,urn,3.2918,1,1,3
+851,run2,5,list5_6495_filmmaker_low3,weird compound word,4,40,1,2,41,42,43,44,3200,11200,filmmaker,3.313,3,29,9
+891,run3,5,list5_744_arthritis_low3,negative connotation,4,40,1,2,41,42,43,44,3500,11500,arthritis,3.2918,3,28.25,9
+897,run3,5,list5_12082_olympics_low3,weird word,4,40,1,2,41,42,43,44,3400,11400,olympics,3.6303,3,21.71,8
+900,run3,5,list5_6374_felony_high3,negative connotation,2,20,1,2,21,22,23,24,3500,11500,felony,3.7482,3,31.8,6
+914,run3,5,list5_3386_clot_low1,negative connotation,3,30,1,2,31,32,33,34,3200,11200,clot,3.2603,1,18,4
+925,run4,5,list5_12316_overdose_low3,negative connotation,4,40,1,2,41,42,43,44,3200,11200,overdose,3.4286,3,37.57,8
+926,run4,5,list5_5135_doc_high1,not a word,1,10,1,2,11,12,13,14,3500,11500,doc,4.907,1,3.5,3
+933,run4,5,list5_14066_quarantine_low3,negative connotation,4,40,1,2,41,42,43,44,3450,11450,quarantine,3.6498,3,126,10
+934,run4,5,list5_14124_quiz_high1,"if keeping quarantine, move to another run; if not, it's fine",1,10,1,2,11,12,13,14,3200,11200,quiz,3.695,1,4.33,4
+936,run4,5,list5_14491_refugee_low3,too political,4,40,1,2,41,42,43,44,3450,11450,refugee,3.2875,3,57,7
+947,run4,5,list5_9476_kidnapping_high3,negative connotation,2,20,1,2,21,22,23,24,3500,11500,kidnapping,4.0828,3,114.67,10
+956,run4,5,list5_218_aisle_high1,2 syllable word,1,10,1,2,11,12,13,14,3500,11500,aisle,3.8716,1,17.5,5
+968,run5,5,list5_3045_chase_high1,verb,1,10,1,2,11,12,13,14,3450,11450,chase,4.5156,1,44.25,5
+970,run5,5,list5_2046_brat_high1,negative connotation,1,10,1,2,11,12,13,14,3200,11200,brat,3.7943,1,20,4
+972,run5,5,list5_2693_cardinal_low3,2 syllable word,4,40,1,2,41,42,43,44,3200,11200,cardinal,3.612,3,82.57,8
+1003,run1,6,list6_18439_tux_low1,"too close to treatment word ""tuxedo""",3,30,1,2,31,32,33,34,3250,11250,tux,3.5398,1,1.5,3
+1010,run1,6,list6_3421_clutch_low1,"for me, the verb is what I think of first",3,30,1,2,31,32,33,34,3250,11250,clutch,3.399,1,28.2,6
+1018,run1,6,list6_10654_mart_low1,"I don't know if I like ""mart"" as a word that isn't attached to something like ""Wal""",3,30,1,2,31,32,33,34,3300,11300,mart,3.2831,1,36.33,4
+1021,run1,6,list6_4759_depression_high3,negative connotation,2,20,1,2,21,22,23,24,3350,11350,depression,3.9014,3,106.78,10
+1029,run1,6,list6_10239_loneliness_high3,negative connotation,2,20,1,2,21,22,23,24,3400,11400,loneliness,3.7001,3,66,10
+1031,run1,6,list6_16316_snob_low1,negative connotation,3,30,1,2,31,32,33,34,3200,11200,snob,3.3411,1,6,4
+1036,run1,6,list6_9830_leap_high1,verb,1,10,1,2,11,12,13,14,3300,11300,leap,3.8246,1,31,4
+1059,run2,6,list6_8851_incision_low3,??? Negative connotation,4,40,1,2,41,42,43,44,3350,11350,incision,3.3782,3,75.14,8
+1060,run2,6,list6_18134_tragedy_high3,negative connotation,2,20,1,2,21,22,23,24,3200,11200,tragedy,4.1516,3,47.67,7
+1063,run2,6,list6_8183_heck_high1,inappropriate,1,10,1,2,11,12,13,14,3400,11400,heck,4.2584,1,25,4
+1082,run3,6,list6_13724_probation_high3,negative connotation,2,20,1,2,21,22,23,24,3350,11350,probation,3.769,3,122.38,9
+1095,run3,6,list6_11643_nausea_low3,negative connotation,4,40,1,2,41,42,43,44,3250,11250,nausea,3.3372,3,36.8,6
+1109,run3,6,list6_2704_caretaker_low3,possibly negative connotation,4,40,1,2,41,42,43,44,3500,11500,caretaker,3.3922,3,60.25,9
+1113,run3,6,list6_19463_wound_high1,negative connotation,1,10,1,2,11,12,13,14,3200,11200,wound,4.4235,1,33.5,5
+1119,run3,6,list6_10414_mag_low1,not a word,3,30,1,2,31,32,33,34,3200,11200,mag,3.1895,1,11,3
+1120,run3,6,list6_3214_chump_low1,negative connotation,3,30,1,2,31,32,33,34,3200,11200,chump,3.6141,1,23.25,5
+1126,run4,6,list6_10549_maniac_high3,"negative connotation, insensitive",2,20,1,2,21,22,23,24,3500,11500,maniac,3.9731,3,48.2,6
+1127,run4,6,list6_10398_mackerel_low3,2 syllable word,4,40,1,2,41,42,43,44,3500,11500,mackerel,3.3293,3,77.43,8
+1130,run4,6,list6_15707_sesame_low3,pretty sure this is an adjective...,4,40,1,2,41,42,43,44,3400,11400,sesame,3.1895,3,28.4,6
+1142,run4,6,list6_4912_dictator_low3,negative connotation,4,40,1,2,41,42,43,44,3200,11200,dictator,3.3293,3,50.14,8
+1145,run4,6,list6_16135_skull_high1,negative connotation,1,10,1,2,11,12,13,14,3450,11450,skull,4.1675,1,13.25,5
+1146,run4,6,list6_8538_hospital_high3,negative connotation,2,20,1,2,21,22,23,24,3450,11450,hospital,5.0936,3,37.43,8
+1147,run4,6,list6_5345_dread_low1,negative connotation,3,30,1,2,31,32,33,34,3250,11250,dread,3.4024,1,35,5
+1157,run4,6,list6_6172_eyewitness_low3,weird compound word,4,40,1,2,41,42,43,44,3350,11350,eyewitness,3.5993,3,34.67,10
+1160,run4,6,list6_13406_pong_low1,not a word,3,30,1,2,31,32,33,34,3400,11400,pong,3.2109,1,29,4
+1161,run5,6,list6_552_anytime_high3,weird compound word,2,20,1,2,21,22,23,24,3200,11200,anytime,4.3884,3,45.17,7
+1167,run5,6,list6_789_assassin_high3,negative connotation,2,20,1,2,21,22,23,24,3300,11300,assassin,3.7733,3,20.57,8
+1172,run5,6,list6_14105_quid_low1,weird word,3,30,1,2,31,32,33,34,3350,11350,quid,3.5013,1,8.33,4
+1186,run5,6,list6_10683_massacre_low3,negative connotation,4,40,1,2,41,42,43,44,3300,11300,massacre,3.5993,3,35.86,8
+1192,run5,6,list6_7297_gent_low1,not a word,3,30,1,2,31,32,33,34,3250,11250,gent,3.2109,1,19.67,4
+1198,run5,6,list6_8158_hearse_low1,negative connotation,3,30,1,2,31,32,33,34,3450,11450,hearse,3.2056,1,56.6,6
+1201,run1,7,list7_3700_conception_low3,negative connotation,4,40,1,2,41,42,43,44,3350,11350,conception,3.3212,3,147.22,10
+1215,run1,7,list7_15114_rye_low1,makes me thirsty! (also: insensitive to alcoholism),3,30,1,2,31,32,33,34,3300,11300,rye,3.6202,1,3.5,3
+1225,run1,7,list7_5793_enema_low3,negative connotation,4,40,1,2,41,42,43,44,3300,11300,enema,3.1552,3,9.75,5
+1234,run1,7,list7_14896_roach_low1,negative connotation; also only an abbreviation,3,30,1,2,31,32,33,34,3500,11500,roach,3.4254,1,41,5
+1252,run2,7,list7_2479_cadillac_high3,this is only the name of a type of car; not an appropriate noun,2,20,1,2,21,22,23,24,3450,11450,cadillac,3.7587,3,35.29,8
+1269,run2,7,list7_1919_borderline_low3,weird compound word,4,40,1,2,41,42,43,44,3250,11250,borderline,3.2056,3,99.22,10
+1271,run2,7,list7_12873_period_high3,negative connotation,2,20,1,2,21,22,23,24,3450,11450,period,4.4435,3,40.2,6
+1278,run2,7,list7_15072_rum_high1,insensitive to alcoholism,1,10,1,2,11,12,13,14,3450,11450,rum,3.875,1,6,3
+1297,run3,7,list7_17830_thud_low1,not a word,3,30,1,2,31,32,33,34,3450,11450,thud,3.2918,1,8.67,4
+1298,run3,7,list7_10346_lunatic_high3,inappropriate,2,20,1,2,21,22,23,24,3400,11400,lunatic,3.9293,3,42.83,7
+1306,run3,7,list7_18221_trench_low1,could have negative connotations,3,30,1,2,31,32,33,34,3450,11450,trench,3.4905,1,45.8,6
+1307,run3,7,list7_10751_mayflower_low3,"not a word, just the name of a boat",4,40,1,2,41,42,43,44,3400,11400,mayflower,3.1783,3,27.5,9
+1311,run3,7,list7_15445_scotch_high1,insensitive to alcoholism,1,10,1,2,11,12,13,14,3350,11350,scotch,4.1686,1,26.6,6
+1335,run4,7,list7_13900_pub_low1,insensitive to alcoholism,3,30,1,2,31,32,33,34,3200,11200,pub,3.5729,1,6.5,3
+1354,run4,7,list7_15011_rouge_low1,french,3,30,1,2,31,32,33,34,3450,11450,rouge,3.5119,1,37,5
+1358,run4,7,list7_9428_keg_low1,insensitive to alcoholism,3,30,1,2,31,32,33,34,3450,11450,keg,3.5373,1,4,3
+1360,run4,7,list7_5009_disaster_high3,negative connotation,2,20,1,2,21,22,23,24,3400,11400,disaster,4.2373,3,100.14,8
+1389,run5,7,list7_12141_oppression_low3,negative connotation,4,40,1,2,41,42,43,44,3200,11200,oppression,3.1783,3,92.11,10
+1399,run5,7,list7_9113_invasion_high3,negative connotation,2,20,1,2,21,22,23,24,3300,11300,invasion,3.9303,3,66.14,8

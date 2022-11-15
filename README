@@ -16,6 +16,7 @@
 - Replaces each word with its correcponding lemma
     - Uses WordNetLemmatizer for this
 - Discards rows not found in cmudict
+- Discards profane words and names
 - Formats dataframe into SOS compatible input
 - Outputs dataframe as a tab delimited txt file
     - File Named "sos_input.txt"
@@ -30,7 +31,15 @@
 - Lists can be found in the folder "wordLists"
 
 ######################################################
-3.) Wuggy
+3.a) wuggy/postSOS.ipynb
+######################################################
+- Generates nonword lists for every wordList
+- nonWordLists outputted to folder nonWordList
+- Prints filenames of files which contain words that could not be converted to a nonWord automatically
+    - Need to generate those pseudowords manually
+
+######################################################
+3.b) Wuggy
 ######################################################
 - Download from http://crr.ugent.be/programs-data/wuggy
 - Settings used:
@@ -39,17 +48,5 @@
     - Match word length
     - Match transition frequency
     - Match 2 out of 3 segments
-- Pass each word list through wuggy
-- For each word, ~10 non words appead
-    - Took the first non word for each word
-- 18 non word lists compiled into nonWordList.csv
-
-######################################################
-4.) postWuggy.ipnb
-######################################################
-- Reads nonWordList.csv into a dataframe
-- outputs 18 separate tab delimited csv files
-    - Each corresponds to a respective nonWordList
-- The 18 files are stored in the folder nonWordLists
-
+- Manually pass the words that could not be found in lexicon through wuggy
 

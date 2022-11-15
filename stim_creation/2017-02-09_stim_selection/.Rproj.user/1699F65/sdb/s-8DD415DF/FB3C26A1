@@ -1,0 +1,29 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1487012704581.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "FB3C26A1",
+    "lastKnownWriteTime" : 7308604914264011873,
+    "last_content_update" : 1487012704581,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "430C9865",
+        "caption" : "newnouns",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=newnouns&cache_key=430C9865",
+        "displayedObservations" : 19628,
+        "environment" : "",
+        "object" : "newnouns",
+        "preview" : 0,
+        "totalObservations" : 19628,
+        "variables" : 18
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

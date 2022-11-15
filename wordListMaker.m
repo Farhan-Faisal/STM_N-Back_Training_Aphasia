@@ -16,7 +16,7 @@ clear
 
 % Add SOS to path
 addpath(genpath("/Users/farhan/Desktop/Baycrest Documents/Aphasia_Study/" + ...
-    "Aphasia_STM_stim_generation/stim_creation"));
+    "Aphasia_STM_stim_generation/SYLLABLE_PROJECT/stim_creation"));
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%Parameters%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 randomSeedValue = 107;
@@ -28,7 +28,7 @@ outputDirectory = ['/Users/farhan/Desktop/Baycrest Documents/Aphasia_Study/' ...
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Set a random seed
-setSeed(107);
+setSeed(randomSeedValue);
 
 % Create a population from the sos_input wordlist file
 lemmaPopulation = population('sos_input.txt','name','lemmaPopulation', ...

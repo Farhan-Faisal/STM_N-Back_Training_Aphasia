@@ -1,0 +1,643 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of sample</title>
+  <meta name="keywords" content="sample">
+  <meta name="description" content="- sample object">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="#">src</a> &gt; sample.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for .\src&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>sample
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>- sample object</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> - sample object
+ 
+ copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut
+
+    This file is part of SOS
+
+    SOS is free software: you can redistribute it and/or modify
+    it for academic and non-commercial purposes
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.  For commercial or for-profit
+    uses, please contact the authors (sos@cnbc.cmu.edu).
+
+    SOS is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="dataFrame.html" class="code" title="">dataFrame</a>	- dataframe object</li><li><a href="population.html" class="code" title="">population</a>	- population object</li><li><a href="sample.html" class="code" title="">sample</a>	- sample object</li><li><a href="validFileNameOrNull.html" class="code" title="function flag = validFileNameOrNull(fileName)">validFileNameOrNull</a>	- helper function to validate that a string represents a valid file name or null</li><li><a href="validLogical.html" class="code" title="function flag = validLogical(l)">validLogical</a>	- helper function to validate that a string represents a logical operator</li><li><a href="validStringOrNull.html" class="code" title="function flag = validStringOrNull(str)">validStringOrNull</a>	- helper function to validate that a string represents a valid string or null</li><li><a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>	- master print function that regulates cmd line output based on verbosity flags</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="genericFeederCandidateSelection.html" class="code" title="">genericFeederCandidateSelection</a>	- parent class for replacement selection objects</li><li><a href="population.html" class="code" title="">population</a>	- population object</li><li><a href="randPopulationAndSampleCandidateSelection.html" class="code" title="">randPopulationAndSampleCandidateSelection</a>	- random population and sample selection method for swaps</li><li><a href="sample.html" class="code" title="">sample</a>	- sample object</li><li><a href="sos.html" class="code" title="">sos</a>	- SOS optimization object</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function obj = sample(n,varargin)</a></li><li><a href="#_sub2" class="code">function lockAll(obj)</a></li><li><a href="#_sub3" class="code">function unlockAll(obj)</a></li><li><a href="#_sub4" class="code">function obj = setPop(obj,population)</a></li><li><a href="#_sub5" class="code">function item = popItem(obj,itemIndex)</a></li><li><a href="#_sub6" class="code">function obj = appendItem(obj,item)</a></li><li><a href="#_sub7" class="code">function obj = swapItems(obj,sIndex,df,dfIndex,sosObj)</a></li><li><a href="#_sub8" class="code">function createLocks(obj)</a></li><li><a href="#_sub9" class="code">function p = sampleInputParser()</a></li><li><a href="#_sub10" class="code">function p = parseConstructorArgs(n,varargin)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% - sample object</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%    This file is part of SOS</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%    SOS is free software: you can redistribute it and/or modify</span>
+0008 <span class="comment">%    it for academic and non-commercial purposes</span>
+0009 <span class="comment">%    under the terms of the GNU General Public License as published by</span>
+0010 <span class="comment">%    the Free Software Foundation, either version 3 of the License, or</span>
+0011 <span class="comment">%    (at your option) any later version.  For commercial or for-profit</span>
+0012 <span class="comment">%    uses, please contact the authors (sos@cnbc.cmu.edu).</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%    SOS is distributed in the hope that it will be useful,</span>
+0015 <span class="comment">%    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+0016 <span class="comment">%    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+0017 <span class="comment">%    GNU General Public License for more details.</span>
+0018 
+0019 <span class="comment">%    You should have received a copy of the GNU General Public License</span>
+0020 <span class="comment">%    along with SOS (see COPYING.txt).</span>
+0021 <span class="comment">%    If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+0022 
+0023 
+0024 
+0025 classdef <a href="sample.html" class="code" title="">sample</a> &lt; <a href="dataFrame.html" class="code" title="">dataFrame</a>
+0026     <span class="comment">%% creates and supports sample objects</span>
+0027     <span class="comment">%</span>
+0028     <span class="comment">% Additional functionality is inherited from parent class &lt;dataFrame&gt;</span>
+0029     <span class="comment">%</span>
+0030     <span class="comment">%PROPERTIES</span>
+0031     <span class="comment">%   n - target number of items for the sample (NOT necessarily current number of items)</span>
+0032     <span class="comment">%   population - population to derive the sample from</span>
+0033     <span class="comment">%   locks - int array of length &lt;sampleObj&gt;.n indicating if an item can be swapped (0) or not (1)</span>
+0034     <span class="comment">%   name - string name associated with the object</span>
+0035     <span class="comment">%</span>
+0036     <span class="comment">% ** ALSO manages the global property 'sampleCount', which tracks the</span>
+0037     <span class="comment">% number of samples that have been created.</span>
+0038     <span class="comment">%</span>
+0039     <span class="comment">%METHODS</span>
+0040     <span class="comment">%   sample(n,varargin) - Constructor - Creates a sample object</span>
+0041     <span class="comment">%   lockAll() - locks all the items in the sample</span>
+0042     <span class="comment">%   unlockAll() - locks all the items in the sample</span>
+0043     <span class="comment">%   setPop(population) - links a sample with a population</span>
+0044     <span class="comment">%   item = popItem(itemIndex) - pops the item from sample.data at itemIndex and returns it</span>
+0045     <span class="comment">%    appendItem(oitem) - append the item at {item index}</span>
+0046     <span class="comment">%   swapItems(,sIndex,df,dfIndex,sosObj) - swaps a sample item with a population item</span>
+0047     <span class="comment">%</span>
+0048     <span class="comment">%METHODS (STATIC)</span>
+0049     <span class="comment">%   p = sampleInputParser() - generates an input parser for the constructor</span>
+0050     <span class="comment">%</span>
+0051     <span class="comment">%METHODS (Access = private)</span>
+0052     <span class="comment">%   createLocks() - creates locks for sample items</span>
+0053     <span class="comment">%</span>
+0054     <span class="comment">%METHODS (Static, Access = private)</span>
+0055     <span class="comment">%   p = parseConstructorArgs(n,varargin) - parses arguments from sample constructor</span>
+0056     <span class="comment">%</span>
+0057  
+0058     <span class="comment">%% PROPERTIES</span>
+0059     properties
+0060         n <span class="comment">% target number of items for the sample (NOT necessarily current number of items)</span>
+0061         <a href="population.html" class="code" title="">population</a> <span class="comment">% population to derive the sample from</span>
+0062         locks <span class="comment">% int array of length &lt;sampleObj&gt;.n indicating if an item can be swapped (0) or not (1)</span>
+0063         name
+0064     <span class="keyword">end</span> <span class="comment">% properties</span>
+0065     
+0066     
+0067     methods
+0068         
+0069         <span class="comment">%% sample CONSTRUCTOR</span>
+0070         <a name="_sub0" href="#_subfunctions" class="code">function obj = sample(n,varargin)</a>
+0071         <span class="comment">% Constructor - Creates a sample object</span>
+0072         <span class="comment">%</span>
+0073         <span class="comment">% CALL:</span>
+0074         <span class="comment">% sample(n, ['filename',&lt;string&gt;, 'isHeader',&lt;logical&gt;, 'isFormatting',&lt;logical&gt;, 'outFile',&lt;string&gt;])</span>
+0075         <span class="comment">%</span>
+0076         <span class="comment">% SYNOPSIS:</span>
+0077         <span class="comment">% Constructor - Creates a sample object and returns it</span>
+0078         <span class="comment">%</span>
+0079         <span class="comment">% PARAMETERS:</span>
+0080         <span class="comment">%  REQUIRED:</span>
+0081         <span class="comment">%   n - target number of observations for the sample</span>
+0082         <span class="comment">%</span>
+0083         <span class="comment">% OPTIONAL:</span>
+0084         <span class="comment">%   fileName - src file for the sample, which must</span>
+0085         <span class="comment">%       follow the SOS dataFrame format specifications.</span>
+0086         <span class="comment">%   isHeader/logical - param/logical-value pair indicating if</span>
+0087         <span class="comment">%       the source file has a header.  Defaults to false.</span>
+0088         <span class="comment">%   isFormatting/logical -  param/logical-value indicating if</span>
+0089         <span class="comment">%       the source file has formating.  Defaults to false.</span>
+0090         <span class="comment">%   outFile - param/string-value pair indicating the name</span>
+0091         <span class="comment">%       (inc. path, if other than pwd is desired) of</span>
+0092         <span class="comment">%       of file to save the sample in after</span>
+0093         <span class="comment">%       optimization has been completed.  Outfile is not</span>
+0094         <span class="comment">%       validated until write.  Defaults to 'null'</span>
+0095         <span class="comment">%   name/string - param/string-value pair indicating string name to</span>
+0096         <span class="comment">%       associate with the variable</span>
+0097         <span class="comment">%</span>
+0098         <span class="comment">% EXAMPLE:</span>
+0099         <span class="comment">%   s1 = sample(5); %creates a sample object targeted to have 5 observations</span>
+0100         <span class="comment">%   s2 = sample(10, 'fileName', 's1.txt'); % creates a sample</span>
+0101         <span class="comment">%                % object with target of 10 obs, reading in initial</span>
+0102         <span class="comment">%                % observations from s1.txt</span>
+0103             
+0104             <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([char(10) <span class="string">'Creating and Configuring Sample Object'</span>], <span class="keyword">...</span>
+0105                 <span class="string">'sample_constructor_startObjCreation'</span>);
+0106             
+0107             
+0108             p = sample.parseConstructorArgs(n,varargin);
+0109             
+0110             <span class="keyword">global</span> sampleCount;
+0111             <span class="keyword">if</span>(isempty(sampleCount))
+0112                 curCount = 1;
+0113             <span class="keyword">else</span>
+0114                 curCount = sampleCount + 1;
+0115             <span class="keyword">end</span>
+0116             
+0117             <span class="comment">%override the default outFile with the sample number if a user</span>
+0118             <span class="comment">%specified value was not specified.</span>
+0119             <span class="keyword">if</span> any(strcmp(p.UsingDefaults,<span class="string">'outFile'</span>))
+0120                 outFile = [<span class="string">'sample'</span>,num2str(curCount),<span class="string">'.out.txt'</span>];
+0121             <span class="keyword">else</span>
+0122                 outFile = p.Results.outFile;
+0123             <span class="keyword">end</span>
+0124             
+0125             <span class="comment">%check that the outFile is associated with a valid file name.  If</span>
+0126             <span class="comment">%it's not, print a message to that effect</span>
+0127             <span class="keyword">if</span> ischar(outFile) == false || strcmp(outFile,<span class="string">'null'</span>)
+0128                 error(<span class="string">'Outfile has not been set to a string != null.'</span>);
+0129             <span class="keyword">end</span>
+0130             
+0131             <span class="keyword">if</span> (exist(outFile,<span class="string">'file'</span>))
+0132                <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([char(10) <span class="string">'WARNING: File {'</span>, outFile, <span class="string">'} already exists.  '</span>, <span class="keyword">...</span>
+0133                    <span class="string">'If you attempt to write to this file, '</span>,<span class="keyword">...</span>
+0134                    <span class="string">'the existing one will be overridden'</span> char(10)], <span class="keyword">...</span>
+0135                     <span class="string">'sample_constructor_fileExists'</span>);  
+0136             <span class="keyword">end</span>
+0137                
+0138             <span class="comment">%similary, use a default name based on the sample count if</span>
+0139             <span class="comment">%necessary</span>
+0140              <span class="keyword">if</span> any(strcmp(p.UsingDefaults,<span class="string">'name'</span>))
+0141                  name = [<span class="string">'sample'</span>,num2str(curCount)];  <span class="comment">%#ok&lt;PROP&gt;</span>
+0142              <span class="keyword">else</span>
+0143                  name = p.Results.name;  <span class="comment">%#ok&lt;PROP&gt;</span>
+0144              <span class="keyword">end</span>
+0145             
+0146             obj = obj@<a href="dataFrame.html" class="code" title="">dataFrame</a>(<span class="string">'fileName'</span>,p.Results.fileName, <span class="keyword">...</span>
+0147                 <span class="string">'isHeader'</span>,p.Results.isHeader,<span class="string">'isFormatting'</span>, <span class="keyword">...</span>
+0148                 p.Results.isFormatting,<span class="string">'outFile'</span>,outFile);
+0149                         
+0150             obj.n = p.Results.n;
+0151             
+0152             obj.name = name; <span class="comment">%#ok&lt;PROP&gt;</span>
+0153             
+0154             <span class="comment">%check that the user has not pre-loaded more data than the size</span>
+0155             <span class="comment">%of the sample.</span>
+0156             <span class="keyword">if</span>(isempty(obj.data) == 0)
+0157                 userN = length(obj.data{1});
+0158                 
+0159                 <span class="keyword">if</span>(userN &gt; obj.n)
+0160                     error(<span class="string">'Sample Constructor: Pre-loaded sample size cannot be larger than target sample size {n}'</span>);
+0161                 <span class="keyword">end</span>
+0162             <span class="keyword">end</span>
+0163                 
+0164             obj.createLocks();
+0165                    
+0166             <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">'Creation of Sample Object Complete'</span> char(10)], <span class="keyword">...</span>
+0167                 <span class="string">'sample_constructor_endObjCreation'</span>);
+0168             
+0169             <span class="comment">% creation of object successful, increment the counter</span>
+0170             sampleCount = curCount;
+0171             
+0172         <span class="keyword">end</span> <span class="comment">% constructor</span>
+0173         
+0174         
+0175         <span class="comment">%% lockAll() METHOD</span>
+0176         <a name="_sub1" href="#_subfunctions" class="code">function lockAll(obj)</a>
+0177            <span class="comment">% locks all the items in the sample</span>
+0178            <span class="comment">%</span>
+0179            <span class="comment">%EXAMPLE:</span>
+0180            <span class="comment">%    s1.lockAll();</span>
+0181            
+0182            <span class="keyword">if</span> isempty(obj.data) == false
+0183                <span class="keyword">for</span> i=1:length(obj.data{1}); obj.locks(i) = 1; <span class="keyword">end</span>;
+0184            <span class="keyword">else</span>
+0185                error(<span class="string">'ERROR: no data in sample to lock'</span>);
+0186            <span class="keyword">end</span>
+0187            
+0188            <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">'All items in sample '</span>, obj.name,<span class="string">' are now locked '</span>], <span class="keyword">...</span>
+0189                     <span class="string">'sample_lockAll_end'</span>);             
+0190         <span class="keyword">end</span>
+0191         
+0192         <span class="comment">%% unlockAll() METHOD</span>
+0193         <a name="_sub2" href="#_subfunctions" class="code">function unlockAll(obj)</a>
+0194            <span class="comment">% locks all the items in the sample</span>
+0195            <span class="comment">%</span>
+0196            <span class="comment">%EXAMPLE:</span>
+0197            <span class="comment">%    s1.unlockAll();</span>
+0198            
+0199            <span class="keyword">for</span> i=1:length(obj.locks); obj.locks(i) = 0; <span class="keyword">end</span>;
+0200            
+0201            <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">'All items in sample '</span>, obj.name,<span class="string">' are now unlocked '</span>], <span class="keyword">...</span>
+0202                     <span class="string">'sample_unlockAll_end'</span>);             
+0203                 
+0204         <span class="keyword">end</span>
+0205             
+0206         <span class="comment">%% setPop(population) METHOD</span>
+0207         <a name="_sub3" href="#_subfunctions" class="code">function obj = setPop(obj,population)</a>
+0208             <span class="comment">% links a sample with a population</span>
+0209             <span class="comment">%</span>
+0210             <span class="comment">%PARAMETERS:</span>
+0211             <span class="comment">%   population - a population object</span>
+0212             <span class="comment">%</span>
+0213             <span class="comment">%EXAMPLE:</span>
+0214             <span class="comment">%   s1.setPop(p1) % where s1 is a sample, p1 is a population</span>
+0215             
+0216             <span class="keyword">if</span>(strcmp(class(<a href="population.html" class="code" title="">population</a>),<span class="string">'population'</span>) ~= 1)
+0217                 error(<span class="string">'{population} must be a population object'</span>);
+0218             <span class="keyword">end</span>
+0219             
+0220             <span class="comment">%ensure that the population is compatible with the sample as it</span>
+0221             <span class="comment">%is currently configured.</span>
+0222            
+0223             <span class="comment">% if the sample has data, must make sure both the sample and</span>
+0224             <span class="comment">% the population have the same columns; otherwise, sample can</span>
+0225             <span class="comment">% just copy the population header info</span>
+0226             <span class="keyword">if</span>(isempty(obj.data) == 0)
+0227                [obj, <a href="population.html" class="code" title="">population</a>] = dataFrame.mergeHeaders(obj,<a href="population.html" class="code" title="">population</a>);
+0228             <span class="keyword">else</span>
+0229                obj.header = population.header;
+0230                obj.format = population.format;               
+0231             <span class="keyword">end</span>
+0232                 
+0233            obj.population = <a href="population.html" class="code" title="">population</a>;
+0234            
+0235            <span class="comment">%link the population with the sample as well</span>
+0236            population.addSample(obj);
+0237            
+0238            <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">'Sample '</span>, obj.name,<span class="string">'''s population set to: '</span>,obj.population.name], <span class="keyword">...</span>
+0239                     <span class="string">'sample_setPop_end'</span>);  
+0240            
+0241         <span class="keyword">end</span> <span class="comment">% sample costructor</span>
+0242         
+0243         
+0244         
+0245         <span class="comment">%% popItem(itemIndex) METHOD</span>
+0246         <a name="_sub4" href="#_subfunctions" class="code">function item = popItem(obj,itemIndex)  </a>
+0247             <span class="comment">%pops the item from sample.data at itemIndex and returns it</span>
+0248             <span class="comment">%</span>
+0249             <span class="comment">%WARNING!!!:</span>
+0250             <span class="comment">% Currently, this function pops an item and then shifts up all</span>
+0251             <span class="comment">% of the subsequent data to fill the empty entries in the data.</span>
+0252             <span class="comment">% To avoid altering the object locks, this method currently</span>
+0253             <span class="comment">% will throw an error if the item at itemIndex, or a subsequent</span>
+0254             <span class="comment">% item, is locked.  This is a known issue, but should not</span>
+0255             <span class="comment">% interact with the standard swapping procedure or initial</span>
+0256             <span class="comment">% filling of the items.  If there is demand for this function</span>
+0257             <span class="comment">% its behavior may be corrected in the future.</span>
+0258             <span class="comment">%</span>
+0259             <span class="comment">%CALL:</span>
+0260             <span class="comment">% item =  &lt;sampleObj&gt;.popItem(itemIndex)</span>
+0261             <span class="comment">%</span>
+0262             <span class="comment">%SYNOPSIS:</span>
+0263             <span class="comment">% pops and returns the item at {itemIndex}</span>
+0264             <span class="comment">%</span>
+0265             <span class="comment">%PARAMETERS:</span>
+0266             <span class="comment">%   itemIndex - the row index of the to-be-popped item</span>
+0267             
+0268             p = inputParser;
+0269             
+0270             p.addRequired(<span class="string">'obj'</span>);
+0271             p.addRequired(<span class="string">'itemIndex'</span>,@(itemIndex)validateattributes(itemIndex, {<span class="string">'numeric'</span>}, <span class="keyword">...</span>
+0272                 {<span class="string">'scalar'</span>, <span class="string">'integer'</span>, <span class="string">'positive'</span>,<span class="string">'&gt;'</span> 0}));
+0273             p.parse(obj,itemIndex);
+0274             
+0275             <span class="keyword">if</span>(isempty(obj.data) == true)
+0276                 error(<span class="string">'No data in sample object - cannot pop item'</span>);
+0277             <span class="keyword">elseif</span> itemIndex &gt; length(obj.data{1})
+0278                 error(<span class="string">'{itemIndex} exceeds row range of data array'</span>);
+0279             <span class="keyword">elseif</span> (any(obj.locks(itemIndex:end)) == 1)
+0280                 error([<span class="string">'ERROR: Attempted to pop an item, when that item '</span>, <span class="keyword">...</span>
+0281                     <span class="string">'or a subsequent one in obj.data has its obj.lock'</span>,<span class="keyword">...</span>
+0282                     <span class="string">'active.  See the sample.popItem docmuentation for more info.'</span>]);
+0283             <span class="keyword">end</span>
+0284         
+0285             item = <a href="#_sub5" class="code" title="subfunction item = popItem(obj,itemIndex)">popItem</a>@<a href="dataFrame.html" class="code" title="">dataFrame</a>(obj,itemIndex);
+0286         <span class="keyword">end</span>
+0287         
+0288         
+0289         <span class="comment">%% appendItem(item) METHOD</span>
+0290         <a name="_sub5" href="#_subfunctions" class="code">function obj = appendItem(obj,item)</a>
+0291             <span class="comment">% append the item at {item index}</span>
+0292             <span class="comment">%</span>
+0293             <span class="comment">% Warning!!!  Method does not confirm that the column structure</span>
+0294             <span class="comment">% of {item} (i.e., what columns of data are in what order)</span>
+0295             <span class="comment">% match that of the sample's data.  This should be the case if</span>
+0296             <span class="comment">% SOS is manipulating the items since it will only insert items</span>
+0297             <span class="comment">% into the sample that belong to the corresponding population,</span>
+0298             <span class="comment">% which should be in sync.  However, manual invocation of this</span>
+0299             <span class="comment">% method does not have this guarantee.  Use carefully!</span>
+0300             <span class="comment">%</span>
+0301             <span class="comment">%CALL:</span>
+0302             <span class="comment">% item =  &lt;sampleObj&gt;.popItem(itemIndex)</span>
+0303             <span class="comment">%</span>
+0304             <span class="comment">%SYNOPSIS:</span>
+0305             <span class="comment">% pops and returns the item at {itemIndex}</span>
+0306             <span class="comment">%</span>
+0307             <span class="comment">%PARAMETERS:</span>
+0308             <span class="comment">%   itemIndex - the row index of the to-be-popped item</span>
+0309             
+0310             
+0311             <span class="comment">%check to make sure haven't exceeded sample size.</span>
+0312             <span class="keyword">if</span>(isempty(obj.data) == false)
+0313                 <span class="keyword">if</span> (length(obj.data{1}) +1 &gt; obj.n)
+0314                     error(<span class="string">'Sample already full.  Cannot append item.'</span>);
+0315                 <span class="keyword">end</span>
+0316             <span class="keyword">end</span>
+0317 
+0318             <a href="#_sub6" class="code" title="subfunction obj = appendItem(obj,item)">appendItem</a>@<a href="dataFrame.html" class="code" title="">dataFrame</a>(obj,item);
+0319         <span class="keyword">end</span>
+0320             
+0321         <span class="comment">%% swapItems(sIndex,pIndex) METHOD</span>
+0322         
+0323         <span class="comment">%% THIS CLASS NEEDS TO BE CORRECTED</span>
+0324         
+0325         
+0326         <a name="_sub6" href="#_subfunctions" class="code">function obj = swapItems(obj,sIndex,df,dfIndex,sosObj)</a>
+0327             <span class="comment">% swaps a sample item with an item from another datafame that shares the (or is the) population associated with that sample</span>
+0328             <span class="comment">%</span>
+0329             <span class="comment">%CALL:</span>
+0330             <span class="comment">%   swapItems(sIndex,df,dfIndex,sosObj)</span>
+0331             <span class="comment">%</span>
+0332             <span class="comment">%SYNOPSIS:</span>
+0333             <span class="comment">% swaps a sample item with an item from another data frame</span>
+0334             <span class="comment">% This dataframe must either be the, or share the, population with</span>
+0335             <span class="comment">% this sample.  This swap takes place both in the</span>
+0336             <span class="comment">% place both in the item's (raw) data and (normalized) zdata.</span>
+0337             <span class="comment">% Both objects must be associated with the same sosObj for the</span>
+0338             <span class="comment">% swap to occur.  This is to ensure that the normalized data</span>
+0339             <span class="comment">% that is being swapped is normalized relative to the other</span>
+0340             <span class="comment">% data in this SOS object, and not relative to some other SOS</span>
+0341             <span class="comment">% object of which this sample/population are also a part.</span>
+0342             <span class="comment">%</span>
+0343             <span class="comment">%PARAMETERS:</span>
+0344             <span class="comment">%   sIndex - index of sample item</span>
+0345             <span class="comment">%   df - another dataframe</span>
+0346             <span class="comment">%   dfIndex - index of population item</span>
+0347             <span class="comment">%   sosObj - sosObj that sample and population are linked to (and usually the object making the function call).</span>
+0348             <span class="comment">%</span>
+0349  
+0350             <span class="comment">%Validate the inputs</span>
+0351             p = inputParser;
+0352             
+0353             p.addRequired(<span class="string">'obj'</span>);
+0354             p.addRequired(<span class="string">'sIndex'</span>,@(itemIndex)validateattributes(itemIndex, {<span class="string">'numeric'</span>}, <span class="keyword">...</span>
+0355                 {<span class="string">'scalar'</span>, <span class="string">'integer'</span>, <span class="string">'positive'</span>,<span class="string">'&gt;'</span> 0}));
+0356             p.addRequired(<span class="string">'df'</span>,@(df)any(strcmp(superclasses(df),<span class="string">'dataFrame'</span>)));
+0357             p.addRequired(<span class="string">'dfIndex'</span>,@(dfIndex)validateattributes(dfIndex, {<span class="string">'numeric'</span>}, <span class="keyword">...</span>
+0358                 {<span class="string">'scalar'</span>, <span class="string">'integer'</span>, <span class="string">'positive'</span>,<span class="string">'&gt;'</span> 0}));
+0359             p.addRequired(<span class="string">'sosObj'</span>,@(sosObj)strcmp(class(sosObj),<span class="string">'sos'</span>));
+0360             
+0361             
+0362             
+0363             p.parse(obj,sIndex,df,dfIndex,sosObj);    
+0364             
+0365             <span class="comment">%check that the population and sample exist and contain</span>
+0366             <span class="comment">%normalized data for the right SOSobj</span>
+0367             
+0368             <span class="comment">%first make sure both the sample and the dataframe have data</span>
+0369             <span class="keyword">if</span>(isempty(obj.data) == true)
+0370                 error(<span class="string">'Sample data is empty'</span>);
+0371             <span class="keyword">end</span>
+0372             
+0373             
+0374             <span class="keyword">if</span>(isempty(df.data) == true)
+0375                 error(<span class="string">'Population data is empty'</span>);
+0376             <span class="keyword">end</span>
+0377             
+0378             <span class="comment">%check that sample and dataframe have been associated with the</span>
+0379             <span class="comment">%current SOSobject, which should indicate whether any</span>
+0380             <span class="comment">%normalized data was normalized for this particular SOS object.</span>
+0381             
+0382             <span class="keyword">if</span>(obj.sosObj ~= sosObj)
+0383                 error(<span class="string">'Sample is not associated with SOS object executing match'</span>);
+0384             <span class="keyword">end</span>
+0385             
+0386             <span class="keyword">if</span>(df.sosObj ~= sosObj)
+0387                 error(<span class="string">'Dataframe is not associated with SOS object executing match'</span>);
+0388             <span class="keyword">end</span>
+0389             
+0390             
+0391             <span class="comment">%check that the sample and dataframe both share the same</span>
+0392             <span class="comment">%population</span>
+0393             <span class="keyword">if</span>(obj.population ~= df)
+0394                 <span class="keyword">if</span>(strcmp(class(df),<span class="string">'sample'</span>))
+0395                     <span class="keyword">if</span>(obj.population ~= df.population)
+0396                         error(<span class="string">'Sample and Dataframe do not share a population'</span>);
+0397                     <span class="keyword">end</span>
+0398                 <span class="keyword">else</span>
+0399                     error(<span class="string">'If df is not the population for the sample, it should be a sample itself'</span>);
+0400                 <span class="keyword">end</span>
+0401                     
+0402             <span class="keyword">end</span>
+0403             
+0404               
+0405             <span class="comment">%check that the sample and the population contain normalized</span>
+0406             <span class="comment">%data.</span>
+0407             <span class="keyword">if</span>(isempty(obj.zdata) || isempty(obj.population.zdata))
+0408                 error(<span class="string">'df or sample do not contain normalized data.Data must be normalized prior to swaps'</span>);
+0409             <span class="keyword">end</span>
+0410             
+0411             <span class="comment">%validate the indices for the swap:</span>
+0412             <span class="keyword">if</span>(dfIndex &gt; length(df.data{1}))
+0413                 error(<span class="string">'df index exceeds number of rows in population'</span>);
+0414             <span class="keyword">end</span>
+0415             
+0416             <span class="keyword">if</span>(sIndex &gt; length(obj.data{1}))
+0417                 error(<span class="string">'sample index exceeds number of rows in sample'</span>);
+0418             <span class="keyword">end</span>
+0419             
+0420             <span class="keyword">if</span>(obj.locks(sIndex) == 1)
+0421                 error(<span class="string">'item at specified sample index is locked'</span>);
+0422             <span class="keyword">end</span>
+0423             
+0424             <span class="keyword">if</span>(strcmp(class(df),<span class="string">'sample'</span>))
+0425                 <span class="keyword">if</span> (df.locks(dfIndex) == 1)
+0426                     error(<span class="string">'item at specified df index is locked'</span>);
+0427                 <span class="keyword">end</span>
+0428             <span class="keyword">end</span>           
+0429             
+0430             
+0431             
+0432             <span class="comment">% copy the sample; again, assumes population and sample header</span>
+0433             <span class="comment">% syncing works as designed</span>
+0434             sampleItemData = cell(1,length(obj.header));
+0435             sampleItemzData = cell(1,length(obj.header));
+0436             <span class="keyword">for</span> i=1:length(obj.header)
+0437                 sampleItemData{i} = obj.data{i}(sIndex);
+0438                 sampleItemzData{i} = obj.zdata{i}(sIndex);
+0439             <span class="keyword">end</span>
+0440       
+0441             <span class="comment">%move the df item into the sample, then move the copied</span>
+0442             <span class="comment">% sample item into the df</span>
+0443             <span class="keyword">for</span> i=1:length(obj.header)
+0444                 
+0445                 <span class="comment">%try to speed up processing of strings by using a more</span>
+0446                 <span class="comment">%primitive operation to copy numbers;  Some more fancy</span>
+0447                 <span class="comment">%string wrapping will be necessary in the case of strings.</span>
+0448                 
+0449                 <span class="keyword">if</span> strcmp(obj.format{i},<span class="string">'%f'</span>)
+0450                     obj.data{i}(sIndex) = df.data{i}(dfIndex);
+0451                     obj.zdata{i}(sIndex) = df.zdata{i}(dfIndex);  
+0452                     
+0453                    df.data{i}(dfIndex) = sampleItemData{i};
+0454                    df.zdata{i}(dfIndex) = sampleItemzData{i};
+0455                    
+0456                 <span class="keyword">else</span>
+0457                     
+0458                     obj.data{i}(sIndex) = df.data{i}(dfIndex);
+0459                     obj.zdata{i}(sIndex) = df.zdata{i}(dfIndex);
+0460 
+0461                     <span class="comment">%trying to optimize performance by changing these to sub</span>
+0462                     <span class="comment">%cell references</span>
+0463                     <span class="comment">% used to be:</span>
+0464                     <span class="comment">%</span>
+0465 
+0466                    <span class="comment">%df.data{i}(dfIndex) = sampleItemData{i};</span>
+0467                    <span class="comment">%df.zdata{i}(dfIndex) = sampleItemzData{i};</span>
+0468 
+0469                    df.data{i}(dfIndex) = sampleItemData{i};
+0470                    df.zdata{i}(dfIndex) = sampleItemzData{i};
+0471                 <span class="keyword">end</span>
+0472                
+0473             <span class="keyword">end</span>          
+0474         <span class="keyword">end</span> <span class="comment">% swapItems()</span>
+0475         
+0476     <span class="keyword">end</span>
+0477     
+0478     methods (Access = private)
+0479         
+0480         <span class="comment">%% createLocks() PRIVATE METHOD</span>
+0481         <a name="_sub7" href="#_subfunctions" class="code">function createLocks(obj)</a>
+0482             <span class="comment">% creates locks for sample items, using 'isLocked' data from a user-specified file, if applicable</span>
+0483             
+0484             lockIndex=-1;
+0485             <span class="keyword">for</span> i=1:length(obj.header)              
+0486                <span class="keyword">if</span>(strcmp(obj.header{i},<span class="string">'isLocked'</span>))
+0487                    lockIndex=i;
+0488                <span class="keyword">end</span>
+0489             <span class="keyword">end</span>
+0490             
+0491             <span class="comment">% if locks were specified, move them to the locks array and</span>
+0492             <span class="comment">% remove them from the data file</span>
+0493             <span class="keyword">if</span>(lockIndex &gt;= 0)
+0494                 obj.header(lockIndex) = [];
+0495                 obj.format(lockIndex) = [];
+0496             
+0497                 <span class="keyword">if</span>(isempty(obj.data) == 0)
+0498                     obj.locks=[obj.data{lockIndex} <span class="keyword">...</span><span class="comment"> </span>
+0499                         zeros(1,(obj.n-length(obj.data{1})))];
+0500                     obj.data(lockIndex) = [];
+0501                 <span class="keyword">else</span>
+0502                     obj.locks=zeros(1,obj.n);
+0503                 <span class="keyword">end</span>
+0504             <span class="keyword">else</span>
+0505                 obj.locks=zeros(1,obj.n);
+0506             <span class="keyword">end</span>
+0507             
+0508         <span class="keyword">end</span> <span class="comment">% createLocks</span>
+0509         
+0510         
+0511     <span class="keyword">end</span>
+0512     
+0513     methods (Static)
+0514         
+0515         <span class="comment">%% p = sampleInputParser() STATIC METHOD</span>
+0516         <a name="_sub8" href="#_subfunctions" class="code">function p = sampleInputParser()</a>
+0517             <span class="comment">%generates an input parser with parameter/value pairs and validators for the constructor</span>
+0518             
+0519             p = inputParser;
+0520             
+0521             <span class="comment">%Define required and optional arguments, and specify how they</span>
+0522             <span class="comment">%are to be validated</span>
+0523             
+0524             p.addRequired(<span class="string">'n'</span>,@(n)validateattributes(n, {<span class="string">'numeric'</span>}, <span class="keyword">...</span>
+0525                 {<span class="string">'scalar'</span>, <span class="string">'integer'</span>, <span class="string">'positive'</span>, <span class="string">'&gt;'</span>, 0}));
+0526             p.addParamValue(<span class="string">'fileName'</span>,<span class="string">'null'</span>, <span class="keyword">...</span>
+0527                 @(fileName)<a href="validFileNameOrNull.html" class="code" title="function flag = validFileNameOrNull(fileName)">validFileNameOrNull</a>(fileName));
+0528             p.addParamValue(<span class="string">'isHeader'</span>,false, <span class="keyword">...</span>
+0529                 @(isHeader)<a href="validLogical.html" class="code" title="function flag = validLogical(l)">validLogical</a>(isHeader));
+0530             p.addParamValue(<span class="string">'isFormatting'</span>,false, <span class="keyword">...</span>
+0531                 @(isFormatting)<a href="validLogical.html" class="code" title="function flag = validLogical(l)">validLogical</a>(isFormatting));
+0532             p.addParamValue(<span class="string">'name'</span>,<span class="string">'noname'</span>, <span class="keyword">...</span>
+0533                 @(name)ischar(name));
+0534             <span class="comment">%Note that outfile is not validated at this point; this will be</span>
+0535             <span class="comment">%done when it comes time to write to the file.  Motivation is</span>
+0536             <span class="comment">%that I don't want to write to create a file (and directory</span>
+0537             <span class="comment">%structure) unless the user ultimately wants to write</span>
+0538             <span class="comment">%something.</span>
+0539             p.addParamValue(<span class="string">'outFile'</span>,<span class="string">'null'</span>, <span class="keyword">...</span>
+0540                 @(outFile)<a href="validStringOrNull.html" class="code" title="function flag = validStringOrNull(str)">validStringOrNull</a>(outFile));     
+0541         <span class="keyword">end</span> <span class="comment">% sampleInputParser</span>
+0542     <span class="keyword">end</span>
+0543     
+0544     
+0545     methods (Static, Access =private)
+0546         
+0547         <span class="comment">%% p = parseConstructorArgs(n,varargin) STATIC PRIVATE METHOD</span>
+0548         <a name="_sub9" href="#_subfunctions" class="code">function p = parseConstructorArgs(n,varargin)</a>
+0549             <span class="comment">% parses arguments from sample constructor</span>
+0550             <span class="comment">%</span>
+0551             <span class="comment">%CALL:</span>
+0552             <span class="comment">% p = sample.parseConstructorArgs(n,varargin)</span>
+0553             <span class="comment">%</span>
+0554             <span class="comment">%SYOPSIS:</span>
+0555             <span class="comment">%parses the arguments from the sample constructor.  Default</span>
+0556             <span class="comment">%values are substituted where appropriate.  Returns a struct</span>
+0557             <span class="comment">%with the parsed args.</span>
+0558             <span class="comment">%</span>
+0559             <span class="comment">%PARAMETERS:</span>
+0560             <span class="comment">% SAME as population CONSTRUCTOR</span>
+0561             <span class="comment">%</span>
+0562             <span class="comment">%RETURNS:</span>
+0563             <span class="comment">% the parsed constructor arguments in struct format</span>
+0564     
+0565             <span class="comment">%this cell gets recursively wrapped when it is passed, so</span>
+0566             <span class="comment">%unwrap one layer.</span>
+0567             
+0568             varargin = varargin{1};
+0569             
+0570             p = sample.sampleInputParser();   
+0571               
+0572             p.parse(n,varargin{:});
+0573             
+0574         <span class="keyword">end</span> <span class="comment">% parseConstructorArgs</span>
+0575                        
+0576     <span class="keyword">end</span>
+0577 <span class="keyword">end</span>
+0578</pre></div>
+<hr><address>Generated on Fri 27-Jan-2012 16:18:41 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

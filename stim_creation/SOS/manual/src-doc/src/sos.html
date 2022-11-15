@@ -1,0 +1,1810 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of sos</title>
+  <meta name="keywords" content="sos">
+  <meta name="description" content="- SOS optimization object">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="#">src</a> &gt; sos.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for .\src&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>sos
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>- SOS optimization object</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> - SOS optimization object
+
+ copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut
+
+    This file is part of SOS
+
+    SOS is free software: you can redistribute it and/or modify
+    it for academic and non-commercial purposes
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.  For commercial or for-profit
+    uses, please contact the authors (sos@cnbc.cmu.edu).
+
+    SOS is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="dataFrame.html" class="code" title="">dataFrame</a>	- dataframe object</li><li><a href="expAnneal.html" class="code" title="">expAnneal</a>	- exponentially-decaying temperature annealing object</li><li><a href="genericStatTest.html" class="code" title="">genericStatTest</a>	- parent class for statistical test objects</li><li><a href="greedyAnneal.html" class="code" title="">greedyAnneal</a>	- greedy annealing (i.e., T = 0) object</li><li><a href="logisticpSwapFunction.html" class="code" title="">logisticpSwapFunction</a>	- swap function based on the logistic curve</li><li><a href="randPopulationAndSampleCandidateSelection.html" class="code" title="">randPopulationAndSampleCandidateSelection</a>	- random population and sample selection method for swaps</li><li><a href="randPopulationCandidateSelection.html" class="code" title="">randPopulationCandidateSelection</a>	- random population selection method for selecting swaps</li><li><a href="randSampleCandidateSelection.html" class="code" title="">randSampleCandidateSelection</a>	- random sample method for selecting swaps</li><li><a href="sample.html" class="code" title="">sample</a>	- sample object</li><li><a href="seconds2human.html" class="code" title="function out = seconds2human(secs, varargin)">seconds2human</a>	- human readable time output</li><li><a href="sos.html" class="code" title="">sos</a>	- SOS optimization object</li><li><a href="sosHistory.html" class="code" title="">sosHistory</a>	- object for storing the detailed history of an optimization</li><li><a href="sosPlots.html" class="code" title="">sosPlots</a>	- object used to create detailed plots of SOS optimization</li><li><a href="sos_gui.html" class="code" title="function varargout = sos_gui(varargin)">sos_gui</a>	- sos main GUI</li><li><a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>	- master print function that regulates cmd line output based on verbosity flags</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="sos.html" class="code" title="">sos</a>	- SOS optimization object</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function obj = sos(varargin)</a></li><li><a href="#_sub2" class="code">function obj = addSample(obj, sample)</a></li><li><a href="#_sub3" class="code">function present = containsSample(obj, sample)</a></li><li><a href="#_sub4" class="code">function constraint = addConstraint(obj, varargin)</a></li><li><a href="#_sub5" class="code">function present = containsConstraint(obj, constraint)</a></li><li><a href="#_sub6" class="code">function obj = initFillSamples(obj)</a></li><li><a href="#_sub7" class="code">function validItem = checkHardConstraintsFilling(obj,sample,sItemIndex,newItemDataFrame,newItemIndex)</a></li><li><a href="#_sub8" class="code">function swCost = checkHardConstraintsSwapping(obj,sample,sItemIndex,newItemDataFrame,newItemIndex)</a></li><li><a href="#_sub9" class="code">function swCost = checkSoftConstraintsSwapping(obj,targSample,targSampleIndex,feederdf, feederdfIndex)</a></li><li><a href="#_sub10" class="code">function swCost = checkMetaConstraintsSwapping(obj,~,~,~,~)</a></li><li><a href="#_sub11" class="code">function [colName,colMean,colStd,allData] = normalizeData(obj)</a></li><li><a href="#_sub12" class="code">function cost = initCost(obj)</a></li><li><a href="#_sub13" class="code">function cost = dispCost(obj)</a></li><li><a href="#_sub14" class="code">function setAnnealSchedule(obj,varargin)</a></li><li><a href="#_sub15" class="code">function setSampleCandidateSelectionMethod(obj,methodName)</a></li><li><a href="#_sub16" class="code">function setFeederdfCandidateSelectionMethod(obj,methodName)</a></li><li><a href="#_sub17" class="code">function setpSwapFunction(obj,swFunctionName)</a></li><li><a href="#_sub18" class="code">function goodEnding = optimize(obj,varargin)</a></li><li><a href="#_sub19" class="code">function doReport(obj,tStart,startIt)</a></li><li><a href="#_sub20" class="code">function createPlots(obj,dispIt)</a></li><li><a href="#_sub21" class="code">function updatePlots(obj)</a></li><li><a href="#_sub22" class="code">function createHistory(obj)</a></li><li><a href="#_sub23" class="code">function updateHistory(obj,curIt,cost,deltaCost,pFlip,temp)</a></li><li><a href="#_sub24" class="code">function writeHistory(obj,outFile)</a></li><li><a href="#_sub25" class="code">function setBufferedHistoryOutfile(obj,outFile)</a></li><li><a href="#_sub26" class="code">function enableBufferedHistoryWrite(obj)</a></li><li><a href="#_sub27" class="code">function disableBufferedHistoryWrite(obj)</a></li><li><a href="#_sub28" class="code">function writeSamples(obj)</a></li><li><a href="#_sub29" class="code">function writePopulations(obj)</a></li><li><a href="#_sub30" class="code">function writeAll(obj)</a></li><li><a href="#_sub31" class="code">function addttest(obj, varargin)</a></li><li><a href="#_sub32" class="code">function addztest(obj, varargin)</a></li><li><a href="#_sub33" class="code">function addkstest(obj, varargin)</a></li><li><a href="#_sub34" class="code">function pass = doStatTests(obj,varargin)</a></li><li><a href="#_sub35" class="code">function deltaCostPercentiles(obj)</a></li><li><a href="#_sub36" class="code">function p = sosInputParser()</a></li><li><a href="#_sub37" class="code">function p = parseConstructorArgs(varargin)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% - SOS optimization object</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%    This file is part of SOS</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%    SOS is free software: you can redistribute it and/or modify</span>
+0008 <span class="comment">%    it for academic and non-commercial purposes</span>
+0009 <span class="comment">%    under the terms of the GNU General Public License as published by</span>
+0010 <span class="comment">%    the Free Software Foundation, either version 3 of the License, or</span>
+0011 <span class="comment">%    (at your option) any later version.  For commercial or for-profit</span>
+0012 <span class="comment">%    uses, please contact the authors (sos@cnbc.cmu.edu).</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%    SOS is distributed in the hope that it will be useful,</span>
+0015 <span class="comment">%    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+0016 <span class="comment">%    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+0017 <span class="comment">%    GNU General Public License for more details.</span>
+0018 
+0019 <span class="comment">%    You should have received a copy of the GNU General Public License</span>
+0020 <span class="comment">%    along with SOS (see COPYING.txt).</span>
+0021 <span class="comment">%    If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+0022 
+0023 classdef <a href="sos.html" class="code" title="">sos</a> &lt; <a href="genericStatTest.html" class="code" title="">genericStatTest</a>
+0024     <span class="comment">% Creates and supports optimization objects</span>
+0025     <span class="comment">%</span>
+0026     <span class="comment">% Inherits from handle so that by-reference passing can be used with</span>
+0027     <span class="comment">% the object</span>
+0028     <span class="comment">%</span>
+0029     <span class="comment">% PROPERTIES</span>
+0030     <span class="comment">%     samples % array of samples linked to SOS object</span>
+0031     <span class="comment">%     hardConstraints % array of hard constraint objects</span>
+0032     <span class="comment">%     softConstraints % array of soft constraint objects</span>
+0033     <span class="comment">%     metaConstraints % array of meta constraint objects</span>
+0034     <span class="comment">%     cost % current cost</span>
+0035     <span class="comment">%     sCandObj % object used to identify the target item in a sample which may be swapped</span>
+0036     <span class="comment">%     feederCandObj % object used to identify the item in a population/other sample to be swapped with the target sample item</span>
+0037     <span class="comment">%     pSwapObj  % object which determines the probability of making a swap based on deltaCost</span>
+0038     <span class="comment">%     annealObj % object used to anneal temperature in pSwap</span>
+0039     <span class="comment">%     maxIt % maximum number of iterations that an optimization will run for</span>
+0040     <span class="comment">%     allData % merge of all data from all samples/ pops linked to sosobj</span>
+0041     <span class="comment">%     allDataColName % name of columns in allData</span>
+0042     <span class="comment">%     allDataColMean % mean for each column in allData</span>
+0043     <span class="comment">%     allDataColStd  % stdev for each column in all data</span>
+0044     <span class="comment">%     reportInterval % number of iterations between progress reports</span>
+0045     <span class="comment">%     curIt % current optimization iteration</span>
+0046     <span class="comment">%     curFreezeIt % number of iterations cost has been frozen at a particular value</span>
+0047     <span class="comment">%     stopFreezeIt % number of frozen iterations before algorithm stops</span>
+0048     <span class="comment">%     sosstattests % array of handles to sos  stat tests requested by user</span>
+0049     <span class="comment">%     statInterval % number of iterations between stat reports</span>
+0050     <span class="comment">%     statTestReportStyle % style of report ('short' or 'full')</span>
+0051     <span class="comment">%     deltaCost % delta cost from soft constraints from last attempted flip that met all hard constraints</span>
+0052     <span class="comment">%     blockSize % number of iterations in a 'block' of trials for which average flip history /minDeltaCost stats are calculated</span>
+0053     <span class="comment">%     nFlip % number of flips so far in the block</span>
+0054     <span class="comment">%     deltaCostLog % log of deltaCost values for delta cost distribution analysis</span>
+0055     <span class="comment">%     oldNumIt % number of iterations requested on the last optimization.  This is the default number for future optimizations.</span>
+0056     <span class="comment">%     plotObj % sos object responsible for plotting</span>
+0057     <span class="comment">%     histObj % object that contains detailed optimization history data</span>
+0058     <span class="comment">%</span>
+0059     <span class="comment">% METHODS:</span>
+0060     <span class="comment">%   sos(varargin) -  Constructor</span>
+0061     <span class="comment">%   addSample(sample) adds a sample to the SOS object so that its items can be optimized.</span>
+0062     <span class="comment">%   present = containsSample(sample) evaluates whether the sos object already contains the specified sample</span>
+0063     <span class="comment">%   constraint = addConstraint(varargin) % Adds a constraint to be optimized and returns it</span>
+0064     <span class="comment">%   initFillSamples() % fills all samples to their specified capacity</span>
+0065     <span class="comment">%   validItem = checkHardConstraintsFilling(sample,sItemIndex,newItemDataFrame,newItemIndex) returns a flag indicating if newIem can be added to sample during the initial filling of samples.</span>
+0066     <span class="comment">%   swCost = checkHardConstraintsSwapping(sample,sItemIndex,newItemDataFrame,newItemIndex) returns the hard constraint cost of swapping item from newItemDataframe with item in sample.</span>
+0067     <span class="comment">%   swCost = checkSoftConstraintsSwapping(targSample,targSampleIndex,feederdf, feederdfIndex)  % calculates the cost of a swap on the soft constraints</span>
+0068     <span class="comment">%   swCost = checkMetaConstraintsSwapping(~,~,~,~)  % calcualtes the cost of a swap on the meta constraints</span>
+0069     <span class="comment">%   [colName,colMean,colStd,allData] = normalizeData() % Normalizes the data in the samples and populations linked to the SOS object to provide some coarse balancing of initial cost values.</span>
+0070     <span class="comment">%   cost = initCost()  %initializes and reports hard/soft/meta cost contraints</span>
+0071     <span class="comment">%   setpSwapFunction(obj,swFunctionName) %sets the pSwap function for the sos obj.</span>
+0072     <span class="comment">%   setSampleCandidateSelectionMethod(methodName) % sets the sample Candidate selection method</span>
+0073     <span class="comment">%   setFeederdfCandidateSelectionMethod(methodName)  % sets the feeder candidate selection method</span>
+0074     <span class="comment">%   setAnnealSchedule(varargin) % sets the anneal schedule for the SOS object</span>
+0075     <span class="comment">%   goodEnding = optimize()  % Optimizes samples based on specified constraints</span>
+0076     <span class="comment">%   doReport(tStart)  % displays a progress report from the last iteration in optimization</span>
+0077     <span class="comment">%   writeSamples() % writes the data from the samples to text files specified in their 'outFile' property</span>
+0078     <span class="comment">%   writePopulations() % writes the data from the populations to text files specified in their 'outFile' property</span>
+0079     <span class="comment">%   writeAll() write all populations and samples associated with SOS object to disk</span>
+0080     <span class="comment">%   addttest(obj, varargin) %adds a t-test to the list of analyses to run</span>
+0081     <span class="comment">%   addztest(varargin) %adds a z-test to the list of analyses to run</span>
+0082     <span class="comment">%   pass = doStatTests(varargin) % runs the stat tests and indicates if all passed the user hypotheses.</span>
+0083     <span class="comment">%   present = containsConstraint(constraint) % determines whether &lt;constraint&gt; is a constraint associated with the current SOSobj</span>
+0084     <span class="comment">%   cost = dispCost()  %reports hard/soft/meta cost contraints</span>
+0085     <span class="comment">%   deltaCostPercentiles() % displays the breakdown of deltaCost values per decile</span>
+0086     <span class="comment">%   createPlots(dispIt) % creates plots for several optimization parameters</span>
+0087     <span class="comment">%   updatePlots(curIt,cost,deltaCost,pFlip,temp) %updates the contents of the plot</span>
+0088     <span class="comment">%   createHistory() % creates plots for several optimization parameters</span>
+0089     <span class="comment">%   updateHistory(curIt,cost,deltaCost,pFlip,temp) %updates the contents of the plot</span>
+0090     <span class="comment">%   writeHistory(fileName) %writes all history saved to date to file 'fileName'</span>
+0091     <span class="comment">%   setBufferedHistoryOutfile(outFile) % writes the history on-line, one update at a time, to outfile</span>
+0092     <span class="comment">%   enableBufferedHistoryWrite() % enables writing of buffered history.</span>
+0093     <span class="comment">%   disbleBufferedHistoryWrite() % disables writing of buffered history.</span>
+0094     <span class="comment">%</span>
+0095     <span class="comment">% METHODS (STATIC,Acess = private)</span>
+0096     <span class="comment">%   p = parseConstructorArgs(varargin) - parses the sos constructor arguments</span>
+0097     
+0098     <span class="comment">%% PROPERTIES</span>
+0099     properties 
+0100         samples <span class="comment">% array of samples linked to SOS object</span>
+0101         hardConstraints <span class="comment">% array of hard constraint objects</span>
+0102         softConstraints <span class="comment">% array of soft constraint objects</span>
+0103         metaConstraints <span class="comment">% array of meta constraint objects</span>
+0104         cost <span class="comment">% current cost</span>
+0105         sCandObj <span class="comment">% object used to identify the target item in a sample which may be swapped</span>
+0106         feederCandObj <span class="comment">% object used to identify the item in a population/other sample to be swapped with the target sample item</span>
+0107         pSwapObj  <span class="comment">% object which determines the probability of making a swap based on deltaCost</span>
+0108         annealObj <span class="comment">% object used to anneal temperature in pSwap</span>
+0109         maxIt <span class="comment">% maximum number of iterations that an optimization will run for</span>
+0110         allData <span class="comment">% merge of all data from all samples/ pops linked to sosobj</span>
+0111         allDataColName <span class="comment">% name of columns in allData</span>
+0112         allDataColMean <span class="comment">% mean for each column in allData</span>
+0113         allDataColStd  <span class="comment">% stdev for each column in all data</span>
+0114         reportInterval <span class="comment">% number of iterations between progress reports</span>
+0115         curIt <span class="comment">% current optimization iteration</span>
+0116         curFreezeIt <span class="comment">% number of iterations cost has been frozen at a particular value</span>
+0117         stopFreezeIt <span class="comment">% number of frozen iterations before algorithm stops</span>
+0118         sosstattests <span class="comment">% array of handles to sos  stat tests requested by user</span>
+0119         statInterval <span class="comment">% number of iterations between stat reports</span>
+0120         statTestReportStyle <span class="comment">% style of report ('short' or 'full')</span>
+0121         deltaCost <span class="comment">% delta cost from soft constraints from last attempted flip that met all hard constraints</span>
+0122         blockSize <span class="comment">% number of iterations in a 'block' of trials for which average flip history /minDeltaCost stats are calculated</span>
+0123         nFlip <span class="comment">% number of flips so far in the block</span>
+0124         deltaCostLog <span class="comment">% log of deltaCost values for delta cost distribution analysis</span>
+0125         oldNumIt <span class="comment">% number of iterations requested on the last optimization.  This is the default number for future optimizations.</span>
+0126         plotObj <span class="comment">% object responsible for plotting</span>
+0127         histObj <span class="comment">% object that contains detailed optimization history data</span>
+0128         targSampleCandSelectMethod <span class="comment">% name of sample replacement method</span>
+0129         feederdfCandSelectMethod <span class="comment">% name of neighbor method</span>
+0130         queryStopOptimize <span class="comment">% how often to probe the gui to see if the stop button was pressed</span>
+0131     <span class="keyword">end</span>
+0132     
+0133     <span class="comment">%% PROPERTIES (Constant)</span>
+0134     properties (Constant)
+0135         maxIt_def = 10000; <span class="comment">% default</span>
+0136         pSwapFunction_def = <span class="string">'logistic'</span>; <span class="comment">% default</span>
+0137         targSampleCandSelectMethod_def = <span class="string">'random'</span>; <span class="comment">% default</span>
+0138         feederdfCandSelectMethod_def = <span class="string">'randomPopulationAndSample'</span>; <span class="comment">% default</span>
+0139         reportInterval_def = 1000; <span class="comment">% default</span>
+0140         stopFreezeIt_def = 10000; <span class="comment">% default</span>
+0141         statInterval_def = 10000; <span class="comment">% default</span>
+0142         statTestReportStyle_def = <span class="string">'short'</span>; <span class="comment">% default</span>
+0143         blockSize_def = 1000; <span class="comment">% default</span>
+0144         queryStopOptimize_def = 100; <span class="comment">% default</span>
+0145     <span class="keyword">end</span>
+0146          
+0147     methods
+0148         
+0149         <span class="comment">%% sos CONSTRUCTOR</span>
+0150         <a name="_sub0" href="#_subfunctions" class="code">function obj = sos(varargin)</a>
+0151             <span class="comment">% Constructor</span>
+0152             <span class="comment">%</span>
+0153             <span class="comment">% SYNOPSIS:</span>
+0154             <span class="comment">% Creates an SOS object</span>
+0155             <span class="comment">%</span>
+0156             <span class="comment">%PARAMETERS:</span>
+0157             <span class="comment">%Optional:</span>
+0158             <span class="comment">%   'maxIt'/integer - maximum number of iterations to run the optimizer</span>
+0159             <span class="comment">%   'pSwapFunction'/string - name of pSwapFunction to use.</span>
+0160             <span class="comment">%   'targSampleCandSelectMethod'/string - name of target Sample Candidate selection method</span>
+0161             <span class="comment">%   'feederdfCandSelectMethod'/string - name of feeder dataframe candidate selection method</span>
+0162             <span class="comment">%   'reportInterval'/int - number of iterations between general cost reports</span>
+0163             <span class="comment">%   'stopFreezeIt'/int - operationalized number of sequential iterations cost value must remain the same for state to be considered 'frozen'</span>
+0164             <span class="comment">%   'statInterval'/int - number of iterations between stat reports</span>
+0165             <span class="comment">%   'statTestReportStyle'/string - style of stat reports ('short' or 'full')</span>
+0166             <span class="comment">%   'blockSize'/int - number of iterations in a block; used to determine length of deltaCostLog</span>
+0167             
+0168             <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([char(10) <span class="string">'Creating sos Object'</span>], <span class="keyword">...</span>
+0169                 <span class="string">'sos_constructor_startObjCreation'</span>);
+0170 
+0171             p = sos.parseConstructorArgs(varargin);
+0172             
+0173             <span class="comment">%potentially user-specified variables</span>
+0174             obj.maxIt = p.Results.maxIt;
+0175             obj.oldNumIt = obj.maxIt;
+0176             obj.reportInterval = p.Results.reportInterval;
+0177             obj.stopFreezeIt = p.Results.stopFreezeIt; 
+0178             obj.statInterval = p.Results.statInterval;
+0179             obj.statTestReportStyle = p.Results.statTestReportStyle;
+0180             obj.blockSize = p.Results.blockSize;
+0181             
+0182             obj.queryStopOptimize = obj.queryStopOptimize_def;
+0183             
+0184             <a href="#_sub17" class="code" title="subfunction setpSwapFunction(obj,swFunctionName)">setpSwapFunction</a>(obj,p.Results.pSwapFunction);
+0185             <a href="#_sub15" class="code" title="subfunction setSampleCandidateSelectionMethod(obj,methodName)">setSampleCandidateSelectionMethod</a>(obj,<span class="keyword">...</span>
+0186                 p.Results.targSampleCandSelectMethod);
+0187             <a href="#_sub16" class="code" title="subfunction setFeederdfCandidateSelectionMethod(obj,methodName)">setFeederdfCandidateSelectionMethod</a>(obj,<span class="keyword">...</span>
+0188                 p.Results.feederdfCandSelectMethod);
+0189             
+0190             obj.targSampleCandSelectMethod = p.Results.targSampleCandSelectMethod;
+0191             obj.feederdfCandSelectMethod = p.Results.feederdfCandSelectMethod;
+0192             
+0193             
+0194             obj.curIt = 0;            
+0195             obj.samples = [];       
+0196             obj.hardConstraints = [];
+0197             obj.softConstraints = [];
+0198             obj.metaConstraints = [];
+0199             obj.sosstattests = [];
+0200             obj.curFreezeIt = 0;
+0201             obj.deltaCost = NaN;
+0202             obj.nFlip = NaN;
+0203             obj.deltaCostLog = nan(obj.blockSize,1);
+0204             
+0205             <span class="comment">%set default anneal schedule to greedy</span>
+0206             obj.setAnnealSchedule();
+0207 
+0208             <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">'Creation of sos object complete'</span> char(10)], <span class="keyword">...</span>
+0209                 <span class="string">'sos_constructor_endObjCreation'</span>);
+0210         <span class="keyword">end</span>
+0211 
+0212         
+0213         <span class="comment">%% addSample METHOD</span>
+0214         <a name="_sub1" href="#_subfunctions" class="code">function obj = addSample(obj, sample)</a>
+0215             <span class="comment">% adds a sample to the SOS object so that its items can be optimized.</span>
+0216             <span class="comment">%</span>
+0217             <span class="comment">% CALL:</span>
+0218             <span class="comment">% &lt;sosObj&gt;.addSample(&lt;sampleObj&gt;)</span>
+0219             <span class="comment">%</span>
+0220             <span class="comment">% PARAMETERS:</span>
+0221             <span class="comment">% sample - a sample object</span>
+0222             
+0223             p = inputParser;
+0224             p.addRequired(<span class="string">'obj'</span>);
+0225             p.addRequired(<span class="string">'sample'</span>, <span class="keyword">...</span>
+0226                  @(<a href="sample.html" class="code" title="">sample</a>)strcmp(class(<a href="sample.html" class="code" title="">sample</a>),<span class="string">'sample'</span>));
+0227             p.parse(obj,<a href="sample.html" class="code" title="">sample</a>);
+0228                                             
+0229             <span class="keyword">if</span>(isempty(sample.population)==1)
+0230                 <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>(<span class="string">'Warning: Sample has not been linked with a population'</span>, <span class="keyword">...</span>
+0231                     <span class="string">'sos_addSample_NoPopForSampleWarn'</span>);
+0232             <span class="keyword">end</span>
+0233           
+0234             present = obj.containsSample(<a href="sample.html" class="code" title="">sample</a>);
+0235             
+0236             <span class="keyword">if</span>(present == 1)
+0237                 <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>(<span class="string">'Warning: Sample has already been added.  It cannot be added again'</span>, <span class="keyword">...</span>
+0238                     <span class="string">'sos_addSample_SampleAlreadyAddedWarn'</span>);              
+0239             <span class="keyword">else</span>
+0240                 obj.samples = [obj.samples <a href="sample.html" class="code" title="">sample</a>];  
+0241                 <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>(<span class="string">'Adding new Sample...'</span>, <span class="keyword">...</span>
+0242                     <span class="string">'sos_addSample_sampleAdded'</span>);
+0243             <span class="keyword">end</span>
+0244             
+0245         <span class="keyword">end</span> <span class="comment">%addSample</span>
+0246         
+0247         
+0248         <span class="comment">%% present = containsSample(sample) METHOD</span>
+0249         <a name="_sub2" href="#_subfunctions" class="code">function present = containsSample(obj, sample)</a>
+0250             <span class="comment">% evaluates whether the sos object already contains the specified sample</span>
+0251             <span class="comment">%</span>
+0252             <span class="comment">% PARAMETERS:</span>
+0253             <span class="comment">%   sample - a sample object</span>
+0254             
+0255             p = inputParser;
+0256             p.addRequired(<span class="string">'obj'</span>);
+0257             p.addRequired(<span class="string">'sample'</span>, <span class="keyword">...</span>
+0258                  @(<a href="sample.html" class="code" title="">sample</a>)strcmp(class(<a href="sample.html" class="code" title="">sample</a>),<span class="string">'sample'</span>));
+0259             p.parse(obj,<a href="sample.html" class="code" title="">sample</a>);
+0260                                             
+0261             present = max(ismember(obj.samples,<a href="sample.html" class="code" title="">sample</a>));
+0262  
+0263         <span class="keyword">end</span> <span class="comment">%addSample</span>
+0264         
+0265         
+0266         <span class="comment">%% addConstraint(varargin) METHOD</span>
+0267         <a name="_sub3" href="#_subfunctions" class="code">function constraint = addConstraint(obj, varargin)</a>
+0268            <span class="comment">% Adds a constraint to be optimized</span>
+0269            <span class="comment">%</span>
+0270            <span class="comment">% PARAMETERS:</span>
+0271            <span class="comment">% varies dependig on object to be created.  See</span>
+0272            <span class="comment">% genericConstraint and the specific constraint you wish to</span>
+0273            <span class="comment">% create for options.</span>
+0274            
+0275            constraint = genericConstraint.createConstraint(<span class="string">'sosObj'</span>,obj,varargin{:});
+0276            
+0277            <span class="keyword">if</span>(strcmp(constraint.constraintType,<span class="string">'hard'</span>))
+0278                obj.hardConstraints = [obj.hardConstraints {constraint}];
+0279            <span class="keyword">elseif</span>(strcmp(constraint.constraintType,<span class="string">'soft'</span>))
+0280                obj.softConstraints = [obj.softConstraints {constraint}];          
+0281            <span class="keyword">elseif</span>(strcmp(constraint.constraintType,<span class="string">'meta'</span>))
+0282                obj.metaConstraints = [obj.metaConstraints {constraint}];
+0283            <span class="keyword">else</span>
+0284                error(<span class="string">'The type of the new constraint is not supported by the sos object.  Supported types are hard/soft/meta'</span>);
+0285            <span class="keyword">end</span>
+0286          
+0287         <span class="keyword">end</span>
+0288 
+0289         <span class="comment">%% present = containsConstraint(constraint) METHOD</span>
+0290         <a name="_sub4" href="#_subfunctions" class="code">function present = containsConstraint(obj, constraint)</a>
+0291             <span class="comment">% determines whether &lt;constraint&gt; is a constraint associated with the current SOSobj</span>
+0292             <span class="comment">%</span>
+0293             <span class="comment">% Returns 1 if &lt;constraint&gt; is present, 0 otherwise</span>
+0294             
+0295             present = 0;
+0296 
+0297             <span class="keyword">for</span> i=1:length(obj.hardConstraints)
+0298                 <span class="keyword">if</span>(obj.hardConstraints{i} == constraint)
+0299                     present = 1;
+0300                     <span class="keyword">return</span>;
+0301                 <span class="keyword">end</span>
+0302             <span class="keyword">end</span>
+0303             
+0304             <span class="keyword">for</span> i=1:length(obj.softConstraints)
+0305                 <span class="keyword">if</span>(obj.softConstraints{i} == constraint)
+0306                     present = 1;
+0307                     <span class="keyword">return</span>;
+0308                 <span class="keyword">end</span>
+0309             <span class="keyword">end</span>
+0310             
+0311             <span class="keyword">for</span> i=1:length(obj.metaConstraints)
+0312                 <span class="keyword">if</span>(obj.metaConstraints{i} == constraint)
+0313                     present = 1;
+0314                     <span class="keyword">return</span>;
+0315                 <span class="keyword">end</span>
+0316             <span class="keyword">end</span>
+0317             
+0318         <span class="keyword">end</span>
+0319         
+0320         <span class="comment">%% initFillSamples()  METHOD</span>
+0321         <a name="_sub5" href="#_subfunctions" class="code">function obj = initFillSamples(obj)</a>
+0322             <span class="comment">% fills all samples to their specified capacity</span>
+0323             <span class="comment">%</span>
+0324             
+0325             <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>(<span class="string">'Filling All Samples...'</span>,<span class="string">'sos_initFillSamples_start'</span>);
+0326             
+0327             <span class="keyword">if</span>(isempty(obj.samples))
+0328                  error(<span class="string">'Error: No Samples in SOS Object!'</span>);
+0329             <span class="keyword">end</span>
+0330             
+0331             <span class="comment">%total add stores references to the number of items left to</span>
+0332             <span class="comment">%fill in to all of the different samples.</span>
+0333             totalAdd = [];
+0334             <span class="keyword">for</span> i=1:length(obj.samples)
+0335                <span class="comment">%find out how many observations are needed,</span>
+0336                <span class="comment">%how many have already been filled,</span>
+0337                <span class="comment">%and then fill the remainder</span>
+0338                
+0339                n = obj.samples(i).n;
+0340                
+0341                <span class="keyword">if</span>(isempty(obj.samples(i).data))
+0342                    curN= 0;
+0343                <span class="keyword">else</span>
+0344                 curN = length(obj.samples(i).data{1});
+0345                <span class="keyword">end</span>
+0346                
+0347                toAdd = n-curN;               
+0348                totalAdd = [totalAdd ones(1,toAdd)*i]; <span class="comment">%#ok&lt;AGROW&gt;</span>
+0349                    
+0350             <span class="keyword">end</span>
+0351             
+0352            <span class="comment">%now add all of those observations from the appropriate</span>
+0353            <span class="comment">%population, enforcing hard bounds</span>
+0354 
+0355            <span class="keyword">while</span>(isempty(totalAdd) ==0)
+0356                <span class="comment">%select a sample at random</span>
+0357                toAddIndex=floor((length(totalAdd)*rand)+1);
+0358                sIndex= totalAdd(toAddIndex);
+0359 
+0360                <span class="comment">%randomly select an item from it's population:</span>
+0361                 <span class="comment">%make sure that the target population has at least one</span>
+0362                 <span class="comment">%item still in it</span>
+0363                 <span class="keyword">if</span>(isempty(obj.samples(sIndex).population))
+0364                     error([<span class="string">'Sample '''</span>,obj.samples(sIndex).name,<span class="string">''' is not filled to capacity, but has not been linked to a population to fill it'</span>]);
+0365                 <span class="keyword">end</span>
+0366                         
+0367                     
+0368                 <span class="keyword">if</span>(isempty(obj.samples(sIndex).population.data)==1)
+0369                     error([<span class="string">'sos.initFillSamples Failed because '</span>, <span class="keyword">...</span>
+0370                         <span class="string">'a population was depeleted of items but '</span>,<span class="keyword">...</span>
+0371                         <span class="string">'more items were still needed'</span>]);                       
+0372                 <span class="keyword">else</span>
+0373                     pItemIndex = <span class="keyword">...</span>
+0374                      floor(length(obj.samples(sIndex).population.data{1})*rand+1);
+0375                 <span class="keyword">end</span>
+0376    
+0377                 <span class="keyword">if</span>(isempty(obj.samples(sIndex).data))
+0378                     sItemIndex = 1;
+0379                 <span class="keyword">else</span>
+0380                     sItemIndex = length(obj.samples(sIndex).data{1});
+0381                 <span class="keyword">end</span>
+0382                 
+0383                 <span class="comment">%pass it the current sample, where the item will go in it,</span>
+0384                 <span class="comment">%then the population, and the item from the pop's index.</span>
+0385                 validItem = obj.checkHardConstraintsFilling( <span class="keyword">...</span>
+0386                     obj.samples(sIndex),sItemIndex, <span class="keyword">...</span>
+0387                     obj.samples(sIndex).population,pItemIndex);
+0388                               
+0389                 <span class="keyword">if</span>(validItem == 1)
+0390                     <span class="comment">%add that population item to the sample list; remove it</span>
+0391                     <span class="comment">%from the population.</span>
+0392                     totalAdd(toAddIndex)=[]; <span class="comment">%#ok&lt;AGROW&gt;</span>
+0393                     pItem = obj.samples(sIndex).population.popItem(pItemIndex);
+0394                     obj.samples(sIndex).appendItem(pItem);
+0395                 <span class="keyword">end</span>
+0396            <span class="keyword">end</span>            
+0397         <span class="keyword">end</span> <span class="comment">% initFillSamples</span>
+0398             
+0399         
+0400         <span class="comment">%% validItem = checkHardConstraintsFilling(obj,sample,sItemIndex,newItemDataFrame,newItemIndex)</span>
+0401         <a name="_sub6" href="#_subfunctions" class="code">function validItem = checkHardConstraintsFilling(obj,sample,sItemIndex,newItemDataFrame,newItemIndex)</a>
+0402             <span class="comment">% returns a flag indicating if newItem can be added to sample during the initial filling of samples.</span>
+0403             <span class="comment">%</span>
+0404             <span class="comment">% Should only be invoked when initially filling the samples</span>
+0405             <span class="comment">%</span>
+0406             <span class="comment">%</span>
+0407             <span class="comment">%   sample - the target sample</span>
+0408             <span class="comment">%   sItemIndex - row index of item to swap</span>
+0409             <span class="comment">%   newItemDataframe - dataframe (sample/pop) containin the item to fill with.</span>
+0410             <span class="comment">%   newItemIndex - row index of item to swap.</span>
+0411             validItem = 1;
+0412             
+0413             <span class="keyword">for</span> i=1:length(obj.hardConstraints)
+0414                 <span class="keyword">if</span>(obj.hardConstraints{i}.s1 == <a href="sample.html" class="code" title="">sample</a>)
+0415                     <span class="keyword">if</span> (obj.hardConstraints{i}.itemCostFilling(<span class="keyword">...</span>
+0416                             <a href="sample.html" class="code" title="">sample</a>,sItemIndex, <span class="keyword">...</span>
+0417                             newItemDataFrame,newItemIndex) == 1)   
+0418                         
+0419                         validItem = 0;
+0420                     <span class="keyword">end</span>
+0421                 <span class="keyword">end</span>
+0422             <span class="keyword">end</span>        
+0423         <span class="keyword">end</span> <span class="comment">% checkHardConstraintsFilling</span>
+0424         
+0425         
+0426         <span class="comment">%% swCost = checkHardConstraintsSwapping(obj,sample,sItemIndex,newItemDataFrame,newItemIndex)</span>
+0427         <a name="_sub7" href="#_subfunctions" class="code">function swCost = checkHardConstraintsSwapping(obj,sample,sItemIndex,newItemDataFrame,newItemIndex)</a>
+0428             <span class="comment">% returns the hard constraint cost of swapping item from newItemDataframe with item in sample.</span>
+0429             <span class="comment">%</span>
+0430             <span class="comment">% Generally, if swCost &gt; 0 the swap should not be executed</span>
+0431             <span class="comment">%   sample - the target sample</span>
+0432             <span class="comment">%   sItemIndex - row index of item to swap</span>
+0433             <span class="comment">%   newItemDataframe - dataframe (sample/pop) containin the item to fill with.</span>
+0434             <span class="comment">%   newItemIndex - row index of item to swap.</span>
+0435             curCost = 0;
+0436             newCost = 0;
+0437             <span class="keyword">for</span> i=1:length(obj.hardConstraints)
+0438                 <span class="keyword">if</span>(obj.hardConstraints{i}.s1 == <a href="sample.html" class="code" title="">sample</a>)
+0439                         
+0440                     curCost = curCost + obj.hardConstraints{i}.cost;
+0441                     newCost = newCost + obj.hardConstraints{i}.swapCost(<span class="keyword">...</span>
+0442                         <a href="sample.html" class="code" title="">sample</a>,sItemIndex,newItemDataFrame,newItemIndex);
+0443                 <span class="keyword">elseif</span> (obj.hardConstraints{i}.s1 == newItemDataFrame)
+0444                     curCost = curCost + obj.hardConstraints{i}.cost;
+0445                     newCost = newCost + obj.hardConstraints{i}.swapCost(<span class="keyword">...</span>
+0446                         newItemDataFrame,newItemIndex,<a href="sample.html" class="code" title="">sample</a>,sItemIndex);
+0447                     
+0448                 <span class="keyword">end</span>        
+0449             <span class="keyword">end</span>
+0450                        
+0451             swCost = newCost - curCost ;
+0452                         
+0453         <span class="keyword">end</span>
+0454         
+0455         <span class="comment">%% swCost =  checkSoftConstraintsSwapping(targSample,targSampleIndex,feederdf, feederdfIndex)</span>
+0456         <a name="_sub8" href="#_subfunctions" class="code">function swCost = checkSoftConstraintsSwapping(obj,targSample,targSampleIndex,feederdf, feederdfIndex)</a>
+0457             <span class="comment">% calculates the cost of a swap on the soft constraints</span>
+0458             <span class="comment">%</span>
+0459             <span class="comment">% PARAMETERS:</span>
+0460             <span class="comment">%   targSample - the target sample</span>
+0461             <span class="comment">%   targSampleIndex - row index of item to swap</span>
+0462             <span class="comment">%   feederdf - dataframe (sample/pop) containin the item to fill with.</span>
+0463             <span class="comment">%   feederdfIndex - row index of item to swap.</span>
+0464             <span class="comment">%</span>
+0465             <span class="comment">% RETURNS:</span>
+0466             <span class="comment">% swCost - cost of making the swap</span>
+0467             
+0468             swCost = 0;
+0469             
+0470             <span class="keyword">for</span> j=1:length(obj.softConstraints)
+0471                 <span class="keyword">if</span> ((obj.softConstraints{j}.s1 == targSample ||  <span class="keyword">...</span>
+0472                         obj.softConstraints{j}.s2 == targSample || <span class="keyword">...</span>
+0473                         obj.softConstraints{j}.s1 == feederdf || <span class="keyword">...</span>
+0474                         obj.softConstraints{j}.s2 == feederdf ))
+0475                     swCost = swCost + <span class="keyword">...</span>
+0476                       obj.softConstraints{j}.swapCost(<span class="keyword">...</span>
+0477                        targSample,targSampleIndex,feederdf, feederdfIndex);
+0478                 <span class="keyword">else</span>
+0479                     swCost = swCost +obj.softConstraints{j}.cost;
+0480                 <span class="keyword">end</span>
+0481             <span class="keyword">end</span>       
+0482         <span class="keyword">end</span>
+0483          
+0484         <span class="comment">%% swCost = checkMetaConstraintsSwapping(~,~,~,~) METHOD</span>
+0485         <a name="_sub9" href="#_subfunctions" class="code">function swCost = checkMetaConstraintsSwapping(obj,~,~,~,~)</a>
+0486             <span class="comment">% calcualtes the cost of a swap on the meta constraints</span>
+0487             <span class="comment">%</span>
+0488             <span class="comment">%Parameters:</span>
+0489             <span class="comment">% parameters are the same as for hard and soft constraints, but</span>
+0490             <span class="comment">% are ignored.  They are accepted as arguments merely to</span>
+0491             <span class="comment">% increase the consistency of the argument.</span>
+0492             
+0493             <span class="comment">%checking meta constraints is extremely computationally cheap,</span>
+0494             <span class="comment">%so they are calculated every time.</span>
+0495             
+0496            swCost = 0; 
+0497            
+0498            <span class="keyword">for</span> j=1:length(obj.metaConstraints)
+0499                swCost = swCost + obj.metaConstraints{j}.swapCost();
+0500            <span class="keyword">end</span>
+0501         <span class="keyword">end</span>
+0502              
+0503              
+0504         <span class="comment">%% [colName,colMean,colStd,allData] = normalizeData() METHOD</span>
+0505         <a name="_sub10" href="#_subfunctions" class="code">function [colName,colMean,colStd,allData] = normalizeData(obj)</a>
+0506             <span class="comment">% Normalizes the data in the samples and populations linked to the SOS object to provide some coarse balancing of initial cost values.</span>
+0507             
+0508             <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>(<span class="string">'Normalizing Population and Sample Data'</span>, <span class="keyword">...</span>
+0509                         <span class="string">'sos_normalizeData_start'</span>);
+0510          
+0511             <span class="comment">%empty data frame</span>
+0512             allData = <a href="dataFrame.html" class="code" title="">dataFrame</a>();
+0513             
+0514             alreadyMerged = {};
+0515             
+0516             <span class="comment">%go through each of the samples, and their populations.</span>
+0517             <span class="keyword">for</span> i=1:length(obj.samples)
+0518                 <span class="comment">%first, check the population:</span>
+0519                 
+0520                 popPresent = 0;
+0521                 <span class="keyword">if</span>(isempty(alreadyMerged))
+0522                     popPresent = 0;
+0523                 <span class="keyword">else</span>
+0524                     <span class="keyword">for</span> j=1:length(alreadyMerged)
+0525                         <span class="keyword">if</span>(alreadyMerged{j} == obj.samples(i).population)
+0526                             popPresent = 1;
+0527                         <span class="keyword">end</span>
+0528                     <span class="keyword">end</span>
+0529                 <span class="keyword">end</span>
+0530                 
+0531                 <span class="comment">%population has not already been added, so add it</span>
+0532                 <span class="keyword">if</span>(popPresent == 0)
+0533                     <span class="comment">%only add the population if the sample does in fact</span>
+0534                     <span class="comment">%have a population</span>
+0535                     <span class="keyword">if</span> isempty(obj.samples(i).population) ~= 1
+0536                         allData = dataFrame.aContainsb(allData,obj.samples(i).population);
+0537                         allData = dataFrame.aContainsbData(allData,obj.samples(i).population);
+0538                         alreadyMerged = [alreadyMerged {obj.samples(i).population}]; <span class="comment">%#ok&lt;AGROW&gt;</span>
+0539                     <span class="keyword">end</span>
+0540                 <span class="keyword">end</span>
+0541                 
+0542                 <span class="comment">%now add the sample</span>
+0543                 allData = dataFrame.aContainsb(allData,obj.samples(i));
+0544                 allData = dataFrame.aContainsbData(allData,obj.samples(i));
+0545                 <span class="comment">%we don't need to check that the sample hasn't been added</span>
+0546                 <span class="comment">%stricly speaking, because samples can only appear once.</span>
+0547                 <span class="comment">%However, this may be necessary in a future version of</span>
+0548                 <span class="comment">%the code...</span>
+0549                 alreadyMerged = [alreadyMerged {obj.samples(i)}]; <span class="comment">%#ok&lt;AGROW&gt;</span>
+0550                
+0551                 
+0552             <span class="keyword">end</span>
+0553             
+0554             <span class="comment">%we now have all of the data in a single dataframe; each column</span>
+0555             <span class="comment">%can now be normalized and descriptive statistics stored.</span>
+0556             
+0557             colName = cell(1,length(allData.data));
+0558             colMean = NaN(1,length(allData.data));
+0559             colStd =  NaN(1,length(allData.data));
+0560             
+0561             
+0562             <span class="keyword">for</span> i=1:length(allData.data)
+0563                 <span class="comment">%if it's a numeric vector, calculate mean/stdev</span>
+0564                 colName{i} = allData.header{i}; 
+0565                 
+0566                 <span class="keyword">if</span>(strcmp(allData.format{i},<span class="string">'%f'</span>))
+0567                    colMean(i) = nanmean(allData.data{i});
+0568                    colStd(i) = nanstd(allData.data{i});
+0569                 <span class="keyword">end</span>    
+0570             <span class="keyword">end</span>
+0571                            
+0572             <span class="comment">%configure the z-data field in each sample and population to</span>
+0573             <span class="comment">%reflect the new changes.</span>
+0574             
+0575             <span class="keyword">for</span> i=1:length(alreadyMerged)
+0576                <span class="comment">%link the current normalization to this object</span>
+0577                 alreadyMerged{i}.sosObj = obj; <span class="comment">%#ok&lt;AGROW&gt;</span>
+0578                 alreadyMerged{i}.zdata = {}; <span class="comment">%#ok&lt;AGROW&gt;</span>
+0579                
+0580                <span class="keyword">for</span> j=1:length(alreadyMerged{i}.data)
+0581                    col = alreadyMerged{i}.data{j};
+0582                    
+0583                   <span class="keyword">if</span>(strcmp(alreadyMerged{i}.format{j},<span class="string">'%f'</span>))
+0584                       m= NaN;
+0585                       std = NaN;
+0586                       <span class="comment">%get the relevant coefficients:</span>
+0587                       <span class="keyword">for</span> k=1:length(colName)
+0588                          <span class="keyword">if</span> (strcmp(colName{k},alreadyMerged{i}.header{j}))                           
+0589                             m = colMean(k);
+0590                             std = colStd(k);
+0591                              <span class="keyword">break</span>;
+0592                          <span class="keyword">end</span>
+0593                       <span class="keyword">end</span>
+0594                       
+0595                       <span class="comment">%check that m and std exist</span>
+0596                       <span class="keyword">if</span>(isnan(m) || isnan(std))
+0597                           error(<span class="string">'Normalization failed because either the mean or stdeviation was NaN'</span>);
+0598                       <span class="keyword">end</span>
+0599                       
+0600                       <span class="comment">%they exist, so normalization can proceed</span>
+0601                       
+0602                       
+0603                       <span class="keyword">if</span> std == 0
+0604                           <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">'Warning: No variance in column: '</span>, alreadyMerged{i}.header{j}],<span class="keyword">...</span>
+0605                             <span class="string">'sos_normalizeData_noVarWarn'</span>);
+0606                           std = 1;
+0607                       <span class="keyword">end</span>
+0608                       
+0609                       col = (col-m)/std;
+0610                                           
+0611                   <span class="keyword">end</span>
+0612 
+0613                   alreadyMerged{i}.zdata{j} = col; <span class="comment">%#ok&lt;AGROW&gt;</span>
+0614                           
+0615                <span class="keyword">end</span>                
+0616             <span class="keyword">end</span>    
+0617             
+0618             obj.allData = allData;
+0619             obj.allDataColName = colName;
+0620             obj.allDataColMean = colMean;
+0621             obj.allDataColStd = colStd;
+0622             
+0623         <span class="keyword">end</span> <span class="comment">%normalizeData</span>
+0624         
+0625         
+0626         <span class="comment">%% initCost() METHOD</span>
+0627         <a name="_sub11" href="#_subfunctions" class="code">function cost = initCost(obj)</a>
+0628             <span class="comment">%initializes and reports hard/soft/meta cost contraints</span>
+0629 
+0630             <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([char(10),<span class="string">'Initializing Constraints'</span>,char(10)],<span class="keyword">...</span>
+0631                 <span class="string">'sos_initCost_startInit'</span>);
+0632             
+0633             
+0634             
+0635             <span class="comment">% hard constraints</span>
+0636             hardConstraintCost = 0;
+0637             <span class="keyword">for</span> j = 1:length(obj.hardConstraints)
+0638                 <span class="keyword">try</span>
+0639                     tempCost = obj.hardConstraints{j}.initCost();
+0640                 <span class="keyword">catch</span> exception
+0641                     <span class="keyword">if</span> strcmp(exception.identifier, <span class="keyword">...</span>
+0642                             <span class="string">'MATLAB:cellRefFromNonCell'</span>)
+0643                         error([<span class="string">'ERROR: Data needed to calculate hard constraint cost #'</span> num2str(j),<span class="string">' is missing.'</span>,<span class="keyword">...</span>
+0644                             char(10),<span class="string">'       Have samples been filled and normalized?'</span>]);
+0645                   
+0646                     <span class="keyword">else</span>
+0647                         throw exception
+0648                     <span class="keyword">end</span>
+0649                     
+0650                 <span class="keyword">end</span>
+0651                 
+0652                 <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">'   Hard Constraint #: '</span>,num2str(j),<span class="keyword">...</span>
+0653                     <span class="string">' Cost: '</span> num2str(tempCost),<span class="string">'   '</span>,obj.hardConstraints{j}.name], <span class="keyword">...</span>
+0654                         <span class="string">'sos_initCost_indivHardCost'</span>);
+0655                 hardConstraintCost = hardConstraintCost + tempCost;
+0656             <span class="keyword">end</span>
+0657  
+0658             <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">'Hard Constraint Total: '</span>, num2str(hardConstraintCost)], <span class="keyword">...</span>
+0659                         <span class="string">'sos_initCost_totalHardCost'</span>);
+0660                     
+0661             <span class="comment">% soft constraints</span>
+0662             softConstraintCost = 0;
+0663             <span class="keyword">for</span> j=1:length(obj.softConstraints)
+0664                 <span class="keyword">try</span>
+0665                     tempCost = obj.softConstraints{j}.initCost();    
+0666                 <span class="keyword">catch</span> exception
+0667                     <span class="keyword">if</span> strcmp(exception.identifier, <span class="keyword">...</span>
+0668                             <span class="string">'MATLAB:cellRefFromNonCell'</span>)
+0669                         error([<span class="string">'ERROR: Data needed to calculate soft constraint cost #'</span> num2str(j),<span class="string">' is missing.'</span>,<span class="keyword">...</span>
+0670                             char(10),<span class="string">'       Have samples been filled and normalized?'</span>]);
+0671                   
+0672                     <span class="keyword">else</span>
+0673                         throw exception
+0674                     <span class="keyword">end</span>
+0675                     
+0676                 <span class="keyword">end</span>
+0677                 
+0678                 <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">'   Soft Constraint #: '</span>,num2str(j),<span class="keyword">...</span>
+0679                     <span class="string">' Cost: '</span> num2str(tempCost),<span class="string">'   '</span>,obj.softConstraints{j}.name], <span class="keyword">...</span>
+0680                         <span class="string">'sos_initCost_indivSoftCost'</span>);
+0681                softConstraintCost = softConstraintCost + tempCost; 
+0682             <span class="keyword">end</span>
+0683             
+0684             <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">'Soft Constraint Total: '</span>, num2str(softConstraintCost)], <span class="keyword">...</span>
+0685                         <span class="string">'sos_initCost_totalSoftCost'</span>);
+0686             
+0687             <span class="comment">% meta constraints</span>
+0688             metaConstraintCost = 0;
+0689             <span class="keyword">for</span> j=1:length(obj.metaConstraints)
+0690                 <span class="keyword">try</span>
+0691                     tempCost = obj.metaConstraints{j}.initCost();    
+0692                 <span class="keyword">catch</span> exception
+0693                     <span class="keyword">if</span> strcmp(exception.identifier, <span class="keyword">...</span>
+0694                             <span class="string">'MATLAB:cellRefFromNonCell'</span>)
+0695                         error([<span class="string">'ERROR: Data needed to calculate meta constraint cost #'</span> num2str(j),<span class="string">' is missing.'</span>,<span class="keyword">...</span>
+0696                             char(10),<span class="string">'       Have samples been filled and normalized?'</span>]);
+0697                   
+0698                     <span class="keyword">else</span>
+0699                         throw exception
+0700                     <span class="keyword">end</span>
+0701                     
+0702                 <span class="keyword">end</span>
+0703                 
+0704                 <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">'   Meta Constraint #: '</span>,num2str(j),<span class="keyword">...</span>
+0705                     <span class="string">' Cost: '</span> num2str(tempCost),<span class="string">'   '</span>,obj.metaConstraints{j}.name], <span class="keyword">...</span>
+0706                         <span class="string">'sos_initCost_indivMetaCost'</span>);
+0707                metaConstraintCost = metaConstraintCost + tempCost; 
+0708             <span class="keyword">end</span>
+0709             
+0710             <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">'Meta Constraint Total: '</span>, num2str(metaConstraintCost)], <span class="keyword">...</span>
+0711                         <span class="string">'sos_initCost_totalMetaCost'</span>);            
+0712             
+0713             
+0714             cost = softConstraintCost + metaConstraintCost;
+0715             obj.cost=cost;
+0716             
+0717             <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([char(10),<span class="string">'TOTAL COST (soft + meta): '</span>, num2str(cost), char(10)], <span class="keyword">...</span>
+0718                 <span class="string">'sos_initCost_totalSoftMetaCost'</span>);             
+0719         <span class="keyword">end</span>
+0720         
+0721         <span class="comment">%% dispCost() METHOD</span>
+0722         <a name="_sub12" href="#_subfunctions" class="code">function cost = dispCost(obj)</a>
+0723             <span class="comment">%reports hard/soft/meta cost contraints</span>
+0724 
+0725             <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([char(10),<span class="string">'Displaying Constraint Costs'</span>,char(10)],<span class="keyword">...</span>
+0726                 <span class="string">'sos_dispCost_start'</span>);
+0727             
+0728             <span class="comment">% hard constraints</span>
+0729             hardConstraintCost = 0;
+0730 
+0731             <span class="keyword">for</span> j = 1:length(obj.hardConstraints)
+0732                 tempCost = obj.hardConstraints{j}.cost;    
+0733                 <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">'   Hard Constraint #: '</span>,num2str(j),<span class="keyword">...</span>
+0734                     <span class="string">' Cost: '</span> num2str(tempCost),<span class="string">'   '</span>,obj.hardConstraints{j}.name], <span class="keyword">...</span>
+0735                         <span class="string">'sos_dispCost_indivHardCost'</span>);
+0736                 hardConstraintCost = hardConstraintCost + tempCost;
+0737             <span class="keyword">end</span>
+0738             
+0739             <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">'Hard Constraint Total: '</span>, num2str(hardConstraintCost)], <span class="keyword">...</span>
+0740                         <span class="string">'sos_dispCost_totalHardCost'</span>);
+0741                     
+0742             <span class="comment">% soft constraints</span>
+0743             softConstraintCost = 0;
+0744             
+0745            
+0746             <span class="keyword">for</span> j=1:length(obj.softConstraints)
+0747                 tempCost = obj.softConstraints{j}.cost;    
+0748                 <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">'   Soft Constraint #: '</span>,num2str(j),<span class="keyword">...</span>
+0749                     <span class="string">' Cost: '</span> num2str(tempCost),<span class="string">'   '</span>,obj.softConstraints{j}.name], <span class="keyword">...</span>
+0750                         <span class="string">'sos_dispCost_indivSoftCost'</span>);
+0751                softConstraintCost = softConstraintCost + tempCost; 
+0752             <span class="keyword">end</span>
+0753 
+0754             
+0755             
+0756             <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">'Soft Constraint Total: '</span>, num2str(softConstraintCost)], <span class="keyword">...</span>
+0757                         <span class="string">'sos_dispCost_totalSoftCost'</span>);
+0758             
+0759             <span class="comment">% meta constraints</span>
+0760             metaConstraintCost = 0;
+0761             
+0762            
+0763             <span class="keyword">for</span> j=1:length(obj.metaConstraints)
+0764                 tempCost = obj.metaConstraints{j}.cost;    
+0765                 <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">'   Meta Constraint #: '</span>,num2str(j),<span class="keyword">...</span>
+0766                     <span class="string">' Cost: '</span> num2str(tempCost),<span class="string">'   '</span>,obj.metaConstraints{j}.name], <span class="keyword">...</span>
+0767                         <span class="string">'sos_dispCost_indivMetaCost'</span>);
+0768                metaConstraintCost = metaConstraintCost + tempCost; 
+0769             <span class="keyword">end</span>
+0770 
+0771             
+0772             <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">'Meta Constraint Total: '</span>, num2str(metaConstraintCost)], <span class="keyword">...</span>
+0773                         <span class="string">'sos_dispCost_totalMetaCost'</span>);            
+0774             
+0775             
+0776             cost = softConstraintCost + metaConstraintCost;
+0777             <span class="comment">%obj.cost=cost;</span>
+0778             
+0779             <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([char(10),<span class="string">'TOTAL COST (soft + meta): '</span>, num2str(cost), char(10)], <span class="keyword">...</span>
+0780                 <span class="string">'sos_dispCost_totalSoftMetaCost'</span>); 
+0781             
+0782             <span class="keyword">if</span> isnan(cost)
+0783                 <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([char(10), <span class="keyword">...</span>
+0784                     <span class="string">'Warning: Cost was NaN.  This should not happen if cost terms '</span>,<span class="keyword">...</span>
+0785                     char(10),<span class="string">'         are present and cost has been initialized'</span>,<span class="keyword">...</span>
+0786                     char(10)], <span class="string">'sos_dispCost_warnCostNaN'</span>);
+0787             <span class="keyword">end</span>
+0788             
+0789         <span class="keyword">end</span> <span class="comment">%dispCost</span>
+0790 
+0791         <span class="comment">%% setAnnealSchedule(varargin) METHOD</span>
+0792         <a name="_sub13" href="#_subfunctions" class="code">function setAnnealSchedule(obj,varargin)</a>
+0793             <span class="comment">% sets the anneal schedule for the SOS object</span>
+0794             <span class="comment">%</span>
+0795             <span class="comment">% PARAMETERS:</span>
+0796             <span class="comment">% Required:</span>
+0797             <span class="comment">% 'schedule'/scheduleName - param/value pair indicating the name of the anneal schedule to use.  Defaults to greedy'</span>
+0798             <span class="comment">%</span>
+0799             <span class="comment">% Optional:</span>
+0800             <span class="comment">%  - As required by specific schedule to create.  See its</span>
+0801             <span class="comment">%  constructor for details.</span>
+0802             
+0803             p = inputParser;
+0804             p.addRequired(<span class="string">'obj'</span>, @(obj)strcmp(class(obj),<span class="string">'sos'</span>));
+0805             p.addParamValue(<span class="string">'schedule'</span>,<span class="string">'greedy'</span>, <span class="keyword">...</span>
+0806                 @(schedule)ischar(schedule));            
+0807             p.KeepUnmatched = true;
+0808             
+0809             <span class="comment">% in case no parameters are passed to varargin, must make the</span>
+0810             <span class="comment">% following decision</span>
+0811             <span class="keyword">if</span>(isempty(varargin) == false)
+0812                  p.parse(obj,varargin{:});
+0813             <span class="keyword">else</span>
+0814                 p.parse(obj);
+0815             <span class="keyword">end</span>
+0816             
+0817             scheduleName = p.Results.schedule;
+0818              
+0819             <span class="keyword">if</span> any(strcmp(p.UsingDefaults,<span class="string">'schedule'</span>))
+0820                 <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">'    Defaulting to '</span>, scheduleName, <span class="string">' annealing...'</span>], <span class="keyword">...</span>
+0821                     <span class="string">'sos_setAnnealSchedule_defaultAnneal'</span>); 
+0822             <span class="keyword">end</span>
+0823             
+0824            <span class="keyword">if</span>(strcmp(scheduleName, <span class="string">'greedy'</span>) == 1)
+0825                obj.annealObj = <a href="greedyAnneal.html" class="code" title="">greedyAnneal</a>(varargin{:});
+0826            <span class="keyword">elseif</span> (strcmp(scheduleName, <span class="string">'exp'</span>) == 1)
+0827                 obj.annealObj = <a href="expAnneal.html" class="code" title="">expAnneal</a>(varargin{:});
+0828            <span class="keyword">else</span>
+0829                error([<span class="string">'There is no schedule named: '</span> schedule])
+0830            <span class="keyword">end</span>                 
+0831         <span class="keyword">end</span>
+0832             
+0833         
+0834         <span class="comment">%% setSampleCandidateSelectionMethod(methodName) METHOD</span>
+0835         <a name="_sub14" href="#_subfunctions" class="code">function setSampleCandidateSelectionMethod(obj,methodName)</a>
+0836             <span class="comment">% sets the sample Candidate selection method</span>
+0837             <span class="comment">%</span>
+0838             <span class="comment">%PARAMETERS:</span>
+0839             <span class="comment">% Name of a sampleCandidateSelectionMethod</span>
+0840             
+0841             <span class="keyword">if</span> (ischar(methodName) == false) 
+0842                 error(<span class="string">'{methodName} must be a string'</span>);
+0843             <span class="keyword">end</span>   
+0844             
+0845            <span class="keyword">if</span> (strcmp(methodName, <span class="string">'random'</span>) == 1)
+0846                 obj.sCandObj = <a href="randSampleCandidateSelection.html" class="code" title="">randSampleCandidateSelection</a>(obj);
+0847            <span class="keyword">else</span>
+0848                error([<span class="string">'Specified methodName '</span>,methodName,<span class="string">' does not exist'</span>]); 
+0849            <span class="keyword">end</span>
+0850         <span class="keyword">end</span>
+0851         
+0852         
+0853         <span class="comment">%% setFeederdfCandidateSelectionMethod(obj,methodName)</span>
+0854         <a name="_sub15" href="#_subfunctions" class="code">function setFeederdfCandidateSelectionMethod(obj,methodName)</a>
+0855             <span class="comment">% sets the feeder candidate selection method</span>
+0856             <span class="comment">%</span>
+0857             <span class="comment">%PARAMETERS:</span>
+0858             <span class="comment">% name of a feederCandidateSelectionMethod</span>
+0859             
+0860             <span class="keyword">if</span> (ischar(methodName) == false) 
+0861                 error(<span class="string">'{methodName} must be a string'</span>);
+0862             <span class="keyword">end</span>   
+0863             
+0864            <span class="keyword">if</span> (strcmp(methodName, <span class="string">'randomPopulation'</span>) == 1)
+0865                 obj.feederCandObj= <a href="randPopulationCandidateSelection.html" class="code" title="">randPopulationCandidateSelection</a>();
+0866                 obj.feederdfCandSelectMethod = methodName;
+0867            <span class="keyword">elseif</span> (strcmp(methodName, <span class="string">'randomPopulationAndSample'</span>) == 1)
+0868                 obj.feederCandObj= <a href="randPopulationAndSampleCandidateSelection.html" class="code" title="">randPopulationAndSampleCandidateSelection</a>(obj);
+0869                 obj.feederdfCandSelectMethod = methodName;
+0870            <span class="keyword">else</span>
+0871                 error(<span class="string">'Specified {methodName} does not exist'</span>); 
+0872            <span class="keyword">end</span>
+0873             
+0874         <span class="keyword">end</span>
+0875         
+0876          <span class="comment">%% setpSwapFunction(methodName) METHOD</span>
+0877          <a name="_sub16" href="#_subfunctions" class="code">function setpSwapFunction(obj,swFunctionName)</a>
+0878              <span class="comment">%sets the pSwap function for the sos obj.</span>
+0879              <span class="comment">%</span>
+0880              <span class="comment">%PARAMETERS:</span>
+0881              <span class="comment">%  swFunctionName - name of swap function.  Currently, 'logicistic' is the only supported function.</span>
+0882 
+0883             <span class="keyword">if</span> (ischar(swFunctionName) == false) 
+0884                 error(<span class="string">'SOS:setSwapFunction {swFunctionName} is not a valid string'</span>);
+0885             <span class="keyword">end</span>   
+0886             
+0887            <span class="keyword">if</span> (strcmp(swFunctionName, <span class="string">'logistic'</span>))
+0888                 obj.pSwapObj = <a href="logisticpSwapFunction.html" class="code" title="">logisticpSwapFunction</a>();
+0889            <span class="keyword">else</span>
+0890                 error(<span class="string">'SOS:setpSwapFunction: specified function does not exist'</span>);
+0891            <span class="keyword">end</span>            
+0892         <span class="keyword">end</span> <span class="comment">%setpSwapFunction</span>
+0893         
+0894         
+0895         <span class="comment">%% optimize() METHOD</span>
+0896         <a name="_sub17" href="#_subfunctions" class="code">function goodEnding = optimize(obj,varargin)</a>
+0897             <span class="comment">% Optimizes samples based on specified constraints</span>
+0898             <span class="comment">%</span>
+0899             <span class="comment">% PARAMETERS</span>
+0900             <span class="comment">%   numIt - number of iterations to run (otherwises uses</span>
+0901             <span class="comment">%           default from obj init)</span>
+0902             <span class="comment">%   'isGui' / 1 or 0 - flag denoting whether there is an active gui or not</span>
+0903             <span class="comment">% RETURNS:</span>
+0904             <span class="comment">%   1 if ended because statistical constraints reached, zero</span>
+0905             <span class="comment">%   otherwise</span>
+0906             
+0907             <span class="comment">% It would be possible to seperate the normalization and</span>
+0908             <span class="comment">% costInitialization procedures so that they need not be run</span>
+0909             <span class="comment">% every time you begin optimizing.  In fact, the current code</span>
+0910             <span class="comment">% probably enforces such a constraint and should generate an</span>
+0911             <span class="comment">% error if normalization is attempted anyways.  Nevertheless,</span>
+0912             <span class="comment">% it costs little to enforce it at this point in time given</span>
+0913             <span class="comment">% that most time should be spent trying to make swaps, so it's</span>
+0914             <span class="comment">% left that way in this version of the code.  In the future, it</span>
+0915             <span class="comment">% may be useful to avoid any possible redundancy here, and also</span>
+0916             <span class="comment">% consider adding the fillSamples() command to the</span>
+0917             <span class="comment">% pre-optimization procedure.</span>
+0918                
+0919             <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">'Setting up optimization procedure...'</span>, <span class="keyword">...</span>
+0920                         char(10)], <span class="string">'sos_optimize_begin'</span>);    
+0921             
+0922             
+0923             <span class="comment">%get all parameters passed to the alogirthm</span>
+0924             
+0925             p = inputParser;
+0926             p.addOptional(<span class="string">'numIt'</span>,-1);
+0927             p.addParamValue(<span class="string">'isGui'</span>,NaN);
+0928             p.parse(varargin{:});
+0929             
+0930             <span class="keyword">if</span> any(strcmp(p.UsingDefaults,<span class="string">'numIt'</span>))
+0931                 <span class="comment">% do nothing, allow defaults to be used</span>
+0932             <span class="keyword">else</span>
+0933                 numIt = p.Results.numIt;
+0934                 validateattributes(numIt, {<span class="string">'numeric'</span>}, <span class="keyword">...</span>
+0935                     {<span class="string">'scalar'</span>, <span class="string">'integer'</span>, <span class="string">'positive'</span>, <span class="string">'&gt;'</span>, 0})
+0936                 obj.maxIt = obj.curIt + numIt; 
+0937                 obj.oldNumIt = numIt;
+0938             <span class="keyword">end</span>
+0939             
+0940             <span class="keyword">if</span> any(strcmp(p.UsingDefaults,<span class="string">'isGui'</span>))
+0941                 <span class="comment">% do nothing, no gui</span>
+0942                 isGui = 0;
+0943             <span class="keyword">else</span>
+0944                 isGui = p.Results.isGui;
+0945                 
+0946                 <span class="keyword">if</span> isGui == 1
+0947                     mainWindowHandle = <a href="sos_gui.html" class="code" title="function varargout = sos_gui(varargin)">sos_gui</a>; <span class="comment">%this connects/ launches the gui</span>
+0948                     mainWindowData = guidata(mainWindowHandle);
+0949                     set(mainWindowData.pushbutton_stopOptimize,<span class="string">'UserData'</span>,0)
+0950                 <span class="keyword">elseif</span> isGui == 0
+0951                     <span class="comment">% do nothing</span>
+0952                 <span class="keyword">else</span>
+0953                     error(<span class="string">'isGui should be a flag with value 1 or 0).'</span>);
+0954                 <span class="keyword">end</span>
+0955             <span class="keyword">end</span>
+0956             
+0957              
+0958             <span class="comment">% flag indicating whether the optimization should be</span>
+0959             <span class="comment">% stopped or not, as inidicated in the GUI</span>
+0960             stopOptimize = 0;
+0961                     
+0962             goodEnding = 0;
+0963             
+0964             <span class="comment">% make sure that there are samples linked with the object</span>
+0965             <span class="comment">% before running.</span>
+0966             
+0967             <span class="keyword">if</span> isempty(obj.samples) 
+0968                 error(<span class="string">'Cannot start optimization - there are no samples to optimize'</span>);
+0969             <span class="keyword">end</span>
+0970             
+0971            <span class="keyword">if</span> isempty(obj.pSwapObj) 
+0972                 error(<span class="string">'Cannot start optimization - the annealing schedule must be set (e.g., greedy, exp)'</span>);
+0973             <span class="keyword">end</span>
+0974             
+0975             <span class="comment">% next, make sure that all of the samples have been filled.</span>
+0976             
+0977             <span class="keyword">for</span> i=1:length(obj.samples)
+0978                 <span class="keyword">if</span> isempty(obj.samples(i).data)
+0979                     error([<span class="string">'Cannot start optimization - sample '''</span>,<span class="keyword">...</span>
+0980                         obj.samples(i).name,<span class="string">''' is empty'</span>]);
+0981                 <span class="keyword">elseif</span> length(obj.samples(i).data{1}) &lt; obj.samples(i).n
+0982                     error([<span class="string">'Cannot start optimization - sample '''</span>,<span class="keyword">...</span>
+0983                         obj.samples(i).name,<span class="string">''' is missing items.  Did you initFillSamples()?'</span>]);
+0984                 <span class="keyword">end</span>
+0985             <span class="keyword">end</span>
+0986               
+0987             
+0988             <span class="keyword">if</span>(obj.curIt == obj.maxIt)
+0989                 obj.maxIt = obj.maxIt+obj.oldNumIt;
+0990             <span class="keyword">elseif</span> obj.curIt &gt; obj.maxIt
+0991                 error(<span class="string">'Cannot start Optimization - curIt should never be greater than maxIt.  Increase by &lt;SOSobj&gt;.maxIt = &lt;larger val&gt;?'</span>);
+0992             <span class="keyword">end</span>
+0993                     
+0994             
+0995             <span class="keyword">if</span>(obj.curFreezeIt == obj.stopFreezeIt)
+0996                 obj.curFreezeIt = 0;
+0997                 <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>(<span class="string">'curFreezeIt was at maximum value at start of optimization; resetting to 0'</span>, <span class="keyword">...</span>
+0998                 <span class="string">'sos_optimize_resetFreezeIt'</span>);
+0999             <span class="keyword">end</span>
+1000             
+1001             obj.normalizeData();
+1002             obj.initCost();
+1003  
+1004             <span class="comment">% set up the sample and neighbor replacement methods</span>
+1005             obj.setSampleCandidateSelectionMethod(obj.targSampleCandSelectMethod);
+1006             obj.setFeederdfCandidateSelectionMethod(obj.feederdfCandSelectMethod);
+1007             
+1008             
+1009             
+1010             <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">'Optimizing for '</span>, num2str(obj.maxIt-obj.curIt), <span class="string">' iterations'</span>], <span class="keyword">...</span>
+1011                 <span class="string">'sos_optimize_startOptimization'</span>);
+1012             
+1013             tStart = tic;
+1014             startIt = obj.curIt;
+1015             allStatsPass = NaN;
+1016             
+1017             reportHeader = [char(10), <span class="string">' Iteration              Cost  %Complete       Elapsed   Remaining'</span>];
+1018             <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>(reportHeader,<span class="string">'sos_optimize_reportHeader'</span>);
+1019             
+1020             <span class="keyword">while</span> obj.curIt&lt;obj.maxIt &amp;&amp; <span class="keyword">...</span>
+1021                     obj.curFreezeIt &lt; obj.stopFreezeIt &amp;&amp; <span class="keyword">...</span>
+1022                     allStatsPass ~= 1 &amp;&amp; <span class="keyword">...</span>
+1023                     stopOptimize == 0
+1024                 obj.curIt=obj.curIt+1;
+1025                
+1026                 <span class="keyword">if</span> mod(obj.curIt,obj.reportInterval) == 0  || obj.curIt == 1
+1027                     obj.doReport(tStart,startIt);
+1028                      obj.doStatTests(<span class="string">'reportStyle'</span>,<span class="string">'none'</span>);
+1029                     
+1030                     <span class="keyword">if</span> isempty(obj.histObj) == 0
+1031                         <span class="comment">%updatePlots</span>
+1032                         pFlip = obj.nFlip/obj.reportInterval;
+1033                         obj.updateHistory(obj.curIt,obj.cost,<span class="keyword">...</span>
+1034                               obj.deltaCost,pFlip,obj.annealObj.getTemp());
+1035                         obj.nFlip = 0;
+1036                         
+1037                         <span class="keyword">if</span> isempty(obj.plotObj) == 0
+1038                             obj.updatePlots();
+1039                         <span class="keyword">end</span>
+1040                     <span class="keyword">end</span>
+1041                 <span class="keyword">end</span>
+1042                           
+1043                 
+1044                 <span class="comment">%select items to swap</span>
+1045                 [targSample,targSampleIndex] = obj.sCandObj.getCandidateIndex(); 
+1046                 [feederdf, feederdfIndex] = obj.feederCandObj.getCandidateIndex(targSample);
+1047                 
+1048 
+1049                 <span class="comment">% check to see how swap fares with regard to hard</span>
+1050                 <span class="comment">% constraints.  Abort swap if it would lead to an</span>
+1051                 <span class="comment">% (increased) violation of hard constraints.</span>
+1052                 sumHardswCost = obj.checkHardConstraintsSwapping(<span class="keyword">...</span>
+1053                        targSample,targSampleIndex,feederdf, feederdfIndex);
+1054                 
+1055                 <span class="comment">%if hard constraint was not violated or improved continue.</span>
+1056                 <span class="comment">%A value &lt; 0 indicates that hard constraint was improved so</span>
+1057                 <span class="comment">%there will be a swap no matter what the soft cost.</span>
+1058                 <span class="keyword">if</span> sumHardswCost &lt;= 0 
+1059                    curCost = obj.cost;
+1060                        
+1061                     sumSoftswCost = obj.checkSoftConstraintsSwapping(<span class="keyword">...</span>
+1062                        targSample,targSampleIndex,feederdf, feederdfIndex);
+1063                    
+1064                     sumMetaswCost = obj.checkMetaConstraintsSwapping(<span class="keyword">...</span>
+1065                        targSample,targSampleIndex,feederdf, feederdfIndex);
+1066                     
+1067                     swCost = sumSoftswCost + sumMetaswCost;
+1068                     <span class="comment">%sign flipped so that if swCost &lt; curCost, we get a</span>
+1069                     <span class="comment">%negative value, and negative values descend in cost</span>
+1070                     <span class="comment">%space</span>
+1071                     
+1072                     deltaCost = -1*(curCost - swCost); <span class="comment">%#ok&lt;PROP&gt;</span>
+1073                     
+1074                     <span class="comment">% if a swap is possible based on hard constraints, but</span>
+1075                     <span class="comment">% not necessary, base decision to swap on soft</span>
+1076                     <span class="comment">% constraints</span>
+1077                     <span class="keyword">if</span> sumHardswCost == 0
+1078                         shouldSwap = obj.pSwapObj.shouldSwap(<span class="keyword">...</span>
+1079                             deltaCost,obj.annealObj.getTemp()); <span class="comment">%#ok&lt;PROP&gt;</span>
+1080                         
+1081                         obj.deltaCost = deltaCost; <span class="comment">%#ok&lt;PROP&gt;</span>
+1082                         
+1083                         
+1084                         
+1085                     <span class="keyword">else</span> <span class="comment">%swap is necessary based on hard constraints.</span>
+1086                         shouldSwap = 1;
+1087                         
+1088                     <span class="keyword">end</span>
+1089                     
+1090                     <span class="keyword">if</span> shouldSwap == 1
+1091                         
+1092                         obj.nFlip = obj.nFlip + 1;
+1093                         
+1094                         
+1095                         <span class="comment">%we need to swap items</span>
+1096                         targSample.swapItems(<span class="keyword">...</span>
+1097                         targSampleIndex,feederdf, feederdfIndex,obj);
+1098 
+1099                         <span class="comment">%update constraints</span>
+1100                         <span class="keyword">for</span> j = 1:length(obj.hardConstraints)
+1101                             obj.hardConstraints{j}.acceptSwap();
+1102                         <span class="keyword">end</span>
+1103 
+1104                         <span class="keyword">for</span> j=1:length(obj.softConstraints)
+1105                             obj.softConstraints{j}.acceptSwap();
+1106                         <span class="keyword">end</span>
+1107 
+1108                         <span class="keyword">for</span> j=1:length(obj.metaConstraints)
+1109                             obj.metaConstraints{j}.acceptSwap();
+1110                         <span class="keyword">end</span>
+1111 
+1112                         <span class="comment">% see if the set is frozen</span>
+1113                         <span class="keyword">if</span> sumHardswCost &lt; 0
+1114                             obj.curFreezeIt = 0;
+1115                         <span class="keyword">elseif</span> obj.cost ~= swCost
+1116                             obj.curFreezeIt = 0;
+1117                         <span class="keyword">else</span> <span class="comment">% we're swapping items with the same cost</span>
+1118                             obj.curFreezeIt = obj.curFreezeIt +1;
+1119                         <span class="keyword">end</span>
+1120                         
+1121                         obj.cost = swCost;
+1122                     <span class="keyword">else</span>
+1123                         <span class="comment">% reject the swap:</span>
+1124                         <span class="keyword">for</span> j = 1:length(obj.hardConstraints)
+1125                             obj.hardConstraints{j}.rejectSwap();
+1126                         <span class="keyword">end</span>
+1127 
+1128                         <span class="keyword">for</span> j=1:length(obj.softConstraints)
+1129                             obj.softConstraints{j}.rejectSwap();
+1130                         <span class="keyword">end</span>
+1131 
+1132                         <span class="keyword">for</span> j=1:length(obj.metaConstraints)
+1133                             obj.metaConstraints{j}.rejectSwap();
+1134                         <span class="keyword">end</span>
+1135                         
+1136                         obj.curFreezeIt = obj.curFreezeIt + 1;
+1137                         
+1138                     <span class="keyword">end</span>
+1139                 <span class="keyword">else</span>
+1140                     <span class="keyword">for</span> j = 1:length(obj.hardConstraints)
+1141                             obj.hardConstraints{j}.rejectSwap();
+1142                     <span class="keyword">end</span>
+1143                     
+1144                     obj.curFreezeIt = obj.curFreezeIt + 1;
+1145                 <span class="keyword">end</span>
+1146                 <span class="comment">%on some subset of the intervals, display relevant</span>
+1147                 <span class="comment">%statistics.</span>
+1148                 
+1149                 <span class="comment">%mod indexing needed to have deltaCostLog loop after</span>
+1150                 <span class="comment">%blockSize updates.</span>
+1151                 obj.deltaCostLog(mod(obj.curIt-1,obj.blockSize)+1) = obj.deltaCost;
+1152                 
+1153                         
+1154                 obj.annealObj.anneal(obj.curIt,obj.cost,obj.deltaCost);
+1155                 
+1156                 <span class="comment">% see if stats constraint has been met</span>
+1157                 <span class="keyword">if</span> mod(obj.curIt,obj.statInterval) == 0
+1158                     allStatsPass = <span class="keyword">...</span>
+1159                         obj.doStatTests(<span class="string">'reportStyle'</span>,obj.statTestReportStyle);
+1160                     <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>(reportHeader,<span class="string">'sos_optimize_reportHeader'</span>);
+1161                 <span class="keyword">end</span>
+1162                 
+1163                 <span class="comment">%see if GUI interrupt has been requested</span>
+1164                 <span class="keyword">if</span> isGui
+1165                     <span class="comment">% check to see if the stop button has been pressed</span>
+1166                     <span class="comment">% every so often.  This should not be done too</span>
+1167                     <span class="comment">% frequently as the drawnow event could take some time.</span>
+1168                     <span class="keyword">if</span> mod(obj.curIt,obj.queryStopOptimize) == 0
+1169                         drawnow;
+1170                         <span class="keyword">if</span>  get(mainWindowData.pushbutton_stopOptimize,<span class="string">'UserData'</span>) ~= 0
+1171                             stopOptimize = 1;
+1172                         <span class="keyword">end</span>
+1173                     <span class="keyword">end</span>
+1174                 <span class="keyword">end</span>
+1175                 
+1176                 
+1177             <span class="keyword">end</span> <span class="comment">%end iterations</span>
+1178             
+1179             <span class="comment">%avoid a redundant report</span>
+1180             <span class="keyword">if</span> mod(obj.curIt,obj.reportInterval) ~= 0 &amp;&amp; obj.curIt ~= 1
+1181                 obj.doReport(tStart,startIt);
+1182                 obj.doStatTests(<span class="string">'reportStyle'</span>,<span class="string">'none'</span>);
+1183                 
+1184                 <span class="keyword">if</span> isempty(obj.histObj) == 0
+1185                     <span class="comment">%updatePlots</span>
+1186                     pFlip = obj.nFlip/obj.reportInterval;
+1187                     obj.updateHistory(obj.curIt,obj.cost,<span class="keyword">...</span>
+1188                           obj.deltaCost,pFlip,obj.annealObj.getTemp());
+1189                     obj.nFlip = 0;
+1190 
+1191                     <span class="keyword">if</span> isempty(obj.plotObj) == 0
+1192                         obj.updatePlots();
+1193                     <span class="keyword">end</span>
+1194                 <span class="keyword">end</span>
+1195             <span class="keyword">end</span>
+1196             
+1197             <span class="keyword">if</span> mod(obj.curIt,obj.statInterval) ~= 0
+1198                     allStatsPass = <span class="keyword">...</span>
+1199                         obj.doStatTests(<span class="string">'reportStyle'</span>,obj.statTestReportStyle);
+1200             <span class="keyword">end</span>
+1201              
+1202             <span class="comment">% state the reason why optimization was stopped</span>
+1203            <span class="keyword">if</span> (allStatsPass == 1)
+1204                 <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([[char(10), <span class="string">'Optimization ended after all statistical tests passed defined criteria'</span>, char(10)], <span class="keyword">...</span>
+1205                         char(10)], <span class="string">'sos_optimize_endallStatsPass'</span>);
+1206                 goodEnding = 1;
+1207            <span class="keyword">elseif</span> obj.curIt == obj.maxIt
+1208                 <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([char(10), <span class="string">'Optimization ended after reaching the maximum number of iterations'</span>, <span class="keyword">...</span>
+1209                         char(10)], <span class="string">'sos_optimize_endMaxIt'</span>);
+1210            <span class="keyword">elseif</span> obj.curFreezeIt &gt;= obj.stopFreezeIt
+1211                 <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([char(10), <span class="string">'Optimization ended after cost value was frozen for specified number of iterations'</span>, <span class="keyword">...</span>
+1212                         char(10)], <span class="string">'sos_optimize_endstopFreezeIt'</span>);
+1213            <span class="keyword">elseif</span> isGui
+1214                <span class="keyword">if</span> get(mainWindowData.pushbutton_stopOptimize,<span class="string">'UserData'</span>) == 1
+1215                <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([char(10),<span class="string">'Optimization ended after user interrupt (from graphical interface)'</span>,<span class="keyword">...</span>
+1216                         char(10)],<span class="string">'sos_optimize_endUserGuiInterrupt'</span>);
+1217                <span class="keyword">end</span>
+1218            <span class="keyword">end</span>
+1219 
+1220             <span class="keyword">if</span> isGui == 1
+1221                 mainWindowHandle = <a href="sos_gui.html" class="code" title="function varargout = sos_gui(varargin)">sos_gui</a>; <span class="comment">%this connects/ launches the gui</span>
+1222                 mainWindowData = guidata(mainWindowHandle);
+1223                 set(mainWindowData.pushbutton_optimize,<span class="string">'Enable'</span>,<span class="string">'on'</span>)
+1224                 set(mainWindowData.pushbutton_stopOptimize,<span class="string">'Enable'</span>,<span class="string">'off'</span>)
+1225             <span class="keyword">end</span>
+1226                     
+1227         <span class="keyword">end</span>
+1228         
+1229         
+1230         <span class="comment">%% doReport (obj,tstart) METHOD</span>
+1231         <a name="_sub18" href="#_subfunctions" class="code">function doReport(obj,tStart,startIt)</a>
+1232             <span class="comment">% displays a progress report from the last iteration in optimization</span>
+1233             <span class="comment">%</span>
+1234             <span class="comment">%PARAMETERS:</span>
+1235             <span class="comment">%   tStart - tic() object indicating start of optimization</span>
+1236 
+1237             percentComplete = (obj.curIt/obj.maxIt)*100;
+1238             elapsedTime = toc(tStart);
+1239             
+1240             startPercent = (startIt/obj.maxIt)*100;
+1241             
+1242             remainingTime = (elapsedTime/ <span class="keyword">...</span>
+1243                (percentComplete-startPercent))*(100-startPercent)-elapsedTime;     
+1244             
+1245             hElapsedTime = <a href="seconds2human.html" class="code" title="function out = seconds2human(secs, varargin)">seconds2human</a>(elapsedTime,<span class="string">'full'</span>);
+1246             tempLen = length(hElapsedTime);
+1247             hElapsedTime = strjust([blanks(8-tempLen) hElapsedTime],<span class="string">'right'</span>);
+1248 
+1249             hRemainingTime = <a href="seconds2human.html" class="code" title="function out = seconds2human(secs, varargin)">seconds2human</a>(remainingTime,<span class="string">'full'</span>);
+1250             tempLen = length(hRemainingTime);
+1251             hRemainingTime = strjust([blanks(8-tempLen) hRemainingTime],<span class="string">'right'</span>);
+1252 
+1253 
+1254             report = sprintf(<span class="string">'%9.0f) \t %15.5f \t %5.2f%% \t %s \t %s'</span>, <span class="keyword">...</span>
+1255                     obj.curIt,obj.cost,percentComplete, <span class="keyword">...</span>
+1256                     hElapsedTime,hRemainingTime);
+1257             <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>(report, <span class="string">'sos_optimize_report'</span>);
+1258 
+1259         <span class="keyword">end</span>
+1260         
+1261         <span class="comment">%% createPlots() METHOD</span>
+1262         <a name="_sub19" href="#_subfunctions" class="code">function createPlots(obj,dispIt)</a>
+1263             <span class="comment">% creates plots for several optimization parameters, as</span>
+1264             <span class="comment">% follows:</span>
+1265             <span class="comment">%   - cost</span>
+1266             <span class="comment">%   - deltaCost</span>
+1267             <span class="comment">%   - sosStatTestpvals</span>
+1268             <span class="comment">%   - temperature</span>
+1269             <span class="comment">%   - pFlipHistory</span>
+1270             <span class="comment">%</span>
+1271             <span class="comment">% PARAMETERS:</span>
+1272             <span class="comment">%   dispIt - number of iterations to show on the plot screen.</span>
+1273             <span class="comment">%       All other datapoints plotted since the creation of the</span>
+1274             <span class="comment">%       object will still be accessible by scrolling the x-axis</span>
+1275             
+1276             
+1277             <span class="keyword">if</span> isempty(obj.histObj)
+1278                 obj.createHistory();
+1279             <span class="keyword">end</span>
+1280             
+1281             <span class="keyword">if</span> exist(<span class="string">'dispIt'</span>,<span class="string">'var'</span>) == 0
+1282                 dispIt = 100000;
+1283             <span class="keyword">else</span>
+1284                 validateattributes(dispIt, {<span class="string">'numeric'</span>}, <span class="keyword">...</span>
+1285                 {<span class="string">'scalar'</span>, <span class="string">'integer'</span>, <span class="string">'positive'</span>, <span class="string">'&gt;'</span>, 0});
+1286             <span class="keyword">end</span>
+1287                 
+1288                            
+1289             <span class="keyword">if</span> isempty(obj.plotObj)            
+1290                 obj.plotObj = <a href="sosPlots.html" class="code" title="">sosPlots</a>(obj,obj.histObj,dispIt, <span class="keyword">...</span>
+1291                                         obj.curIt);
+1292             <span class="keyword">else</span>
+1293                 <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>(<span class="string">'Warning: Plots already exist so cannot be created'</span>,<span class="keyword">...</span>
+1294                     <span class="string">'sos_createPlots_alreadyCreated'</span>);
+1295             <span class="keyword">end</span>            
+1296         <span class="keyword">end</span>
+1297         
+1298         <span class="comment">%% updatePlots() METHOD</span>
+1299         <a name="_sub20" href="#_subfunctions" class="code">function updatePlots(obj)</a>
+1300             <span class="comment">%updates the contents of the plot</span>
+1301             
+1302             obj.plotObj.updatePlots();
+1303             
+1304         <span class="keyword">end</span>
+1305 
+1306         
+1307         <span class="comment">%% createHistory() METHOD</span>
+1308         <a name="_sub21" href="#_subfunctions" class="code">function createHistory(obj)</a>
+1309             <span class="comment">% creates plots for several optimization parameters, as</span>
+1310             <span class="comment">% follows:</span>
+1311             <span class="comment">%   - cost</span>
+1312             <span class="comment">%   - deltaCost</span>
+1313             <span class="comment">%   - sosStatTestpvals</span>
+1314             <span class="comment">%   - temperature</span>
+1315             <span class="comment">%   - pFlipHistory</span>
+1316             
+1317             <span class="keyword">if</span> isempty(obj.histObj)
+1318             
+1319                 obj.histObj = <a href="sosHistory.html" class="code" title="">sosHistory</a>(obj);
+1320             <span class="keyword">else</span>
+1321                 <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>(<span class="string">'Warning: History already exists so cannot be created'</span>,<span class="keyword">...</span>
+1322                     <span class="string">'sos_createHistory_alreadyCreated'</span>);
+1323             <span class="keyword">end</span>
+1324             
+1325         <span class="keyword">end</span>
+1326 
+1327         
+1328         <span class="comment">%% updateHistory() METHOD</span>
+1329         <a name="_sub22" href="#_subfunctions" class="code">function updateHistory(obj,curIt,cost,deltaCost,pFlip,temp)</a>
+1330             <span class="comment">%updates the contents of the plot</span>
+1331             
+1332             <span class="comment">% get the information about the p-vals.</span>
+1333             testNames = {};
+1334             testps = [];
+1335             
+1336             <span class="keyword">for</span> i=1:length(obj.sosstattests)
+1337                 testNames = horzcat(testNames,obj.sosstattests{i}.label); <span class="comment">%#ok&lt;AGROW&gt;</span>
+1338                 testps = horzcat(testps,obj.sosstattests{i}.lastp); <span class="comment">%#ok&lt;AGROW&gt;</span>
+1339             <span class="keyword">end</span>
+1340             
+1341             obj.histObj.updateHistory(curIt,cost,deltaCost,pFlip, <span class="keyword">...</span>
+1342                             testNames,testps,temp);
+1343             
+1344         <span class="keyword">end</span>
+1345         
+1346         <span class="comment">%% function writeHistory(outFile) METHOD</span>
+1347         <a name="_sub23" href="#_subfunctions" class="code">function writeHistory(obj,outFile)</a>
+1348             <span class="comment">%writes all history saved to date to file 'outFile'</span>
+1349                 
+1350              <span class="keyword">if</span> exist(<span class="string">'outFile'</span>,<span class="string">'var'</span>) == 0
+1351                  error(<span class="string">'&quot;Outfile&quot; argument was not supplied to writeHistory()'</span>);
+1352              <span class="keyword">end</span>
+1353              
+1354              <span class="keyword">if</span>(ischar(outFile) == false)
+1355                 error(<span class="string">'Outfile has not been set to a string != &quot;null&quot;.'</span>);
+1356              <span class="keyword">end</span>
+1357     
+1358             <span class="keyword">if</span> isempty(obj.histObj) == 0
+1359                 obj.histObj.writeHistory(outFile);
+1360             <span class="keyword">else</span>
+1361                 error(<span class="string">'No saved history to write - did you run createHistory() before optimizing?'</span>);
+1362             <span class="keyword">end</span>
+1363         <span class="keyword">end</span>
+1364         
+1365         <span class="comment">%% setbufferedHistoryOutfile(outFile) METHOD</span>
+1366         <a name="_sub24" href="#_subfunctions" class="code">function setBufferedHistoryOutfile(obj,outFile)</a>
+1367             <span class="comment">% writes the history on-line, one update at a time, to outfile</span>
+1368             <span class="comment">% If outfile exists, it will be overridden.</span>
+1369             
+1370             <span class="keyword">if</span> exist(<span class="string">'outFile'</span>,<span class="string">'var'</span>) == 0
+1371                 error(<span class="string">'&quot;Outfile&quot; argument was not supplied to writeHistory()'</span>);
+1372             <span class="keyword">end</span>
+1373 
+1374             <span class="keyword">if</span>(ischar(outFile) == false)
+1375                 error(<span class="string">'Outfile has not been set to a string != &quot;null&quot;.'</span>);
+1376             <span class="keyword">end</span>
+1377 
+1378             <span class="keyword">if</span> ischar(outFile) == false || strcmp(outFile,<span class="string">'null'</span>)
+1379                 error(<span class="string">'Outfile has not been set to a string != &quot;null&quot;.'</span>);
+1380             <span class="keyword">end</span>
+1381             
+1382             <span class="keyword">if</span> isempty(obj.histObj) == 0
+1383                 obj.histObj.setBufferedHistoryOutfile(outFile);
+1384             <span class="keyword">else</span>
+1385                 error(<span class="string">'No saved history to write - did you start recording history with createHistory()?'</span>);
+1386             <span class="keyword">end</span>                                    
+1387         <span class="keyword">end</span>
+1388 
+1389         <span class="comment">%% enableBufferedHistoryWrite() METHOD</span>
+1390         <a name="_sub25" href="#_subfunctions" class="code">function enableBufferedHistoryWrite(obj)</a>
+1391             <span class="comment">% enables writing of buffered history.  Enabled automatically</span>
+1392             <span class="comment">% when bufferedHistoryWrite is first called; cannot be called</span>
+1393             <span class="comment">% until that method has first been called to specify an</span>
+1394             <span class="comment">% outfile.  Subsequent enablings continue to write to that</span>
+1395             <span class="comment">% file.</span>
+1396             
+1397             <span class="keyword">if</span> isempty(obj.histObj) == 0
+1398                 obj.histObj.enableBufferedHistoryWrite();
+1399             <span class="keyword">else</span>
+1400                 error(<span class="string">'History is not being recorded so buffered writing cannot be enabled - run createHistory() first'</span>);
+1401             <span class="keyword">end</span>     
+1402         <span class="keyword">end</span>
+1403         
+1404         <span class="comment">%% disableBufferedHistoryWrite() METHOD</span>
+1405         <a name="_sub26" href="#_subfunctions" class="code">function disableBufferedHistoryWrite(obj)</a>
+1406             <span class="comment">% disables writing of buffered history.</span>
+1407             
+1408             <span class="keyword">if</span> isempty(obj.histObj) == 0
+1409                 obj.histObj.disableBufferedHistoryWrite();
+1410             <span class="keyword">else</span>
+1411                 error(<span class="string">'History is not being recorded so buffered writing cannot be disabled - run createHistory() first'</span>);
+1412             <span class="keyword">end</span>     
+1413         <span class="keyword">end</span>
+1414         
+1415         
+1416         <span class="comment">%% writeSamples()  METHOD</span>
+1417         <a name="_sub27" href="#_subfunctions" class="code">function writeSamples(obj)</a>
+1418            <span class="comment">% writes the data from the samples to text files specified in their 'outFile' property</span>
+1419            
+1420            <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>(<span class="string">'Writing all samples to disk...'</span>,<span class="keyword">...</span>
+1421                             <span class="string">'sos_writeSamples_begin'</span>);
+1422            
+1423            <span class="keyword">for</span> i=1:length(obj.samples)
+1424                obj.samples(i).writeData();
+1425            <span class="keyword">end</span>
+1426         <span class="keyword">end</span> <span class="comment">%writeSamples()</span>
+1427         
+1428         <span class="comment">%% writePopulations()  METHOD</span>
+1429         <a name="_sub28" href="#_subfunctions" class="code">function writePopulations(obj)</a>
+1430            <span class="comment">% writes the data from the populations to text files specified in their 'outFile' property</span>
+1431            
+1432            <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>(<span class="string">'Writing all populations to disk...'</span>,<span class="keyword">...</span>
+1433                             <span class="string">'sos_writePopulations_begin'</span>);
+1434            
+1435            alreadyWritten = {};
+1436            popWritten = 0;
+1437            
+1438            <span class="keyword">for</span> i=1:length(obj.samples)
+1439                <span class="keyword">if</span> isempty(alreadyWritten)
+1440                    popWritten = 0;
+1441                <span class="keyword">else</span>
+1442                 <span class="keyword">for</span> j = 1:length(alreadyWritten)
+1443                     <span class="keyword">if</span> (alreadyWritten{j} == obj.samples(i).population)
+1444                         popWritten = 1;
+1445                     <span class="keyword">end</span>
+1446                 <span class="keyword">end</span>
+1447                <span class="keyword">end</span>
+1448                
+1449                <span class="keyword">if</span>(popWritten == 0)
+1450                 obj.samples(i).population.writeData();
+1451                 alreadyWritten = [alreadyWritten {obj.samples(i).population}]; <span class="comment">%#ok&lt;AGROW&gt;</span>
+1452                <span class="keyword">end</span>
+1453            <span class="keyword">end</span>
+1454         <span class="keyword">end</span> <span class="comment">%writeSamples()</span>
+1455             
+1456         <span class="comment">%% writeAll() METHOD</span>
+1457         <a name="_sub29" href="#_subfunctions" class="code">function writeAll(obj)</a>
+1458             <span class="comment">%write all populations and samples associated with SOS object to disk</span>
+1459             obj.writeSamples();
+1460             obj.writePopulations();
+1461             
+1462         <span class="keyword">end</span> <span class="comment">% writeAll()</span>
+1463         
+1464         <span class="comment">%% addttest(sample1, sample2, s1ColName, s2ColName, type) METHOD</span>
+1465         <a name="_sub30" href="#_subfunctions" class="code">function addttest(obj, varargin)</a>
+1466                 <span class="comment">%adds a t-test to the list of analyses to run</span>
+1467                 newTest = genericStatTest.createStatTest(<span class="string">'ttest'</span>,<span class="string">'sosObj'</span>,obj,varargin{:});
+1468                 obj.sosstattests = [obj.sosstattests {newTest}];   
+1469                 
+1470                 <span class="comment">% if there is a history object at work, let it know that a</span>
+1471                 <span class="comment">% new stat test has been added.</span>
+1472                 <span class="keyword">if</span> isempty(obj.histObj) == 0
+1473                     obj.histObj.addStatTestName(newTest.name);
+1474                 <span class="keyword">end</span>
+1475                 
+1476              <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>(<span class="string">'t-test added...'</span>,  <span class="keyword">...</span>
+1477                     <span class="string">'sos_addttest_end'</span>);    
+1478         <span class="keyword">end</span>
+1479         
+1480         <span class="comment">%% addtzest(sample1, sample2, s1ColName, s2ColName, type, ...) METHOD</span>
+1481         <a name="_sub31" href="#_subfunctions" class="code">function addztest(obj, varargin)</a>
+1482                 <span class="comment">%adds a z-test to the list of analyses to run</span>
+1483                 
+1484                 <span class="comment">% NOTE: If additional, more general types of z-tests are</span>
+1485                 <span class="comment">% added, this will need to be conditionalized so that</span>
+1486                 <span class="comment">% sosCorrelTest is not chosen by default...</span>
+1487                 newTest = genericStatTest.createStatTest(<span class="string">'matchCorrel'</span>,<span class="string">'sosObj'</span>,obj,varargin{:});
+1488                 obj.sosstattests = [obj.sosstattests {newTest}];   
+1489                 
+1490                 <span class="comment">% if there is a history object at work, let it know that a</span>
+1491                 <span class="comment">% new stat test has been added.</span>
+1492                 <span class="keyword">if</span> isempty(obj.histObj) == 0
+1493                     obj.histObj.addStatTestName(newTest.name);
+1494                 <span class="keyword">end</span>
+1495                 
+1496              <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>(<span class="string">'z-test added...'</span>,  <span class="keyword">...</span>
+1497                     <span class="string">'sos_addztest_end'</span>);    
+1498         <span class="keyword">end</span>        
+1499 
+1500         
+1501         <span class="comment">%% addtzest(sample1, sample2, s1ColName, s2ColName, type, ...) METHOD</span>
+1502         <a name="_sub32" href="#_subfunctions" class="code">function addkstest(obj, varargin)</a>
+1503                 <span class="comment">%adds a kstest to the list of analyses to run</span>
+1504                 
+1505                 <span class="comment">% NOTE: If additional, more general types of kstests are</span>
+1506                 <span class="comment">% added, this will need to be conditionalized so that</span>
+1507                 <span class="comment">% sosCorrelTest is not chosen by default...</span>
+1508                 newTest = genericStatTest.createStatTest(<span class="string">'matchUniform'</span>,<span class="string">'sosObj'</span>,obj,varargin{:});
+1509                 obj.sosstattests = [obj.sosstattests {newTest}];   
+1510                 
+1511                 <span class="comment">% if there is a history object at work, let it know that a</span>
+1512                 <span class="comment">% new stat test has been added.</span>
+1513                 <span class="keyword">if</span> isempty(obj.histObj) == 0
+1514                     obj.histObj.addStatTestName(newTest.name);
+1515                 <span class="keyword">end</span>
+1516                 
+1517              <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>(<span class="string">'ks-test added...'</span>,  <span class="keyword">...</span>
+1518                     <span class="string">'sos_addkstest_end'</span>);    
+1519         <span class="keyword">end</span>    
+1520         
+1521         
+1522         
+1523         <a name="_sub33" href="#_subfunctions" class="code">function pass = doStatTests(obj,varargin)</a>
+1524             <span class="comment">% runs the stat tests and indicates if all passed the user</span>
+1525             <span class="comment">% hypotheses.</span>
+1526             <span class="comment">%</span>
+1527             <span class="comment">%PARAMETERS:</span>
+1528             <span class="comment">%   'reportStyle'/'short'|'full' - style of report to be printed.</span>
+1529             <span class="comment">%                               Either short or long</span>
+1530             <span class="comment">%</span>
+1531             <span class="comment">% RETURNS:</span>
+1532             <span class="comment">%   NaN if user had no hypotheses about any of the tests that</span>
+1533             <span class="comment">%   were run.  1 if there were hypotheses and all hypotheses</span>
+1534             <span class="comment">%   passed their tests.  0  otherwise.</span>
+1535             
+1536            p = inputParser;            
+1537            p.addParamValue(<span class="string">'reportStyle'</span>,<span class="string">'short'</span>, <span class="keyword">...</span>
+1538                     @(reportStyle)any([strcmp(reportStyle,<span class="string">'short'</span>) <span class="keyword">...</span>
+1539                                     strcmp(reportStyle,<span class="string">'full'</span>) <span class="keyword">...</span>
+1540                                     strcmp(reportStyle,<span class="string">'none'</span>)]));
+1541            p.parse(varargin{:});
+1542            
+1543            <span class="keyword">if</span> strcmp(p.Results.reportStyle,<span class="string">'none'</span>) == 0
+1544                 <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([char(10),<span class="string">'Running all stat tests:'</span>],<span class="keyword">...</span>
+1545                             <span class="string">'sos_doStatTests_begin'</span>);            
+1546            <span class="keyword">end</span>              
+1547             pass = NaN;
+1548             
+1549             <span class="comment">%</span>
+1550             
+1551             
+1552             <span class="keyword">for</span> i=1:length(obj.sosstattests)
+1553                 userHypothesis = obj.sosstattests{i}.runTest(varargin{:});
+1554                 
+1555                 <span class="keyword">if</span> userHypothesis == 0
+1556                     pass = 0;
+1557                 <span class="comment">% if a hypothesis passes (as opposed to being NaN), set the</span>
+1558                 <span class="comment">% condition to pass;  If a hypothesis has already failed,</span>
+1559                 <span class="comment">% it cannot pass</span>
+1560                 <span class="keyword">elseif</span> userHypothesis == 1 &amp;&amp; isnan(pass)
+1561                     pass = 1;
+1562                 <span class="keyword">end</span>
+1563             <span class="keyword">end</span>
+1564         <span class="keyword">end</span> <span class="comment">% doStatTests</span>
+1565         
+1566         <span class="comment">%% function deltaCostPercentiles() METHOD</span>
+1567         <a name="_sub34" href="#_subfunctions" class="code">function deltaCostPercentiles(obj)</a>
+1568             <span class="comment">% displays the breakdown of deltaCost values per decile and</span>
+1569             <span class="comment">% other important percentiles</span>
+1570             
+1571             <span class="comment">%one over 100 so that we get the 100th decile</span>
+1572             deciles = 0:10:101;
+1573             scores = prctile(obj.deltaCostLog, deciles);
+1574             
+1575             <span class="comment">%let the user know how many observations entered into the delta</span>
+1576             <span class="comment">%cost report</span>
+1577             <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">'Deciles for deltaCost in last block:'</span>,char(10), <span class="keyword">...</span>
+1578                 <span class="string">'('</span>,num2str(min(length(obj.deltaCostLog),obj.curIt)),<span class="keyword">...</span>
+1579                 <span class="string">' iterations total; numIt &lt; blockSize in first block)'</span>,char(10)], <span class="keyword">...</span>
+1580                         <span class="string">'sos_deltaCostPercentiles_Header'</span>);
+1581                     
+1582                     
+1583            values = <span class="string">''</span>;
+1584            <span class="keyword">for</span> i=1:length(deciles)
+1585                line=sprintf(<span class="string">'\t%1.0f:  \t %+10.8f \n'</span>,deciles(i),scores(i)); 
+1586                values = [values line]; <span class="comment">%#ok&lt;AGROW&gt;</span>
+1587            <span class="keyword">end</span> 
+1588                
+1589            <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>(values, <span class="string">'sos_deltaCostPercentiles_Scores'</span>);
+1590              
+1591            
+1592            <span class="comment">%print out information that could be helpful for configuring the</span>
+1593            <span class="comment">%expAnneal function</span>
+1594            
+1595            percentiles = [2.5 97.5];
+1596            scores = prctile(obj.deltaCostLog, percentiles);
+1597                 
+1598            deltaCost95 = scores(2) - scores(1);
+1599            
+1600            msg = sprintf(<span class="string">'\n\n 97.5th - 2.5th percentile deltaCost: %10.8f\n\n'</span>, <span class="keyword">...</span>
+1601                         deltaCost95);
+1602                     
+1603            <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>(msg, <span class="string">'sos_deltaCostPercentiles_deltaCost95'</span>);
+1604                 
+1605              
+1606         <span class="keyword">end</span>
+1607         
+1608     <span class="keyword">end</span> <span class="comment">%end methods</span>
+1609     
+1610     methods (Static)
+1611         
+1612         <span class="comment">%% p = sosInputParser() STATIC METHOD</span>
+1613         <a name="_sub35" href="#_subfunctions" class="code">function p = sosInputParser()</a>
+1614             <span class="comment">% returns an input parser for the sos constructor args</span>
+1615             <span class="comment">%</span>
+1616             <span class="comment">%CALL:</span>
+1617             <span class="comment">% p = sos.sosInputParser()</span>
+1618             <span class="comment">%</span>
+1619             <span class="comment">%SYNOPSIS:</span>
+1620             <span class="comment">% returns an input parser for the sos constructor args</span>
+1621             <span class="comment">%</span>
+1622             <span class="comment">%PARAMETERS:</span>
+1623             <span class="comment">%   Same as object constructor</span>
+1624             <span class="comment">%</span>
+1625             <span class="comment">%EXAMPLE:</span>
+1626             <span class="comment">% p = sos.sosInputParser()</span>
+1627             <span class="comment">%</span>
+1628             
+1629              p = inputParser;
+1630 
+1631              <span class="comment">%use NaN as null, since matlab doesn't support standard</span>
+1632              <span class="comment">%NULL</span>
+1633              
+1634              p.addParamValue(<span class="string">'maxIt'</span>,  sos.maxIt_def, <span class="keyword">...</span>
+1635                 @(maxIt)validateattributes(maxIt, {<span class="string">'numeric'</span>}, <span class="keyword">...</span>
+1636                 {<span class="string">'scalar'</span>, <span class="string">'integer'</span>, <span class="string">'positive'</span>, <span class="string">'&gt;'</span>, 0}));
+1637             p.addParamValue(<span class="string">'pSwapFunction'</span>,sos.pSwapFunction_def, <span class="keyword">...</span>
+1638                 @(pSwapFunction)ischar(pSwapFunction));
+1639             p.addParamValue(<span class="string">'targSampleCandSelectMethod'</span>,sos.targSampleCandSelectMethod_def, <span class="keyword">...</span>
+1640                 @(targSampleCandSelectMethod)ischar(targSampleCandSelectMethod));
+1641             p.addParamValue(<span class="string">'feederdfCandSelectMethod'</span>,sos.feederdfCandSelectMethod_def, <span class="keyword">...</span>
+1642                 @(feederdfCandSelectMethod)ischar(feederdfCandSelectMethod));
+1643             p.addParamValue(<span class="string">'reportInterval'</span>,sos.reportInterval_def, <span class="keyword">...</span>
+1644                 @(reportInterval)validateattributes(reportInterval, {<span class="string">'numeric'</span>}, <span class="keyword">...</span>
+1645                 {<span class="string">'scalar'</span>, <span class="string">'integer'</span>, <span class="string">'positive'</span>, <span class="string">'&gt;'</span>, 0}));
+1646             p.addParamValue(<span class="string">'stopFreezeIt'</span>,sos.stopFreezeIt_def, <span class="keyword">...</span>
+1647                 @(stopFreezeIt)validateattributes(stopFreezeIt, {<span class="string">'numeric'</span>}, <span class="keyword">...</span>
+1648                 {<span class="string">'scalar'</span>, <span class="string">'integer'</span>, <span class="string">'positive'</span>, <span class="string">'&gt;'</span>, 0}));
+1649             p.addParamValue(<span class="string">'statInterval'</span>,sos.statInterval_def, <span class="keyword">...</span>
+1650                 @(statInterval)validateattributes(statInterval, {<span class="string">'numeric'</span>}, <span class="keyword">...</span>
+1651                 {<span class="string">'scalar'</span>, <span class="string">'integer'</span>, <span class="string">'positive'</span>, <span class="string">'&gt;'</span>, 0})); 
+1652             p.addParamValue(<span class="string">'statTestReportStyle'</span>,sos.statTestReportStyle_def, <span class="keyword">...</span>
+1653                 @(statTestReportStyle)any( <span class="keyword">...</span>
+1654                     [strcmp(statTestReportStyle,<span class="string">'short'</span>), <span class="keyword">...</span>
+1655                      strcmp(statTestReportStyle,<span class="string">'full'</span>)]));
+1656             p.addParamValue(<span class="string">'blockSize'</span>,sos.blockSize_def, <span class="keyword">...</span>
+1657                 @(statInterval)validateattributes(statInterval, {<span class="string">'numeric'</span>}, <span class="keyword">...</span>
+1658                 {<span class="string">'scalar'</span>, <span class="string">'integer'</span>, <span class="string">'positive'</span>, <span class="string">'&gt;'</span>, 0})); 
+1659             
+1660       
+1661         <span class="keyword">end</span>
+1662     <span class="keyword">end</span>
+1663     
+1664     methods (Static, Access = private)
+1665         <span class="comment">%% parseConstructorArgs PRIVATE STATIC METHOD</span>
+1666         <a name="_sub36" href="#_subfunctions" class="code">function p = parseConstructorArgs(varargin)</a>
+1667             <span class="comment">%parses the constructor arguments</span>
+1668             <span class="comment">%</span>
+1669             <span class="comment">% CALL:</span>
+1670             <span class="comment">% p = sos.parseConstructorArgs(varargin);</span>
+1671             <span class="comment">%</span>
+1672             <span class="comment">%parses the arguments from the  constructor.  Default</span>
+1673             <span class="comment">%values are substituted where appropriate.  Returns a struct</span>
+1674             <span class="comment">%with the parsed args</span>
+1675             <span class="comment">%</span>
+1676             <span class="comment">%PARAMETERS:</span>
+1677             <span class="comment">% SAME as sos CONSTRUCTOR</span>
+1678             <span class="comment">%</span>
+1679             <span class="comment">%RETURNS:</span>
+1680             <span class="comment">%    p - parsed constructor input</span>
+1681             
+1682              varargin = varargin{1};
+1683 
+1684              p = sos.sosInputParser();
+1685              p.parse(varargin{:});
+1686              
+1687              <span class="keyword">if</span> any(strcmp(p.UsingDefaults,<span class="string">'maxIt'</span>))
+1688                  <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">'    Defaulting to '</span>,  <span class="keyword">...</span>
+1689                      num2str(p.Results.maxIt), <span class="string">' maximum iterations'</span>], <span class="keyword">...</span>
+1690                     <span class="string">'sos_parseConstructor_defaultMaxIt'</span>);
+1691              <span class="keyword">end</span>
+1692              
+1693              <span class="keyword">if</span> any(strcmp(p.UsingDefaults,<span class="string">'pSwapFunction'</span>))
+1694                  <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">'    Defaulting to '</span>, <span class="keyword">...</span>
+1695                      (p.Results.pSwapFunction), <span class="string">' pSwapFunction'</span>], <span class="keyword">...</span>
+1696                     <span class="string">'sos_parseConstructor_pSwapFunction'</span>);                         
+1697              <span class="keyword">end</span>
+1698 
+1699              <span class="keyword">if</span> any(strcmp(p.UsingDefaults,<span class="string">'targSampleCandSelectMethod'</span>))
+1700                  <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">'    Defaulting to '</span>, <span class="keyword">...</span>
+1701                      (p.Results.targSampleCandSelectMethod), <span class="keyword">...</span>
+1702                      <span class="string">' targSample Candidate Selection Method'</span>], <span class="keyword">...</span>
+1703                     <span class="string">'sos_parseConstructor_targSampleCandSelectMethod'</span>);      
+1704              <span class="keyword">end</span>
+1705              
+1706              <span class="keyword">if</span> any(strcmp(p.UsingDefaults,<span class="string">'feederdfCandSelectMethod'</span>))
+1707                  <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">'    Defaulting to '</span>, <span class="keyword">...</span>
+1708                      (p.Results.feederdfCandSelectMethod), <span class="keyword">...</span>
+1709                      <span class="string">' feederdf Candidate Selection Method'</span>], <span class="keyword">...</span>
+1710                     <span class="string">'sos_parseConstructor_feederdfCandSelectMethod'</span>);      
+1711              <span class="keyword">end</span>
+1712              
+1713              <span class="keyword">if</span> any(strcmp(p.UsingDefaults,<span class="string">'reportInterval'</span>))
+1714                  <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">'    Defaulting to '</span>, <span class="keyword">...</span>
+1715                      num2str(p.Results.reportInterval), <span class="keyword">...</span>
+1716                      <span class="string">' iterations between reports'</span>], <span class="keyword">...</span>
+1717                     <span class="string">'sos_parseConstructor_reportInterval'</span>);      
+1718              <span class="keyword">end</span>
+1719              
+1720              <span class="keyword">if</span> any(strcmp(p.UsingDefaults,<span class="string">'stopFreezeIt'</span>))
+1721                  <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">'    Defaulting to '</span>, <span class="keyword">...</span>
+1722                      num2str(p.Results.stopFreezeIt), <span class="keyword">...</span>
+1723                      <span class="string">' of same frozen cost before stopping'</span>], <span class="keyword">...</span>
+1724                     <span class="string">'sos_parseConstructor_stopFreezeIt'</span>);      
+1725              <span class="keyword">end</span>
+1726              
+1727              
+1728              <span class="keyword">if</span> any(strcmp(p.UsingDefaults,<span class="string">'statInterval'</span>))
+1729                  <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">'    Defaulting to '</span>, <span class="keyword">...</span>
+1730                      num2str(p.Results.statInterval), <span class="keyword">...</span>
+1731                      <span class="string">' intervals between stat reports'</span>], <span class="keyword">...</span>
+1732                     <span class="string">'sos_parseConstructor_statReports'</span>);      
+1733              <span class="keyword">end</span>
+1734              
+1735              <span class="keyword">if</span> any(strcmp(p.UsingDefaults,<span class="string">'statTestReportStyle'</span>))
+1736                  <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">'    Defaulting to '</span>, <span class="keyword">...</span>
+1737                      p.Results.statTestReportStyle, <span class="keyword">...</span>
+1738                      <span class="string">' style stat reports'</span>], <span class="keyword">...</span>
+1739                     <span class="string">'sos_parseConstructor_statReports'</span>);      
+1740              <span class="keyword">end</span>             
+1741                          
+1742         <span class="keyword">end</span> <span class="comment">% parseConstructorArgs</span>
+1743     <span class="keyword">end</span>        
+1744     
+1745 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Fri 27-Jan-2012 16:18:41 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

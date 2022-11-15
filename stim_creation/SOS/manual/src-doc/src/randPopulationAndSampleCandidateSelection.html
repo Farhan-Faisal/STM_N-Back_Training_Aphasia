@@ -1,0 +1,247 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of randPopulationAndSampleCandidateSelection</title>
+  <meta name="keywords" content="randPopulationAndSampleCandidateSelection">
+  <meta name="description" content="- random population and sample selection method for swaps">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="#">src</a> &gt; randPopulationAndSampleCandidateSelection.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for .\src&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>randPopulationAndSampleCandidateSelection
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>- random population and sample selection method for swaps</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> - random population and sample selection method for swaps
+
+ copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut
+
+    This file is part of SOS
+
+    SOS is free software: you can redistribute it and/or modify
+    it for academic and non-commercial purposes
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.  For commercial or for-profit
+    uses, please contact the authors (sos@cnbc.cmu.edu).
+
+    SOS is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="genericFeederCandidateSelection.html" class="code" title="">genericFeederCandidateSelection</a>	- parent class for replacement selection objects</li><li><a href="randPopulationAndSampleCandidateSelection.html" class="code" title="">randPopulationAndSampleCandidateSelection</a>	- random population and sample selection method for swaps</li><li><a href="sample.html" class="code" title="">sample</a>	- sample object</li><li><a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>	- master print function that regulates cmd line output based on verbosity flags</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="randPopulationAndSampleCandidateSelection.html" class="code" title="">randPopulationAndSampleCandidateSelection</a>	- random population and sample selection method for swaps</li><li><a href="sos.html" class="code" title="">sos</a>	- SOS optimization object</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function obj = randPopulationAndSampleCandidateSelection(sosObj)</a></li><li><a href="#_sub2" class="code">function init(obj,sosObj)</a></li><li><a href="#_sub3" class="code">function [feederdf,feederdfIndex] = getCandidateIndex(obj,sample)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% - random population and sample selection method for swaps</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%    This file is part of SOS</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%    SOS is free software: you can redistribute it and/or modify</span>
+0008 <span class="comment">%    it for academic and non-commercial purposes</span>
+0009 <span class="comment">%    under the terms of the GNU General Public License as published by</span>
+0010 <span class="comment">%    the Free Software Foundation, either version 3 of the License, or</span>
+0011 <span class="comment">%    (at your option) any later version.  For commercial or for-profit</span>
+0012 <span class="comment">%    uses, please contact the authors (sos@cnbc.cmu.edu).</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%    SOS is distributed in the hope that it will be useful,</span>
+0015 <span class="comment">%    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+0016 <span class="comment">%    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+0017 <span class="comment">%    GNU General Public License for more details.</span>
+0018 
+0019 <span class="comment">%    You should have received a copy of the GNU General Public License</span>
+0020 <span class="comment">%    along with SOS (see COPYING.txt).</span>
+0021 <span class="comment">%    If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+0022 
+0023 
+0024 
+0025 classdef <a href="randPopulationAndSampleCandidateSelection.html" class="code" title="">randPopulationAndSampleCandidateSelection</a> &lt; <a href="genericFeederCandidateSelection.html" class="code" title="">genericFeederCandidateSelection</a>
+0026     <span class="comment">% selects a neighbor item from a sample's population or other children samples of that pop.</span>
+0027     <span class="comment">% sample's population</span>
+0028     <span class="comment">%</span>
+0029     <span class="comment">%</span>
+0030     <span class="comment">% PROPERTIES:</span>
+0031     <span class="comment">%   samples - list of all samples swaps could occur in</span>
+0032     <span class="comment">%   sampleItems - list of samples and items that could be swapped into those samples</span>
+0033     <span class="comment">%</span>
+0034     <span class="comment">% METHODS:</span>
+0035     <span class="comment">%   randPopulationAndSampleCandidateSelection() % Constructor</span>
+0036     <span class="comment">%   init() %initializes the sample method by generating a list of swap candidates for this sample.</span>
+0037     <span class="comment">%   [feederdf,feederdfIndex] = getCandidateIndex(obj,sample)  % returns a dataframe and row index for a swap candidate</span>
+0038    
+0039     
+0040     
+0041     properties
+0042         samples
+0043         sampleItems
+0044     <span class="keyword">end</span>
+0045     
+0046     methods
+0047        <span class="comment">%% randPopulationAndSampleCandidateSelection() CONSTRUCTOR</span>
+0048         <a name="_sub0" href="#_subfunctions" class="code">function obj = randPopulationAndSampleCandidateSelection(sosObj)</a>
+0049             <span class="comment">% Constructor</span>
+0050             
+0051             obj.init(sosObj);
+0052             
+0053             <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>(<span class="string">'Random Population And Sample Feeder Candidate Selection Ready'</span>, <span class="keyword">...</span>
+0054                 <span class="string">'randPopulationAndSampleCandidateSelection_const'</span>);
+0055         <span class="keyword">end</span>
+0056         
+0057         
+0058         <span class="comment">%% init(sosObj) METHOD</span>
+0059         <a name="_sub1" href="#_subfunctions" class="code">function init(obj,sosObj)</a>
+0060             <span class="comment">%initializes the sample method by generating a list of swap candidates for this sample.</span>
+0061             <span class="comment">%</span>
+0062             <span class="comment">%PARAMETERS:</span>
+0063             <span class="comment">% sosObj - the SOS object the candidate selection method is linked to</span>
+0064             
+0065             obj.samples = [];
+0066             obj.sampleItems = {};
+0067             
+0068             <span class="keyword">for</span> i=1:length(sosObj.samples)
+0069                 curSample = sosObj.samples(i);
+0070                 obj.samples = [obj.samples curSample];
+0071                
+0072                 alreadyMerged = {};
+0073                 
+0074                 candidateItemIndicies = {};
+0075                 <span class="comment">%add it's own items to the list.</span>
+0076                 
+0077                 <span class="keyword">for</span> j=1:curSample.n
+0078                     <span class="keyword">if</span> curSample.locks(j) == 0
+0079                         candidateItemIndicies = [candidateItemIndicies ; {curSample j}]; <span class="comment">%#ok&lt;AGROW&gt;</span>
+0080                     <span class="keyword">end</span>
+0081                 <span class="keyword">end</span>
+0082                 
+0083                 alreadyMerged = [alreadyMerged {curSample}]; <span class="comment">%#ok&lt;AGROW&gt;</span>
+0084                 
+0085                 <span class="comment">%add it's population's item to the list</span>
+0086                 
+0087                 <span class="keyword">if</span>(isempty(curSample.population) == false &amp;&amp; isempty(curSample.population.data) == false)
+0088                     tempIndicies = cell(length(curSample.population.data{1}),2);
+0089                     <span class="keyword">for</span> j=1:length(curSample.population.data{1})
+0090                         tempIndicies{j,1} = curSample.population; 
+0091                         tempIndicies{j,2} = j; 
+0092                     <span class="keyword">end</span>
+0093 
+0094                     candidateItemIndicies = [candidateItemIndicies ; tempIndicies]; <span class="comment">%#ok&lt;AGROW&gt;</span>
+0095                     alreadyMerged = [alreadyMerged {curSample.population}]; <span class="comment">%#ok&lt;AGROW&gt;</span>
+0096                 
+0097                 <span class="keyword">end</span>
+0098                 <span class="comment">% add other samples which are part of this SOS obj and</span>
+0099                 <span class="comment">% which share the sample population to the current sample.</span>
+0100                 
+0101                 <span class="comment">%no siblings if there is no population linked with the</span>
+0102                 <span class="comment">%object</span>
+0103                 <span class="keyword">if</span> isempty(curSample.population) ~= 1
+0104                     numSiblings=length(curSample.population.samples);
+0105                 <span class="keyword">else</span>
+0106                     numSiblings = 0;
+0107                 <span class="keyword">end</span>
+0108                 
+0109                 <span class="keyword">for</span> k=1:numSiblings
+0110                     siblingSample = curSample.population.samples(k);
+0111                     
+0112                     doneAlready = false;
+0113                     <span class="keyword">for</span> l=1:length(alreadyMerged)
+0114                         <span class="keyword">if</span> alreadyMerged{l} == siblingSample
+0115                             doneAlready = true;
+0116                         <span class="keyword">end</span>
+0117                     <span class="keyword">end</span>
+0118                     
+0119                     
+0120                     inSOSObj = max(ismember(siblingSample,sosObj.samples)); 
+0121                     <span class="comment">%doneAlready = max(ismember(siblingSample,alreadyMerged));</span>
+0122                     
+0123                     <span class="keyword">if</span> inSOSObj == true &amp;&amp; doneAlready == false
+0124                         <span class="keyword">for</span> j=1:siblingSample.n
+0125                             <span class="comment">%also exclude locked items from the sibling</span>
+0126                             <span class="comment">%sample from entering into the computation.</span>
+0127                             <span class="keyword">if</span> siblingSample.locks(j) == 0
+0128                              candidateItemIndicies = [candidateItemIndicies ; {siblingSample j}]; <span class="comment">%#ok&lt;AGROW&gt;</span>
+0129                             <span class="keyword">end</span>
+0130                         <span class="keyword">end</span>
+0131                     <span class="keyword">end</span>
+0132                     
+0133                     alreadyMerged = [alreadyMerged {siblingSample}]; <span class="comment">%#ok&lt;AGROW&gt;</span>
+0134                      
+0135                 <span class="keyword">end</span>
+0136              
+0137                 obj.sampleItems{i} = candidateItemIndicies;
+0138             <span class="keyword">end</span>
+0139                        
+0140         <span class="keyword">end</span> <span class="comment">%init()</span>
+0141         
+0142         
+0143         <span class="comment">%% [feederdf,feederdfIndex] = getCandidateIndex(obj,sample) METHOD</span>
+0144         <a name="_sub2" href="#_subfunctions" class="code">function [feederdf,feederdfIndex] = getCandidateIndex(obj,sample) </a>
+0145             <span class="comment">% returns a dataframe and row index for a swap candidate</span>
+0146             <span class="comment">%</span>
+0147             <span class="comment">% PARAMETERS:</span>
+0148             <span class="comment">%   sample - the target sample to swap into</span>
+0149             <span class="comment">%</span>
+0150             <span class="comment">% RETURNS:</span>
+0151             <span class="comment">% feederdf - the feeder dataframe</span>
+0152             <span class="comment">% feederdfIndex -row index of item in feederdf</span>
+0153             
+0154             <span class="keyword">if</span>(strcmp(class(<a href="sample.html" class="code" title="">sample</a>),<span class="string">'sample'</span>) == false)
+0155                 error(<span class="string">'Input must be a sample'</span>);
+0156             <span class="keyword">end</span>
+0157             
+0158             sampleIndex = -1;
+0159             <span class="keyword">for</span> i=1:length(obj.samples)
+0160                 <span class="keyword">if</span> obj.samples(i) == <a href="sample.html" class="code" title="">sample</a>
+0161                     sampleIndex = i;
+0162                 <span class="keyword">end</span>
+0163             <span class="keyword">end</span>
+0164             
+0165             <span class="comment">%find the sample</span>
+0166             <span class="keyword">if</span> sampleIndex == -1
+0167                 error(<span class="string">'Unable to find sample'</span>);
+0168             <span class="keyword">end</span>
+0169             
+0170             <span class="comment">%randomly select an item to swap with</span>
+0171             
+0172             lookupIndex = floor((length(obj.sampleItems{sampleIndex})*rand)+1);
+0173            
+0174             feederdf = obj.sampleItems{1,sampleIndex}{lookupIndex,1};
+0175             feederdfIndex = obj.sampleItems{1,sampleIndex}{lookupIndex,2};
+0176 
+0177         <span class="keyword">end</span>
+0178       
+0179     <span class="keyword">end</span>
+0180     
+0181 <span class="keyword">end</span>
+0182</pre></div>
+<hr><address>Generated on Fri 27-Jan-2012 16:18:41 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

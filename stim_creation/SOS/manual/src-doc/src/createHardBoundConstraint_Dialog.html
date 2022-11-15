@@ -1,0 +1,608 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of createHardBoundConstraint_Dialog</title>
+  <meta name="keywords" content="createHardBoundConstraint_Dialog">
+  <meta name="description" content="- create hard bound constraint dialog">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="#">src</a> &gt; createHardBoundConstraint_Dialog.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for .\src&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>createHardBoundConstraint_Dialog
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>- create hard bound constraint dialog</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function varargout = createHardBoundConstraint_Dialog(varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> - create hard bound constraint dialog
+
+ copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut
+
+    This file is part of SOS
+
+    SOS is free software: you can redistribute it and/or modify
+    it for academic and non-commercial purposes
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.  For commercial or for-profit
+    uses, please contact the authors (sos@cnbc.cmu.edu).
+
+    SOS is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="getdfName.html" class="code" title="function dfName = getdfName(handle,dfType)">getdfName</a>	-  extracts a dataframe name selected in the GUI</li><li><a href="sos_gui.html" class="code" title="function varargout = sos_gui(varargin)">sos_gui</a>	- sos main GUI</li><li><a href="validateRealNumber.html" class="code" title="function flag = validateRealNumber(strNum,errmsg,errtitle)">validateRealNumber</a>	- helper function to validate that a string represents a real number</li><li><a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>	- master print function that regulates cmd line output based on verbosity flags</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="sos_gui.html" class="code" title="function varargout = sos_gui(varargin)">sos_gui</a>	- sos main GUI</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function createHardBoundConstraint_Dialog_OpeningFcn(hObject, eventdata, handles, varargin)</a></li><li><a href="#_sub2" class="code">function varargout = createHardBoundConstraint_Dialog_OutputFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub3" class="code">function edit_name_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub4" class="code">function flag = validate_name(handles)</a></li><li><a href="#_sub5" class="code">function edit_name_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub6" class="code">function popupmenu_sample1Selector_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub7" class="code">function populateSampleList(hObject)</a></li><li><a href="#_sub8" class="code">function popupmenu_sample1Selector_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub9" class="code">function pushbutton_refreshSample1List_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub10" class="code">function popupmenu_sample1Selector_ButtonDownFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub11" class="code">function popupmenu_sample1ColSelector_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub12" class="code">function populateColumnList(hObject,sampleSelector)</a></li><li><a href="#_sub13" class="code">function popupmenu_sample1ColSelector_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub14" class="code">function pushbutton_refreshsample1ColSelector_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub15" class="code">function popupmenu_sample2Selector_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub16" class="code">function popupmenu_sample2Selector_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub17" class="code">function pushbutton_refreshSample2List_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub18" class="code">function popupmenu_sample2ColSelector_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub19" class="code">function popupmenu_sample2ColSelector_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub20" class="code">function pushbutton_refreshsample2ColSelector_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub21" class="code">function popupmenu_sample1ColSelector_ButtonDownFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub22" class="code">function popupmenu_sample2Selector_ButtonDownFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub23" class="code">function popupmenu_sample2ColSelector_ButtonDownFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub24" class="code">function edit_value_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub25" class="code">function flag = validate_value(handles)</a></li><li><a href="#_sub26" class="code">function edit_value_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub27" class="code">function popupmenu_desiredpvalCondition_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub28" class="code">function popupmenu_desiredpvalCondition_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub29" class="code">function popupmenu_tails_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub30" class="code">function popupmenu_tails_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub31" class="code">function pushbutton_createHardBoundConstraint_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub32" class="code">function popupmenu_type_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub33" class="code">function popupmenu_type_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub34" class="code">function popupmenu_fncSelector_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub35" class="code">function popupmenu_fncSelector_CreateFcn(hObject, eventdata, handles)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% - create hard bound constraint dialog</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%    This file is part of SOS</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%    SOS is free software: you can redistribute it and/or modify</span>
+0008 <span class="comment">%    it for academic and non-commercial purposes</span>
+0009 <span class="comment">%    under the terms of the GNU General Public License as published by</span>
+0010 <span class="comment">%    the Free Software Foundation, either version 3 of the License, or</span>
+0011 <span class="comment">%    (at your option) any later version.  For commercial or for-profit</span>
+0012 <span class="comment">%    uses, please contact the authors (sos@cnbc.cmu.edu).</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%    SOS is distributed in the hope that it will be useful,</span>
+0015 <span class="comment">%    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+0016 <span class="comment">%    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+0017 <span class="comment">%    GNU General Public License for more details.</span>
+0018 
+0019 <span class="comment">%    You should have received a copy of the GNU General Public License</span>
+0020 <span class="comment">%    along with SOS (see COPYING.txt).</span>
+0021 <span class="comment">%    If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+0022 
+0023 
+0024 
+0025 
+0026 <a name="_sub0" href="#_subfunctions" class="code">function varargout = createHardBoundConstraint_Dialog(varargin)</a>
+0027 <span class="comment">% CREATEHARDBOUNDCONSTRAINT_DIALOG M-file for createHardBoundConstraint_Dialog.fig</span>
+0028 <span class="comment">%      CREATEHARDBOUNDCONSTRAINT_DIALOG, by itself, creates a new CREATEHARDBOUNDCONSTRAINT_DIALOG or raises the existing</span>
+0029 <span class="comment">%      singleton*.</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">%      H = CREATEHARDBOUNDCONSTRAINT_DIALOG returns the handle to a new CREATEHARDBOUNDCONSTRAINT_DIALOG or the handle to</span>
+0032 <span class="comment">%      the existing singleton*.</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">%      CREATEHARDBOUNDCONSTRAINT_DIALOG('CALLBACK',hObject,eventData,handles,...) calls the local</span>
+0035 <span class="comment">%      function named CALLBACK in CREATEHARDBOUNDCONSTRAINT_DIALOG.M with the given input arguments.</span>
+0036 <span class="comment">%</span>
+0037 <span class="comment">%      CREATEHARDBOUNDCONSTRAINT_DIALOG('Property','Value',...) creates a new CREATEHARDBOUNDCONSTRAINT_DIALOG or raises the</span>
+0038 <span class="comment">%      existing singleton*.  Starting from the left, property value pairs are</span>
+0039 <span class="comment">%      applied to the GUI before createHardBoundConstraint_Dialog_OpeningFcn gets called.  An</span>
+0040 <span class="comment">%      unrecognized property name or invalid value makes property application</span>
+0041 <span class="comment">%      stop.  All inputs are passed to createHardBoundConstraint_Dialog_OpeningFcn via varargin.</span>
+0042 <span class="comment">%</span>
+0043 <span class="comment">%      *See GUI Options on GUIDE's Tools menu.  Choose &quot;GUI allows only one</span>
+0044 <span class="comment">%      instance to run (singleton)&quot;.</span>
+0045 <span class="comment">%</span>
+0046 <span class="comment">% See also: GUIDE, GUIDATA, GUIHANDLES</span>
+0047 
+0048 <span class="comment">% Edit the above text to modify the response to help createHardBoundConstraint_Dialog</span>
+0049 
+0050 <span class="comment">% Last Modified by GUIDE v2.5 16-Sep-2010 16:12:20</span>
+0051 
+0052 <span class="comment">% Begin initialization code - DO NOT EDIT</span>
+0053 gui_Singleton = 1;
+0054 gui_State = struct(<span class="string">'gui_Name'</span>,       mfilename, <span class="keyword">...</span>
+0055                    <span class="string">'gui_Singleton'</span>,  gui_Singleton, <span class="keyword">...</span>
+0056                    <span class="string">'gui_OpeningFcn'</span>, @<a href="#_sub1" class="code" title="subfunction createHardBoundConstraint_Dialog_OpeningFcn(hObject, eventdata, handles, varargin)">createHardBoundConstraint_Dialog_OpeningFcn</a>, <span class="keyword">...</span>
+0057                    <span class="string">'gui_OutputFcn'</span>,  @<a href="#_sub2" class="code" title="subfunction varargout = createHardBoundConstraint_Dialog_OutputFcn(hObject, eventdata, handles)">createHardBoundConstraint_Dialog_OutputFcn</a>, <span class="keyword">...</span>
+0058                    <span class="string">'gui_LayoutFcn'</span>,  [] , <span class="keyword">...</span>
+0059                    <span class="string">'gui_Callback'</span>,   []);
+0060 <span class="keyword">if</span> nargin &amp;&amp; ischar(varargin{1})
+0061     gui_State.gui_Callback = str2func(varargin{1});
+0062 <span class="keyword">end</span>
+0063 
+0064 <span class="keyword">if</span> nargout
+0065     [varargout{1:nargout}] = gui_mainfcn(gui_State, varargin{:});
+0066 <span class="keyword">else</span>
+0067     gui_mainfcn(gui_State, varargin{:});
+0068 <span class="keyword">end</span>
+0069 <span class="comment">% End initialization code - DO NOT EDIT</span>
+0070 
+0071 
+0072 <span class="comment">% --- Executes just before createHardBoundConstraint_Dialog is made visible.</span>
+0073 <a name="_sub1" href="#_subfunctions" class="code">function createHardBoundConstraint_Dialog_OpeningFcn(hObject, eventdata, handles, varargin)</a>
+0074 <span class="comment">% This function has no output args, see OutputFcn.</span>
+0075 <span class="comment">% hObject    handle to figure</span>
+0076 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0077 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0078 <span class="comment">% varargin   command line arguments to createHardBoundConstraint_Dialog (see VARARGIN)</span>
+0079 
+0080 <span class="comment">% Choose default command line output for createHardBoundConstraint_Dialog</span>
+0081 handles.output = hObject;
+0082 
+0083 <span class="comment">% Update handles structure</span>
+0084 guidata(hObject, handles);
+0085 
+0086 <span class="comment">% UIWAIT makes createHardBoundConstraint_Dialog wait for user response (see UIRESUME)</span>
+0087 <span class="comment">% uiwait(handles.figure_createHardBoundConstraint_Dialog);</span>
+0088 
+0089 
+0090 <span class="comment">% --- Outputs from this function are returned to the command line.</span>
+0091 <a name="_sub2" href="#_subfunctions" class="code">function varargout = createHardBoundConstraint_Dialog_OutputFcn(hObject, eventdata, handles) </a>
+0092 <span class="comment">% varargout  cell array for returning output args (see VARARGOUT);</span>
+0093 <span class="comment">% hObject    handle to figure</span>
+0094 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0095 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0096 
+0097 <span class="comment">% Get default command line output from handles structure</span>
+0098 varargout{1} = handles.output;
+0099 
+0100 
+0101 
+0102 <a name="_sub3" href="#_subfunctions" class="code">function edit_name_Callback(hObject, eventdata, handles)</a>
+0103 <span class="comment">% hObject    handle to edit_name (see GCBO)</span>
+0104 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0105 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0106 
+0107 <span class="comment">% Hints: get(hObject,'String') returns contents of edit_name as text</span>
+0108 <span class="comment">%        str2double(get(hObject,'String')) returns contents of edit_name as a double</span>
+0109     <a href="#_sub4" class="code" title="subfunction flag = validate_name(handles)">validate_name</a>(handles);
+0110     
+0111 
+0112 <a name="_sub4" href="#_subfunctions" class="code">function flag = validate_name(handles)</a>
+0113 
+0114     varName = get(handles.edit_name,<span class="string">'String'</span>);
+0115     
+0116     <span class="comment">%check to make sure that the name is a valid variable name:</span>
+0117     valid = regexp(varName,<span class="string">'^[a-zA-Z]+\w*$'</span>, <span class="string">'once'</span>);
+0118     
+0119     <span class="keyword">if</span> isempty(valid)
+0120         <span class="comment">% name is not currently valid, tell the user.</span>
+0121         msgbox(<span class="string">'Only letters, numbers, and underscores are permitted in the name of the ttest object.  The first character must also be a letter.'</span>,<span class="keyword">...</span>
+0122                 <span class="string">'Invalid name!'</span>);
+0123         flag = false;
+0124     <span class="keyword">else</span>
+0125         <span class="comment">% check to make sure that the new variable name doesn't already exist.</span>
+0126         command = strcat(<span class="string">'whos('''</span>,varName,<span class="string">''')'</span>);
+0127         varExists = evalin(<span class="string">'base'</span>,command);
+0128 
+0129 
+0130         <span class="comment">% if a variable with this name already exists, warns the user</span>
+0131         <span class="keyword">if</span> isempty(varExists) == 0
+0132             msgbox(<span class="string">'A variable with this name already exists and will be overridden if you continue'</span>,<span class="keyword">...</span>
+0133                     <span class="string">'Variable name already in use!'</span>);
+0134         <span class="keyword">end</span>
+0135         
+0136         flag = true;
+0137     <span class="keyword">end</span>
+0138     
+0139     
+0140 
+0141 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0142 <a name="_sub5" href="#_subfunctions" class="code">function edit_name_CreateFcn(hObject, eventdata, handles)</a>
+0143 <span class="comment">% hObject    handle to edit_name (see GCBO)</span>
+0144 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0145 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0146 
+0147 <span class="comment">% Hint: edit controls usually have a white background on Windows.</span>
+0148 <span class="comment">%       See ISPC and COMPUTER.</span>
+0149 <span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+0150     set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0151 <span class="keyword">end</span>
+0152 
+0153 
+0154 <span class="comment">% --- Executes on selection change in popupmenu_sample1Selector.</span>
+0155 <a name="_sub6" href="#_subfunctions" class="code">function popupmenu_sample1Selector_Callback(hObject, eventdata, handles)</a>
+0156 <span class="comment">% hObject    handle to popupmenu_sample1Selector (see GCBO)</span>
+0157 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0158 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0159 
+0160 <span class="comment">% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_sample1Selector contents as cell array</span>
+0161 <span class="comment">%        contents{get(hObject,'Value')} returns selected item from popupmenu_sample1Selector</span>
+0162     <a href="#_sub7" class="code" title="subfunction populateSampleList(hObject)">populateSampleList</a>(hObject);
+0163 
+0164 
+0165 <a name="_sub7" href="#_subfunctions" class="code">function populateSampleList(hObject)    </a>
+0166     <span class="comment">% get a list of all populations in the base workspace:</span>
+0167     vars = evalin(<span class="string">'base'</span>,<span class="string">'whos()'</span>);
+0168     
+0169     samples = [];
+0170     <span class="keyword">for</span> i=1:length(vars)
+0171         <span class="keyword">if</span> strcmp(vars(i).class,<span class="string">'sample'</span>)
+0172             samples = [samples; {vars(i).name}]; <span class="comment">%#ok&lt;AGROW&gt;</span>
+0173         <span class="keyword">end</span>
+0174     <span class="keyword">end</span>
+0175     
+0176     
+0177     
+0178     <span class="comment">% assign that list to the options in the pop up menu</span>
+0179     warning(<span class="string">'off'</span>,<span class="string">'MATLAB:hg:uicontrol:ParameterValuesMustBeValid'</span>);    
+0180     set(hObject,<span class="string">'String'</span>,samples); 
+0181 
+0182 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0183 <a name="_sub8" href="#_subfunctions" class="code">function popupmenu_sample1Selector_CreateFcn(hObject, eventdata, handles)</a>
+0184 <span class="comment">% hObject    handle to popupmenu_sample1Selector (see GCBO)</span>
+0185 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0186 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0187 
+0188 <span class="comment">% Hint: popupmenu controls usually have a white background on Windows.</span>
+0189 <span class="comment">%       See ISPC and COMPUTER.</span>
+0190 <span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+0191     set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0192 <span class="keyword">end</span>
+0193 
+0194 
+0195 <span class="comment">% --- Executes on button press in pushbutton_refreshSample1List.</span>
+0196 <a name="_sub9" href="#_subfunctions" class="code">function pushbutton_refreshSample1List_Callback(hObject, eventdata, handles)</a>
+0197 <span class="comment">% hObject    handle to pushbutton_refreshSample1List (see GCBO)</span>
+0198 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0199 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0200     <a href="#_sub7" class="code" title="subfunction populateSampleList(hObject)">populateSampleList</a>(handles.popupmenu_sample1Selector);
+0201 
+0202 <span class="comment">% --- If Enable == 'on', executes on mouse press in 5 pixel border.</span>
+0203 <span class="comment">% --- Otherwise, executes on mouse press in 5 pixel border or over popupmenu_sample1Selector.</span>
+0204 <a name="_sub10" href="#_subfunctions" class="code">function popupmenu_sample1Selector_ButtonDownFcn(hObject, eventdata, handles)</a>
+0205 <span class="comment">% hObject    handle to popupmenu_sample1Selector (see GCBO)</span>
+0206 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0207 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0208     <a href="#_sub7" class="code" title="subfunction populateSampleList(hObject)">populateSampleList</a>(hObject);
+0209 
+0210 
+0211 <span class="comment">% --- Executes on selection change in popupmenu_sample1ColSelector.</span>
+0212 <a name="_sub11" href="#_subfunctions" class="code">function popupmenu_sample1ColSelector_Callback(hObject, eventdata, handles)</a>
+0213 <span class="comment">% hObject    handle to popupmenu_sample1ColSelector (see GCBO)</span>
+0214 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0215 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0216     <a href="#_sub12" class="code" title="subfunction populateColumnList(hObject,sampleSelector)">populateColumnList</a>(hObject,handles.popupmenu_sample1Selector);
+0217 
+0218 <span class="comment">% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_sample1ColSelector contents as cell array</span>
+0219 <span class="comment">%        contents{get(hObject,'Value')} returns selected item from popupmenu_sample1ColSelector</span>
+0220 <a name="_sub12" href="#_subfunctions" class="code">function populateColumnList(hObject,sampleSelector)    </a>
+0221     <span class="comment">% get a list of all populations in the base workspace:</span>
+0222 
+0223     create = true;
+0224     
+0225     <span class="comment">% get the sample in the first list.</span>
+0226     sampleMenuHandle = sampleSelector;
+0227     sampleName = <a href="getdfName.html" class="code" title="function dfName = getdfName(handle,dfType)">getdfName</a>(sampleMenuHandle,<span class="string">'sample 1'</span>);    
+0228     
+0229     <span class="keyword">if</span> isempty(sampleName)
+0230         create = false;
+0231     <span class="keyword">end</span>
+0232     
+0233     <span class="keyword">if</span> create == true
+0234         <span class="comment">% add in all of the header names associated with that sample.</span>
+0235         tmpColNames = evalin(<span class="string">'base'</span>,[sampleName,<span class="string">'.header'</span>]);
+0236         
+0237         <span class="comment">% melt and refreeze cells</span>
+0238         colNames = {};
+0239         
+0240         <span class="keyword">for</span> i=1:length(tmpColNames)
+0241             colNames = [colNames ; tmpColNames{i}]; <span class="comment">%#ok&lt;AGROW&gt;</span>
+0242         <span class="keyword">end</span>
+0243         
+0244     
+0245     <span class="comment">% assign that list to the options in the pop up menu</span>
+0246         warning(<span class="string">'off'</span>,<span class="string">'MATLAB:hg:uicontrol:ParameterValuesMustBeValid'</span>);    
+0247         set(hObject,<span class="string">'String'</span>,colNames);
+0248     <span class="keyword">end</span>
+0249 
+0250 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0251 <a name="_sub13" href="#_subfunctions" class="code">function popupmenu_sample1ColSelector_CreateFcn(hObject, eventdata, handles)</a>
+0252 <span class="comment">% hObject    handle to popupmenu_sample1ColSelector (see GCBO)</span>
+0253 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0254 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0255 
+0256 <span class="comment">% Hint: popupmenu controls usually have a white background on Windows.</span>
+0257 <span class="comment">%       See ISPC and COMPUTER.</span>
+0258 <span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+0259     set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0260 <span class="keyword">end</span>
+0261 
+0262 
+0263 <span class="comment">% --- Executes on button press in pushbutton_refreshsample1ColSelector.</span>
+0264 <a name="_sub14" href="#_subfunctions" class="code">function pushbutton_refreshsample1ColSelector_Callback(hObject, eventdata, handles)</a>
+0265 <span class="comment">% hObject    handle to pushbutton_refreshsample1ColSelector (see GCBO)</span>
+0266 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0267 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0268     <a href="#_sub12" class="code" title="subfunction populateColumnList(hObject,sampleSelector)">populateColumnList</a>(handles.popupmenu_sample1ColSelector,handles.popupmenu_sample1Selector);
+0269 
+0270 
+0271 <span class="comment">% --- Executes on selection change in popupmenu_sample2Selector.</span>
+0272 <a name="_sub15" href="#_subfunctions" class="code">function popupmenu_sample2Selector_Callback(hObject, eventdata, handles)</a>
+0273 <span class="comment">% hObject    handle to popupmenu_sample2Selector (see GCBO)</span>
+0274 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0275 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0276 
+0277 <span class="comment">% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_sample2Selector contents as cell array</span>
+0278 <span class="comment">%        contents{get(hObject,'Value')} returns selected item from popupmenu_sample2Selector</span>
+0279     <a href="#_sub7" class="code" title="subfunction populateSampleList(hObject)">populateSampleList</a>(hObject);
+0280 
+0281 
+0282 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0283 <a name="_sub16" href="#_subfunctions" class="code">function popupmenu_sample2Selector_CreateFcn(hObject, eventdata, handles)</a>
+0284 <span class="comment">% hObject    handle to popupmenu_sample2Selector (see GCBO)</span>
+0285 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0286 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0287 
+0288 <span class="comment">% Hint: popupmenu controls usually have a white background on Windows.</span>
+0289 <span class="comment">%       See ISPC and COMPUTER.</span>
+0290 <span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+0291     set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0292 <span class="keyword">end</span>
+0293 
+0294 
+0295 <span class="comment">% --- Executes on button press in pushbutton_refreshSample2List.</span>
+0296 <a name="_sub17" href="#_subfunctions" class="code">function pushbutton_refreshSample2List_Callback(hObject, eventdata, handles)</a>
+0297 <span class="comment">% hObject    handle to pushbutton_refreshSample2List (see GCBO)</span>
+0298 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0299 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0300     <a href="#_sub7" class="code" title="subfunction populateSampleList(hObject)">populateSampleList</a>(handles.popupmenu_sample2Selector);
+0301 
+0302 <span class="comment">% --- Executes on selection change in popupmenu_sample2ColSelector.</span>
+0303 <a name="_sub18" href="#_subfunctions" class="code">function popupmenu_sample2ColSelector_Callback(hObject, eventdata, handles)</a>
+0304 <span class="comment">% hObject    handle to popupmenu_sample2ColSelector (see GCBO)</span>
+0305 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0306 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0307 
+0308 <span class="comment">% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_sample2ColSelector contents as cell array</span>
+0309 <span class="comment">%        contents{get(hObject,'Value')} returns selected item from popupmenu_sample2ColSelector</span>
+0310     <a href="#_sub12" class="code" title="subfunction populateColumnList(hObject,sampleSelector)">populateColumnList</a>(hObject,handles.popupmenu_sample2Selector);
+0311 
+0312 
+0313 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0314 <a name="_sub19" href="#_subfunctions" class="code">function popupmenu_sample2ColSelector_CreateFcn(hObject, eventdata, handles)</a>
+0315 <span class="comment">% hObject    handle to popupmenu_sample2ColSelector (see GCBO)</span>
+0316 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0317 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0318 
+0319 <span class="comment">% Hint: popupmenu controls usually have a white background on Windows.</span>
+0320 <span class="comment">%       See ISPC and COMPUTER.</span>
+0321 <span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+0322     set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0323 <span class="keyword">end</span>
+0324 
+0325 
+0326 <span class="comment">% --- Executes on button press in pushbutton_refreshsample2ColSelector.</span>
+0327 <a name="_sub20" href="#_subfunctions" class="code">function pushbutton_refreshsample2ColSelector_Callback(hObject, eventdata, handles)</a>
+0328 <span class="comment">% hObject    handle to pushbutton_refreshsample2ColSelector (see GCBO)</span>
+0329 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0330 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0331     <a href="#_sub12" class="code" title="subfunction populateColumnList(hObject,sampleSelector)">populateColumnList</a>(handles.popupmenu_sample2ColSelector,handles.popupmenu_sample2Selector);
+0332 
+0333 
+0334 <span class="comment">% --- If Enable == 'on', executes on mouse press in 5 pixel border.</span>
+0335 <span class="comment">% --- Otherwise, executes on mouse press in 5 pixel border or over popupmenu_sample1ColSelector.</span>
+0336 <a name="_sub21" href="#_subfunctions" class="code">function popupmenu_sample1ColSelector_ButtonDownFcn(hObject, eventdata, handles)</a>
+0337 <span class="comment">% hObject    handle to popupmenu_sample1ColSelector (see GCBO)</span>
+0338 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0339 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0340     <a href="#_sub12" class="code" title="subfunction populateColumnList(hObject,sampleSelector)">populateColumnList</a>(hObject,handles.popupmenu_sample1Selector);
+0341 
+0342 
+0343 <span class="comment">% --- If Enable == 'on', executes on mouse press in 5 pixel border.</span>
+0344 <span class="comment">% --- Otherwise, executes on mouse press in 5 pixel border or over popupmenu_sample2Selector.</span>
+0345 <a name="_sub22" href="#_subfunctions" class="code">function popupmenu_sample2Selector_ButtonDownFcn(hObject, eventdata, handles)</a>
+0346 <span class="comment">% hObject    handle to popupmenu_sample2Selector (see GCBO)</span>
+0347 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0348 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0349     <a href="#_sub7" class="code" title="subfunction populateSampleList(hObject)">populateSampleList</a>(hObject);
+0350 
+0351 
+0352 <span class="comment">% --- If Enable == 'on', executes on mouse press in 5 pixel border.</span>
+0353 <span class="comment">% --- Otherwise, executes on mouse press in 5 pixel border or over popupmenu_sample2ColSelector.</span>
+0354 <a name="_sub23" href="#_subfunctions" class="code">function popupmenu_sample2ColSelector_ButtonDownFcn(hObject, eventdata, handles)</a>
+0355 <span class="comment">% hObject    handle to popupmenu_sample2ColSelector (see GCBO)</span>
+0356 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0357 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0358     <a href="#_sub12" class="code" title="subfunction populateColumnList(hObject,sampleSelector)">populateColumnList</a>(hObject,handles.popupmenu_sample2Selector);
+0359 
+0360 
+0361 
+0362 <a name="_sub24" href="#_subfunctions" class="code">function edit_value_Callback(hObject, eventdata, handles)</a>
+0363 <span class="comment">% hObject    handle to edit_value (see GCBO)</span>
+0364 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0365 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0366 
+0367 <span class="comment">% Hints: get(hObject,'String') returns contents of edit_value as text</span>
+0368 <span class="comment">%        str2double(get(hObject,'String')) returns contents of edit_value as a double</span>
+0369     <a href="#_sub25" class="code" title="subfunction flag = validate_value(handles)">validate_value</a>(handles);
+0370     
+0371     
+0372 <a name="_sub25" href="#_subfunctions" class="code">function flag = validate_value(handles)</a>
+0373      str = get(handles.edit_value,<span class="string">'String'</span>);
+0374     
+0375     errmsg = <span class="string">'Bound value must be a number'</span>;
+0376     errtitle = <span class="string">'Invalid bound value!'</span>;
+0377     
+0378     flag = <a href="validateRealNumber.html" class="code" title="function flag = validateRealNumber(strNum,errmsg,errtitle)">validateRealNumber</a>(str,errmsg,errtitle);    
+0379     
+0380     
+0381 
+0382 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0383 <a name="_sub26" href="#_subfunctions" class="code">function edit_value_CreateFcn(hObject, eventdata, handles)</a>
+0384 <span class="comment">% hObject    handle to edit_value (see GCBO)</span>
+0385 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0386 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0387 
+0388 <span class="comment">% Hint: edit controls usually have a white background on Windows.</span>
+0389 <span class="comment">%       See ISPC and COMPUTER.</span>
+0390 <span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+0391     set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0392 <span class="keyword">end</span>
+0393 
+0394 
+0395 <span class="comment">% --- Executes on selection change in popupmenu_desiredpvalCondition.</span>
+0396 <a name="_sub27" href="#_subfunctions" class="code">function popupmenu_desiredpvalCondition_Callback(hObject, eventdata, handles)</a>
+0397 <span class="comment">% hObject    handle to popupmenu_desiredpvalCondition (see GCBO)</span>
+0398 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0399 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0400 
+0401 <span class="comment">% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_desiredpvalCondition contents as cell array</span>
+0402 <span class="comment">%        contents{get(hObject,'Value')} returns selected item from popupmenu_desiredpvalCondition</span>
+0403 
+0404 
+0405 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0406 <a name="_sub28" href="#_subfunctions" class="code">function popupmenu_desiredpvalCondition_CreateFcn(hObject, eventdata, handles)</a>
+0407 <span class="comment">% hObject    handle to popupmenu_desiredpvalCondition (see GCBO)</span>
+0408 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0409 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0410 
+0411 <span class="comment">% Hint: popupmenu controls usually have a white background on Windows.</span>
+0412 <span class="comment">%       See ISPC and COMPUTER.</span>
+0413 <span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+0414     set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0415 <span class="keyword">end</span>
+0416 
+0417 
+0418 <span class="comment">% --- Executes on selection change in popupmenu_tails.</span>
+0419 <a name="_sub29" href="#_subfunctions" class="code">function popupmenu_tails_Callback(hObject, eventdata, handles)</a>
+0420 <span class="comment">% hObject    handle to popupmenu_tails (see GCBO)</span>
+0421 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0422 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0423 
+0424 <span class="comment">% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_tails contents as cell array</span>
+0425 <span class="comment">%        contents{get(hObject,'Value')} returns selected item from popupmenu_tails</span>
+0426 
+0427 
+0428 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0429 <a name="_sub30" href="#_subfunctions" class="code">function popupmenu_tails_CreateFcn(hObject, eventdata, handles)</a>
+0430 <span class="comment">% hObject    handle to popupmenu_tails (see GCBO)</span>
+0431 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0432 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0433 
+0434 <span class="comment">% Hint: popupmenu controls usually have a white background on Windows.</span>
+0435 <span class="comment">%       See ISPC and COMPUTER.</span>
+0436 <span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+0437     set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0438 <span class="keyword">end</span>
+0439 
+0440 
+0441 <span class="comment">% --- Executes on button press in pushbutton_createHardBoundConstraint.</span>
+0442 <a name="_sub31" href="#_subfunctions" class="code">function pushbutton_createHardBoundConstraint_Callback(hObject, eventdata, handles)</a>
+0443 <span class="comment">% hObject    handle to pushbutton_createHardBoundConstraint (see GCBO)</span>
+0444 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0445 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0446 
+0447     type = <a href="getdfName.html" class="code" title="function dfName = getdfName(handle,dfType)">getdfName</a>(handles.popupmenu_type,<span class="string">'type'</span>);
+0448 
+0449     mainWindowHandle = <a href="sos_gui.html" class="code" title="function varargout = sos_gui(varargin)">sos_gui</a>;
+0450     mainWindowData = guidata(mainWindowHandle);
+0451 
+0452     sosObjName = <a href="getdfName.html" class="code" title="function dfName = getdfName(handle,dfType)">getdfName</a>(mainWindowData.popupmenu_SOSSelector,<span class="string">'SOS'</span>);
+0453 
+0454     <span class="keyword">if</span> isempty(sosObjName) == 0
+0455         <span class="comment">% we have a valid SOS object to add the test to</span>
+0456         <span class="comment">% validate all of the parameters for the test</span>
+0457         create = <a href="#_sub4" class="code" title="subfunction flag = validate_name(handles)">validate_name</a>(handles);
+0458         name = get(handles.edit_name,<span class="string">'String'</span>);
+0459         
+0460         <span class="keyword">if</span> create == true
+0461             sample1 = <a href="getdfName.html" class="code" title="function dfName = getdfName(handle,dfType)">getdfName</a>(handles.popupmenu_sample1Selector,<span class="string">'sample 1'</span>);
+0462             
+0463             <span class="keyword">if</span> isempty(sample1) == 0
+0464                 sample1Col = <a href="getdfName.html" class="code" title="function dfName = getdfName(handle,dfType)">getdfName</a>(handles.popupmenu_sample1ColSelector',<span class="string">'sample 1 column'</span>);
+0465                 
+0466                 <span class="keyword">if</span> isempty(sample1Col) == 0
+0467                    create = <a href="#_sub25" class="code" title="subfunction flag = validate_value(handles)">validate_value</a>(handles);
+0468                    
+0469                    <span class="keyword">if</span> create == true
+0470                        <span class="comment">% all values have passed.  Can execute the command</span>
+0471                         value = get(handles.edit_value,<span class="string">'String'</span>);
+0472                                
+0473                         fnc = <a href="getdfName.html" class="code" title="function dfName = getdfName(handle,dfType)">getdfName</a>(handles.popupmenu_fncSelector,<span class="keyword">...</span>
+0474                                         <span class="string">'fnc'</span>);
+0475                                     
+0476                                     
+0477                         <span class="comment">%all of the other options are in drop-down</span>
+0478                         <span class="comment">%menus and as such necessarily will pass.</span>
+0479                         <span class="comment">%run the command.</span>
+0480 
+0481                         command = [name,<span class="string">'='</span>,sosObjName,<span class="string">'.addConstraint('</span>,<span class="keyword">...</span>
+0482                             <span class="string">'''name'','''</span>,name,<span class="string">''','</span>,<span class="keyword">...</span>
+0483                             <span class="string">'''constraintType'','''</span>,type,<span class="string">''','</span>,<span class="keyword">...</span>
+0484                             <span class="string">'''fnc'','''</span>,fnc,<span class="string">''','</span>,<span class="keyword">...</span>
+0485                             <span class="string">'''sample1'','</span>,sample1,<span class="string">','</span>,<span class="keyword">...</span>
+0486                             <span class="string">'''s1ColName'','''</span>,sample1Col,<span class="string">''','</span>,<span class="keyword">...</span>
+0487                             <span class="string">'''value'','</span>,value,<span class="string">');'</span>,<span class="keyword">...</span>
+0488                             ];
+0489 
+0490                         <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">'Executing command: '</span>,<span class="string">''''</span>,command,<span class="string">''''</span>],<span class="string">'createHardBoundConstraint_Dialog_create'</span>);
+0491                         evalin(<span class="string">'base'</span>,command);      
+0492                         close(handles.figure_createHardBoundConstraint_Dialog);
+0493                    <span class="keyword">end</span>
+0494                 <span class="keyword">end</span>
+0495             <span class="keyword">end</span> 
+0496         <span class="keyword">end</span>
+0497     <span class="keyword">end</span>
+0498 
+0499 
+0500 <span class="comment">% --- Executes on selection change in popupmenu_type.</span>
+0501 <a name="_sub32" href="#_subfunctions" class="code">function popupmenu_type_Callback(hObject, eventdata, handles)</a>
+0502 <span class="comment">% hObject    handle to popupmenu_type (see GCBO)</span>
+0503 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0504 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0505 
+0506 <span class="comment">% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_type contents as cell array</span>
+0507 <span class="comment">%        contents{get(hObject,'Value')} returns selected item from popupmenu_type</span>
+0508 
+0509 
+0510 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0511 <a name="_sub33" href="#_subfunctions" class="code">function popupmenu_type_CreateFcn(hObject, eventdata, handles)</a>
+0512 <span class="comment">% hObject    handle to popupmenu_type (see GCBO)</span>
+0513 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0514 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0515 
+0516 <span class="comment">% Hint: popupmenu controls usually have a white background on Windows.</span>
+0517 <span class="comment">%       See ISPC and COMPUTER.</span>
+0518 <span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+0519     set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0520 <span class="keyword">end</span>
+0521 
+0522 
+0523 <span class="comment">% --- Executes on selection change in popupmenu_fncSelector.</span>
+0524 <a name="_sub34" href="#_subfunctions" class="code">function popupmenu_fncSelector_Callback(hObject, eventdata, handles)</a>
+0525 <span class="comment">% hObject    handle to popupmenu_fncSelector (see GCBO)</span>
+0526 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0527 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0528 
+0529 <span class="comment">% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu_fncSelector contents as cell array</span>
+0530 <span class="comment">%        contents{get(hObject,'Value')} returns selected item from popupmenu_fncSelector</span>
+0531 
+0532 
+0533 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0534 <a name="_sub35" href="#_subfunctions" class="code">function popupmenu_fncSelector_CreateFcn(hObject, eventdata, handles)</a>
+0535 <span class="comment">% hObject    handle to popupmenu_fncSelector (see GCBO)</span>
+0536 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0537 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0538 
+0539 <span class="comment">% Hint: popupmenu controls usually have a white background on Windows.</span>
+0540 <span class="comment">%       See ISPC and COMPUTER.</span>
+0541 <span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+0542     set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0543 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Fri 27-Jan-2012 16:18:41 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

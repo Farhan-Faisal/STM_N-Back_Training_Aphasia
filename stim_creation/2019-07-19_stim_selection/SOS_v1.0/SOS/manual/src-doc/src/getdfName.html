@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of getdfName</title>
+  <meta name="keywords" content="getdfName">
+  <meta name="description" content="-  extracts a dataframe name selected in the GUI">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="#">src</a> &gt; getdfName.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for .\src&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>getdfName
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>-  extracts a dataframe name selected in the GUI</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function dfName = getdfName(handle,dfType) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> -  extracts a dataframe name selected in the GUI
+
+ copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut
+
+    This file is part of SOS
+
+    SOS is free software: you can redistribute it and/or modify
+    it for academic and non-commercial purposes
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.  For commercial or for-profit
+    uses, please contact the authors (sos@cnbc.cmu.edu).
+
+    SOS is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="calculateOverlap_Dialog.html" class="code" title="function varargout = calculateOverlap_Dialog(varargin)">calculateOverlap_Dialog</a>	- calculate overlap dialog</li><li><a href="create2samplettest_Dialog.html" class="code" title="function varargout = create2samplettest_Dialog(varargin)">create2samplettest_Dialog</a>	- create 2-sample t-test dialog</li><li><a href="createHardBoundConstraint_Dialog.html" class="code" title="function varargout = createHardBoundConstraint_Dialog(varargin)">createHardBoundConstraint_Dialog</a>	- create hard bound constraint dialog</li><li><a href="createMatchCorrelztest_Dialog.html" class="code" title="function varargout = createMatchCorrelztest_Dialog(varargin)">createMatchCorrelztest_Dialog</a>	- create correlation-matching z-test dialog</li><li><a href="createMatchUniformkstest_Dialog.html" class="code" title="function varargout = createMatchUniformkstest_Dialog(varargin)">createMatchUniformkstest_Dialog</a>	- create uniformity ks-test dialog</li><li><a href="createPlots_Dialog.html" class="code" title="function varargout = createPlots_Dialog(varargin)">createPlots_Dialog</a>	- create sosplots dialog</li><li><a href="createSingleSampleSoftDistanceConstraint_Dialog.html" class="code" title="function varargout = createSingleSampleSoftDistanceConstraint_Dialog(varargin)">createSingleSampleSoftDistanceConstraint_Dialog</a>	- create single sample soft distance constraint dialog</li><li><a href="createSoftEntropyConstraint_Dialog.html" class="code" title="function varargout = createSoftEntropyConstraint_Dialog(varargin)">createSoftEntropyConstraint_Dialog</a>	- create soft entropy constraint dialog</li><li><a href="createSoftMatchCorrelDistanceConstraint_Dialog.html" class="code" title="function varargout = createSoftMatchCorrelDistanceConstraint_Dialog(varargin)">createSoftMatchCorrelDistanceConstraint_Dialog</a>	- create soft match correlation constraint dialog</li><li><a href="createSoftMetaConstraint_Dialog.html" class="code" title="function varargout = createSoftMetaConstraint_Dialog(varargin)">createSoftMetaConstraint_Dialog</a>	- create soft meta-constraint dialog</li><li><a href="createTwoSampleSoftDistanceConstraint_Dialog.html" class="code" title="function varargout = createTwoSampleSoftDistanceConstraint_Dialog(varargin)">createTwoSampleSoftDistanceConstraint_Dialog</a>	- create two sample soft distance constraint dialog</li><li><a href="createsinglesamplettest_Dialog.html" class="code" title="function varargout = createsinglesamplettest_Dialog(varargin)">createsinglesamplettest_Dialog</a>	- create single sample t-test dialog</li><li><a href="expAnneal_Dialog.html" class="code" title="function varargout = expAnneal_Dialog(varargin)">expAnneal_Dialog</a>	- create expAnneal dialog</li><li><a href="saveHistory_Dialog.html" class="code" title="function varargout = saveHistory_Dialog(varargin)">saveHistory_Dialog</a>	- dialog used to save the optimization history</li><li><a href="setBufferedHistoryOutfile_Dialog.html" class="code" title="function varargout = setBufferedHistoryOutfile_Dialog(varargin)">setBufferedHistoryOutfile_Dialog</a>	- dialog for setting output file for buffered history output</li><li><a href="sos_gui.html" class="code" title="function varargout = sos_gui(varargin)">sos_gui</a>	- sos main GUI</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% -  extracts a dataframe name selected in the GUI</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%    This file is part of SOS</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%    SOS is free software: you can redistribute it and/or modify</span>
+0008 <span class="comment">%    it for academic and non-commercial purposes</span>
+0009 <span class="comment">%    under the terms of the GNU General Public License as published by</span>
+0010 <span class="comment">%    the Free Software Foundation, either version 3 of the License, or</span>
+0011 <span class="comment">%    (at your option) any later version.  For commercial or for-profit</span>
+0012 <span class="comment">%    uses, please contact the authors (sos@cnbc.cmu.edu).</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%    SOS is distributed in the hope that it will be useful,</span>
+0015 <span class="comment">%    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+0016 <span class="comment">%    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+0017 <span class="comment">%    GNU General Public License for more details.</span>
+0018 
+0019 <span class="comment">%    You should have received a copy of the GNU General Public License</span>
+0020 <span class="comment">%    along with SOS (see COPYING.txt).</span>
+0021 <span class="comment">%    If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+0022 
+0023 
+0024 <span class="comment">% returns the string label of the dataframe (techically and more generally now, the</span>
+0025 <span class="comment">% name of the object) that has been selected in a gui popup menu.</span>
+0026 <a name="_sub0" href="#_subfunctions" class="code">function dfName = getdfName(handle,dfType)    </a>
+0027     <span class="comment">%% returns the string label (name) of an object in a gui popup menu</span>
+0028     
+0029     dfNum = get(handle,<span class="string">'Value'</span>);
+0030     dfNames = get(handle,<span class="string">'String'</span>);
+0031     
+0032     <span class="keyword">if</span> isempty(dfNames) == 0
+0033         <span class="keyword">if</span> ischar(dfNames) <span class="comment">% for if there is only one entry in the list</span>
+0034             dfName = dfNames;
+0035         <span class="keyword">else</span>
+0036             dfName = dfNames{dfNum};
+0037         <span class="keyword">end</span>
+0038     <span class="keyword">else</span>
+0039         dfName = <span class="string">''</span>;
+0040     <span class="keyword">end</span>    
+0041 
+0042     <span class="comment">%make sure there is an active df</span>
+0043     <span class="keyword">if</span> isempty(dfName) == 0
+0044         <span class="comment">% success</span>
+0045     <span class="keyword">else</span>
+0046         msgbox([<span class="string">'A '</span>,dfType,<span class="string">' must be active'</span>],<span class="keyword">...</span>
+0047                 [<span class="string">'No active '</span>,dfType]);  
+0048     <span class="keyword">end</span>
+0049 
+0050</pre></div>
+<hr><address>Generated on Fri 27-Jan-2012 16:18:41 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,406 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of population</title>
+  <meta name="keywords" content="population">
+  <meta name="description" content="- population object">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="#">src</a> &gt; population.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for .\src&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>population
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>- population object</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> - population object
+
+ copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut
+
+    This file is part of SOS
+
+    SOS is free software: you can redistribute it and/or modify
+    it for academic and non-commercial purposes
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.  For commercial or for-profit
+    uses, please contact the authors (sos@cnbc.cmu.edu).
+
+    SOS is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="dataFrame.html" class="code" title="">dataFrame</a>	- dataframe object</li><li><a href="population.html" class="code" title="">population</a>	- population object</li><li><a href="sample.html" class="code" title="">sample</a>	- sample object</li><li><a href="validFileName.html" class="code" title="function flag = validFileName(fileName)">validFileName</a>	- helper function to validate that a string represents a valid file name</li><li><a href="validLogical.html" class="code" title="function flag = validLogical(l)">validLogical</a>	- helper function to validate that a string represents a logical operator</li><li><a href="validStringOrNull.html" class="code" title="function flag = validStringOrNull(str)">validStringOrNull</a>	- helper function to validate that a string represents a valid string or null</li><li><a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>	- master print function that regulates cmd line output based on verbosity flags</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="population.html" class="code" title="">population</a>	- population object</li><li><a href="sample.html" class="code" title="">sample</a>	- sample object</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function obj = population(fileName,varargin)</a></li><li><a href="#_sub2" class="code">function obj = addSample(obj,sample)</a></li><li><a href="#_sub3" class="code">function item = popItem(obj,itemIndex)</a></li><li><a href="#_sub4" class="code">function obj = appendItem(obj,item)</a></li><li><a href="#_sub5" class="code">function p = populationInputParser()</a></li><li><a href="#_sub6" class="code">function p = parseConstructorArgs(fileName,varargin)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% - population object</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%    This file is part of SOS</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%    SOS is free software: you can redistribute it and/or modify</span>
+0008 <span class="comment">%    it for academic and non-commercial purposes</span>
+0009 <span class="comment">%    under the terms of the GNU General Public License as published by</span>
+0010 <span class="comment">%    the Free Software Foundation, either version 3 of the License, or</span>
+0011 <span class="comment">%    (at your option) any later version.  For commercial or for-profit</span>
+0012 <span class="comment">%    uses, please contact the authors (sos@cnbc.cmu.edu).</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%    SOS is distributed in the hope that it will be useful,</span>
+0015 <span class="comment">%    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+0016 <span class="comment">%    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+0017 <span class="comment">%    GNU General Public License for more details.</span>
+0018 
+0019 <span class="comment">%    You should have received a copy of the GNU General Public License</span>
+0020 <span class="comment">%    along with SOS (see COPYING.txt).</span>
+0021 <span class="comment">%    If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+0022 
+0023 
+0024 classdef <a href="population.html" class="code" title="">population</a> &lt; <a href="dataFrame.html" class="code" title="">dataFrame</a> 
+0025     <span class="comment">%% creates and manipulates population objects</span>
+0026     <span class="comment">%</span>
+0027     <span class="comment">%   This class provides support for functions and data storage that are</span>
+0028     <span class="comment">%   specific to population objects, from which samples are created.</span>
+0029     <span class="comment">%</span>
+0030     <span class="comment">%   Additional functionality is inherited from parent class &lt;dataFrame&gt;</span>
+0031     <span class="comment">%</span>
+0032     <span class="comment">%</span>
+0033     <span class="comment">%PROPERTIES</span>
+0034     <span class="comment">%   samples - Array of samples associated with the population</span>
+0035     <span class="comment">%   name - string name associated with the variable</span>
+0036     <span class="comment">%</span>
+0037     <span class="comment">% ** ALSO manages the global property 'popCount', which tracks the</span>
+0038     <span class="comment">% number of populations that have been created.</span>
+0039     <span class="comment">%</span>
+0040     <span class="comment">%METHODS</span>
+0041     <span class="comment">%   population(filename, ['isHeader',&lt;logical&gt;, 'isFormatting',&lt;logical&gt;, 'outFile',&lt;string&gt;]) -  constructor</span>
+0042     <span class="comment">%   addSample(sample) - associate a sample with the population</span>
+0043     <span class="comment">%   popItem(itemIndex) - pops and returns the item at {itemIndex}</span>
+0044     <span class="comment">%   insertItem(itemIndex,item) - inserts {item} at {itemIndex}</span>
+0045     <span class="comment">%</span>
+0046     <span class="comment">%METHODS (STATIC)</span>
+0047     <span class="comment">%   populationInputParser() - generates an input parser for the constructor</span>
+0048     <span class="comment">%</span>
+0049     <span class="comment">%METHODS (Static, Access=private)</span>
+0050     <span class="comment">% function p = parseConstructorArgs(fileName,varargin) - parses constructor args</span>
+0051 
+0052     <span class="comment">%% PROPERTIES</span>
+0053     properties
+0054         samples <span class="comment">% Array of samples associated with the population</span>
+0055         name <span class="comment">% string name associated with the variable</span>
+0056     <span class="keyword">end</span> <span class="comment">%# properties</span>
+0057 
+0058     <span class="comment">%% METHODS</span>
+0059     methods
+0060         
+0061         <span class="comment">%% population CONSTRUCTOR</span>
+0062         <a name="_sub0" href="#_subfunctions" class="code">function obj = population(fileName,varargin)</a>
+0063         <span class="comment">% Constructor - Creates a population object</span>
+0064             <span class="comment">%</span>
+0065             <span class="comment">% CALL:</span>
+0066             <span class="comment">% population(filename, ['isHeader',&lt;logical&gt;, 'isFormatting',&lt;logical&gt;, 'outFile',&lt;string&gt;])</span>
+0067             <span class="comment">%</span>
+0068             <span class="comment">% SYNOPSIS:</span>
+0069             <span class="comment">% Constructor - Creates a population object and returns it</span>
+0070             <span class="comment">%</span>
+0071             <span class="comment">% PARAMETERS:</span>
+0072             <span class="comment">%  REQUIRED:</span>
+0073             <span class="comment">%   fileName - src file for the population is required, which must</span>
+0074             <span class="comment">%       follow the SOS dataFrame format specifications.</span>
+0075             <span class="comment">%</span>
+0076             <span class="comment">%  OPTIONAL:</span>
+0077             <span class="comment">%   isHeader/logical - param/logical-value pair indicating if</span>
+0078             <span class="comment">%       the source file has a header.  Defaults to false.</span>
+0079             <span class="comment">%   isFormatting/logical -  param/logical-value indicating if</span>
+0080             <span class="comment">%       the source file has formating.  Defaults to false.</span>
+0081             <span class="comment">%   outFile - param/string-value pair indicating the name</span>
+0082             <span class="comment">%       (inc. path, if other than pwd is desired) of</span>
+0083             <span class="comment">%       of file to save the residual population in after</span>
+0084             <span class="comment">%       optimization has been completed.  Outfile is not</span>
+0085             <span class="comment">%       validated until write.  Defaults to 'null'</span>
+0086             <span class="comment">%   name/string - string name for the variable.</span>
+0087             <span class="comment">%</span>
+0088             <span class="comment">% EXAMPLE:</span>
+0089             <span class="comment">%   p1 = population('p1.txt',1,5);</span>
+0090             <span class="comment">%</span>
+0091             
+0092             <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([char(10) <span class="string">'Creating and Configuring Population Object'</span>], <span class="keyword">...</span>
+0093                 <span class="string">'population_constructor_startObjCreation'</span>);
+0094             
+0095             p = population.parseConstructorArgs(fileName,varargin);
+0096 
+0097             
+0098              <span class="keyword">global</span> popCount;
+0099             <span class="keyword">if</span>(isempty(popCount))
+0100                 curCount = 1;
+0101             <span class="keyword">else</span>
+0102                 curCount = popCount + 1;
+0103             <span class="keyword">end</span>
+0104             
+0105             <span class="comment">%override the default outFile with the sample number if a user</span>
+0106             <span class="comment">%specified value was not specified.</span>
+0107             <span class="keyword">if</span> any(strcmp(p.UsingDefaults,<span class="string">'outFile'</span>))
+0108                 outFile = [<span class="string">'pop'</span>,num2str(curCount),<span class="string">'.res.out.txt'</span>];
+0109             <span class="keyword">else</span>
+0110                 outFile = p.Results.outFile;
+0111             <span class="keyword">end</span>
+0112             
+0113             <span class="comment">%check that the new outfile is a valid filename, warn if file</span>
+0114             <span class="comment">%exists</span>
+0115             <span class="keyword">if</span> ischar(outFile) == false || strcmp(outFile,<span class="string">'null'</span>)
+0116                 error(<span class="string">'Outfile has not been set to a string != null.'</span>);
+0117             <span class="keyword">end</span>
+0118             
+0119             <span class="keyword">if</span> (exist(outFile,<span class="string">'file'</span>))
+0120                <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([char(10) <span class="string">'WARNING: File {'</span>, outFile, <span class="string">'} already exists.  '</span>, <span class="keyword">...</span>
+0121                    <span class="string">'If you attempt to write to this file, '</span>,<span class="keyword">...</span>
+0122                    <span class="string">'the existing one will be overridden'</span> char(10)], <span class="keyword">...</span>
+0123                     <span class="string">'population_constructor_fileExists'</span>);  
+0124             <span class="keyword">end</span>
+0125             
+0126             <span class="comment">%similarly, add a default name based on the sample count if no</span>
+0127             <span class="comment">%name was supplied</span>
+0128             <span class="keyword">if</span> (any(strcmp(p.UsingDefaults,<span class="string">'name'</span>)))
+0129                 name = [<span class="string">'pop'</span>,num2str(curCount)]; <span class="comment">%#ok&lt;PROP&gt;</span>
+0130             <span class="keyword">else</span>
+0131                 name = p.Results.name; <span class="comment">%#ok&lt;PROP&gt;</span>
+0132             <span class="keyword">end</span>
+0133                
+0134             
+0135             obj = obj@<a href="dataFrame.html" class="code" title="">dataFrame</a>(<span class="string">'fileName'</span>,p.Results.fileName,<span class="string">'isHeader'</span>,p.Results.isHeader, <span class="keyword">...</span>
+0136                 <span class="string">'isFormatting'</span>,p.Results.isFormatting,<span class="string">'outFile'</span>, <span class="keyword">...</span>
+0137                  outFile);       
+0138             
+0139             obj.name = name; <span class="comment">%#ok&lt;PROP&gt;</span>
+0140              
+0141             <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">'Creation of Population Object Complete'</span> char(10)], <span class="keyword">...</span>
+0142                 <span class="string">'population_constructor_endObjCreation'</span>);
+0143             
+0144             popCount = curCount;
+0145             
+0146         <span class="keyword">end</span> <span class="comment">% population constructor</span>
+0147         
+0148         <span class="comment">%% addSample METHOD</span>
+0149         <a name="_sub1" href="#_subfunctions" class="code">function obj = addSample(obj,sample)</a>
+0150             <span class="comment">% Associates a sample with a population</span>
+0151             <span class="comment">%</span>
+0152             <span class="comment">%CALL:</span>
+0153             <span class="comment">% &lt;populationObj&gt;.addSample(sample)</span>
+0154             <span class="comment">%</span>
+0155             <span class="comment">%SYNOPSIS:</span>
+0156             <span class="comment">%associates a sample with the population.  Also updates the number</span>
+0157             <span class="comment">%and order of columns in the population and its samples so that</span>
+0158             <span class="comment">%all of these dataframes are in sync.</span>
+0159             <span class="comment">%</span>
+0160             <span class="comment">%PARAMETERS:</span>
+0161             <span class="comment">%   sample - a sample object</span>
+0162             <span class="comment">%</span>
+0163             <span class="comment">%EXAMPLE:</span>
+0164             <span class="comment">%   p1.addSample(obj,s1); % where s1 is a sample object</span>
+0165             
+0166             obj.samples = [obj.samples <a href="sample.html" class="code" title="">sample</a>];
+0167 
+0168             <span class="comment">%ensure that that all the samples associated with the</span>
+0169             <span class="comment">%population have the same columns and order of columns as in</span>
+0170             <span class="comment">%the population.  If addSample is called in the intended way,</span>
+0171             <span class="comment">%i.e., from within the sample.setPop() method, the population</span>
+0172             <span class="comment">%will already be synchronized with the new sample, so this just</span>
+0173             <span class="comment">%pushes those changes to the other samples associated with the</span>
+0174             <span class="comment">%population</span>
+0175             
+0176             <span class="comment">%First, make sure all the samples contain the same columns as</span>
+0177             <span class="comment">%the population</span>
+0178             <span class="keyword">for</span> i=1:length(obj.samples)
+0179                 updatedSample = dataFrame.aContainsb(obj.samples(i),obj);
+0180                 obj.samples(i) = updatedSample;
+0181             <span class="keyword">end</span> 
+0182             
+0183             <span class="comment">%Second, make sure all the columns are ordered in the same way</span>
+0184             <span class="comment">%across all the samples and the population.</span>
+0185             <span class="keyword">for</span> i=1:length(obj.samples)
+0186                 tmpData = obj.samples(i).data;  
+0187                 
+0188                 <span class="comment">%if the sample does have data, need to make sure it's</span>
+0189                 <span class="comment">%odered.</span>
+0190                 
+0191                 <span class="comment">%This section of the code could be make more efficient, as</span>
+0192                 <span class="comment">%it currently applies the same blind 'matching' algorithm</span>
+0193                 <span class="comment">%to all non-empty dataframes, even those that are already</span>
+0194                 <span class="comment">%sorted.  However, for present purposes, this method is a</span>
+0195                 <span class="comment">%simple, guaranteed way to make sure the columns line up.</span>
+0196                 <span class="comment">%Best to spend the time adding more features ;)</span>
+0197                 <span class="keyword">if</span> (isempty(tmpData) == 0)
+0198                     <span class="keyword">for</span> j=1:length(obj.header)
+0199                        <span class="keyword">for</span> k=1:length(obj.samples(i).header)
+0200                             <span class="keyword">if</span>(strcmp(char(obj.header{j}), <span class="keyword">...</span>
+0201                                     char(obj.samples(i).header{k})))
+0202                                 sampleIndex = k;
+0203                             <span class="keyword">end</span>;
+0204                        <span class="keyword">end</span>
+0205                    
+0206                        tmpData(j) = obj.samples(i).data(sampleIndex);
+0207                        
+0208                     <span class="keyword">end</span>
+0209                 <span class="keyword">end</span>
+0210                 
+0211                 <span class="comment">%update the sample dataframe and header information so it's</span>
+0212                 <span class="comment">%all synched with the population</span>
+0213                 obj.samples(i).data = tmpData;
+0214                 obj.samples(i).header = obj.header;
+0215                 obj.samples(i).format = obj.format;
+0216                            
+0217             <span class="keyword">end</span>     
+0218         <span class="keyword">end</span> <span class="comment">%addSample</span>
+0219         
+0220         <span class="comment">%% popItem(itemIndex) METHOD</span>
+0221         <a name="_sub2" href="#_subfunctions" class="code">function item = popItem(obj,itemIndex)  </a>
+0222             <span class="comment">% pops and returns the item at {item index}</span>
+0223             <span class="comment">%</span>
+0224             <span class="comment">%CALL:</span>
+0225             <span class="comment">% item =  &lt;populationObj&gt;.popItem(itemIndex)</span>
+0226             <span class="comment">%</span>
+0227             <span class="comment">%SYNOPSIS:</span>
+0228             <span class="comment">% pops and returns the item at {itemIndex}</span>
+0229             <span class="comment">%</span>
+0230             <span class="comment">%PARAMETERS:</span>
+0231             <span class="comment">%   itemIndex - the row index of the to-be-popped item</span>
+0232             
+0233             p = inputParser;
+0234             
+0235             p.addRequired(<span class="string">'obj'</span>);
+0236             p.addRequired(<span class="string">'itemIndex'</span>,@(itemIndex)validateattributes(itemIndex, {<span class="string">'numeric'</span>}, <span class="keyword">...</span>
+0237                 {<span class="string">'scalar'</span>, <span class="string">'integer'</span>, <span class="string">'positive'</span>,<span class="string">'&gt;'</span> 0}));
+0238             p.parse(obj,itemIndex);
+0239             
+0240             <span class="keyword">if</span>(isempty(obj.data{1}) == true)
+0241                 error([<span class="string">'ERROR: No data in dataframe object - cannot pop item.'</span>,<span class="keyword">...</span>
+0242                        char(10),<span class="string">'       If you are filling samples, make sure the pop size &gt;= to'</span>,<span class="keyword">...</span>
+0243                        char(10),<span class="string">'       The number of items in all the samples drawing from it.'</span>]);
+0244             <span class="keyword">elseif</span> itemIndex &gt; length(obj.data{1})
+0245                 error(<span class="string">'{itemIndex} exceeds row range of data array'</span>);
+0246             <span class="keyword">end</span>
+0247             
+0248             item = <a href="#_sub3" class="code" title="subfunction item = popItem(obj,itemIndex)">popItem</a>@<a href="dataFrame.html" class="code" title="">dataFrame</a>(obj,itemIndex);
+0249         <span class="keyword">end</span>
+0250         
+0251         <span class="comment">%% insertItem(item, itemIndex) METHOD</span>
+0252         <a name="_sub3" href="#_subfunctions" class="code">function obj = appendItem(obj,item)</a>
+0253             <span class="comment">% inserts {item} at {itemIndex}</span>
+0254             <span class="comment">%</span>
+0255             <span class="comment">% Warning!!!  Method does not confirm that the column structure</span>
+0256             <span class="comment">% of {item} (i.e., what columns of data are in what order)</span>
+0257             <span class="comment">% match that of the population's data.  This should be the case if</span>
+0258             <span class="comment">% SOS is manipulating the items since it will only insert items</span>
+0259             <span class="comment">% into the population that belong to the corresponding samples,</span>
+0260             <span class="comment">% which should be in sync.  However, manual invocation of this</span>
+0261             <span class="comment">% method does not have this guarantee.  Use carefully!</span>
+0262             <span class="comment">%</span>
+0263             <span class="comment">%CALL:</span>
+0264             <span class="comment">% &lt;populationObj&gt;.insertItem(itemIndex,item)</span>
+0265             <span class="comment">%</span>
+0266             <span class="comment">%SYOPSIS:</span>
+0267             <span class="comment">%inserts {item} at {itemIndex}</span>
+0268             <span class="comment">%</span>
+0269             <span class="comment">%PARAMETERS:</span>
+0270             <span class="comment">%item - an item (row) consistent with the population</span>
+0271             <span class="comment">%itemIndex - the index at which this item should be inserted</span>
+0272             
+0273             <a href="#_sub4" class="code" title="subfunction obj = appendItem(obj,item)">appendItem</a>@<a href="dataFrame.html" class="code" title="">dataFrame</a>(obj,item);
+0274         <span class="keyword">end</span>
+0275             
+0276     <span class="keyword">end</span> <span class="comment">%methods</span>
+0277 
+0278     methods (Static)
+0279         
+0280         <span class="comment">%% p = populationInputParser() STATIC METHOD</span>
+0281         <a name="_sub4" href="#_subfunctions" class="code">function p = populationInputParser()</a>
+0282         <span class="comment">% generates an input parser with parameter/value pairs and validators for the constructor args.</span>
+0283 
+0284             p = inputParser;
+0285             
+0286             <span class="comment">%Define required and optional arguments, and specify how they</span>
+0287             <span class="comment">%are to be validated</span>
+0288             
+0289             p.addRequired(<span class="string">'fileName'</span>,@(fileName)<a href="validFileName.html" class="code" title="function flag = validFileName(fileName)">validFileName</a>(fileName));
+0290             p.addParamValue(<span class="string">'isHeader'</span>,false, <span class="keyword">...</span>
+0291                 @(isHeader)<a href="validLogical.html" class="code" title="function flag = validLogical(l)">validLogical</a>(isHeader));
+0292             p.addParamValue(<span class="string">'isFormatting'</span>,false, <span class="keyword">...</span>
+0293                 @(isFormatting)<a href="validLogical.html" class="code" title="function flag = validLogical(l)">validLogical</a>(isFormatting));
+0294             p.addParamValue(<span class="string">'name'</span>,<span class="string">'noname'</span>, <span class="keyword">...</span>
+0295                 @(name)ischar(name));
+0296             <span class="comment">%Note that outfile is not validated at this point; this will be</span>
+0297             <span class="comment">%done when it comes time to write to the file.  Motivation is</span>
+0298             <span class="comment">%that I don't want to write to create a file (and directory</span>
+0299             <span class="comment">%structure) unless the user ultimately wants to write</span>
+0300             <span class="comment">%something.</span>
+0301             p.addParamValue(<span class="string">'outFile'</span>,<span class="string">'null'</span>,@(outFile)<a href="validStringOrNull.html" class="code" title="function flag = validStringOrNull(str)">validStringOrNull</a>(outFile));             
+0302             
+0303         <span class="keyword">end</span>
+0304         
+0305     <span class="keyword">end</span>
+0306     
+0307     methods (Static, Access=private)
+0308         
+0309         <span class="comment">%% p = parseConstructorArgs(fileName,varargin) STATIC PRIVATE METHOD</span>
+0310         <a name="_sub5" href="#_subfunctions" class="code">function p = parseConstructorArgs(fileName,varargin)</a>
+0311             <span class="comment">% parses arguments from population constructor</span>
+0312             <span class="comment">%</span>
+0313             <span class="comment">%CALL:</span>
+0314             <span class="comment">% p = population.parseConstructorArgs(fileName,varargin)</span>
+0315             <span class="comment">%</span>
+0316             <span class="comment">%SYOPSIS:</span>
+0317             <span class="comment">%parses the arguments from the population constructor.  Default</span>
+0318             <span class="comment">%values are substituted where appropriate.  Returns a struct</span>
+0319             <span class="comment">%with the parsed args</span>
+0320             <span class="comment">%</span>
+0321             <span class="comment">%PARAMETERS:</span>
+0322             <span class="comment">% SAME as population CONSTRUCTOR</span>
+0323             <span class="comment">%</span>
+0324             <span class="comment">%RETURNS:</span>
+0325             <span class="comment">% the parsed constructor arguments in struct format</span>
+0326     
+0327             <span class="comment">%this cell gets recursively wrapped when it is passed, so</span>
+0328             <span class="comment">%unwrap one layer.</span>
+0329             varargin = varargin{1};
+0330            
+0331             p = population.populationInputParser();
+0332 
+0333             p.parse(fileName,varargin{:});
+0334   
+0335         <span class="keyword">end</span> <span class="comment">%parse Constructor Args</span>
+0336             
+0337     <span class="keyword">end</span> <span class="comment">% methods (Static)</span>
+0338 <span class="keyword">end</span>
+0339 
+0340 
+0341</pre></div>
+<hr><address>Generated on Fri 27-Jan-2012 16:18:41 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

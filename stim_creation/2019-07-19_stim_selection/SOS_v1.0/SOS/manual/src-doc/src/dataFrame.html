@@ -1,0 +1,895 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of dataFrame</title>
+  <meta name="keywords" content="dataFrame">
+  <meta name="description" content="- dataframe object">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="#">src</a> &gt; dataFrame.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for .\src&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>dataFrame
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>- dataframe object</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> - dataframe object
+
+ copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut
+
+    This file is part of SOS
+
+    SOS is free software: you can redistribute it and/or modify
+    it for academic and non-commercial purposes
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.  For commercial or for-profit
+    uses, please contact the authors (sos@cnbc.cmu.edu).
+
+    SOS is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="NaNArray.html" class="code" title="function emptyArray = NaNArray(length)">NaNArray</a>	- helper function to generate an empty array</li><li><a href="dataFrame.html" class="code" title="">dataFrame</a>	- dataframe object</li><li><a href="nullArray.html" class="code" title="function emptyArray = nullArray(length)">nullArray</a>	- helper function to generate a null array</li><li><a href="validFileNameOrNull.html" class="code" title="function flag = validFileNameOrNull(fileName)">validFileNameOrNull</a>	- helper function to validate that a string represents a valid file name or null</li><li><a href="validLogical.html" class="code" title="function flag = validLogical(l)">validLogical</a>	- helper function to validate that a string represents a logical operator</li><li><a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>	- master print function that regulates cmd line output based on verbosity flags</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="dataFrame.html" class="code" title="">dataFrame</a>	- dataframe object</li><li><a href="population.html" class="code" title="">population</a>	- population object</li><li><a href="sample.html" class="code" title="">sample</a>	- sample object</li><li><a href="sos.html" class="code" title="">sos</a>	- SOS optimization object</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function obj = dataFrame(varargin)</a></li><li><a href="#_sub2" class="code">function item = popItem(obj,itemIndex)</a></li><li><a href="#_sub3" class="code">function item = appendItem(obj,item)</a></li><li><a href="#_sub4" class="code">function colNum = colName2colNum(obj, colName)</a></li><li><a href="#_sub5" class="code">function writeData(obj)</a></li><li><a href="#_sub6" class="code">function a = aContainsb(a,b)</a></li><li><a href="#_sub7" class="code">function [a,b] = mergeHeaders(a,b)</a></li><li><a href="#_sub8" class="code">function [a,b] = aContainsbData(a,b)</a></li><li><a href="#_sub9" class="code">function p = dataFrameInputParser()</a></li><li><a href="#_sub10" class="code">function [data,header,format] =</a></li><li><a href="#_sub11" class="code">function percent = overlap(df1,df2)</a></li><li><a href="#_sub12" class="code">function p = parseConstructorArgs(varargin)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% - dataframe object</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%    This file is part of SOS</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%    SOS is free software: you can redistribute it and/or modify</span>
+0008 <span class="comment">%    it for academic and non-commercial purposes</span>
+0009 <span class="comment">%    under the terms of the GNU General Public License as published by</span>
+0010 <span class="comment">%    the Free Software Foundation, either version 3 of the License, or</span>
+0011 <span class="comment">%    (at your option) any later version.  For commercial or for-profit</span>
+0012 <span class="comment">%    uses, please contact the authors (sos@cnbc.cmu.edu).</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%    SOS is distributed in the hope that it will be useful,</span>
+0015 <span class="comment">%    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+0016 <span class="comment">%    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+0017 <span class="comment">%    GNU General Public License for more details.</span>
+0018 
+0019 <span class="comment">%    You should have received a copy of the GNU General Public License</span>
+0020 <span class="comment">%    along with SOS (see COPYING.txt).</span>
+0021 <span class="comment">%    If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+0022 
+0023 
+0024 classdef <a href="dataFrame.html" class="code" title="">dataFrame</a> &lt;  handle
+0025     <span class="comment">%% Creates a dataframe object.  Parent of population and sample.</span>
+0026     <span class="comment">%</span>
+0027     <span class="comment">% NOTE: Objects of this class are generally not generated directly; rather,</span>
+0028     <span class="comment">% children such as population and sample generate objects which inherit</span>
+0029     <span class="comment">% the characteristics of dataFrame objects.</span>
+0030     <span class="comment">%</span>
+0031     <span class="comment">% dataframe objects are used to store and manipulate sample and</span>
+0032     <span class="comment">% population data, and other general information about samples and</span>
+0033     <span class="comment">% populations such as their source files, where to save the dataframe,</span>
+0034     <span class="comment">% and so on.</span>
+0035     <span class="comment">%</span>
+0036     <span class="comment">% To allow for reference- as opposed to value- based passing of</span>
+0037     <span class="comment">% dataFrame objects, this class inherits from handle.</span>
+0038     <span class="comment">%</span>
+0039     <span class="comment">%PROPERTIES</span>
+0040     <span class="comment">%    src - the name of the source file to be read in (if applicable)</span>
+0041     <span class="comment">%    data - the actual data (a cell array of cell arrays/arrays)</span>
+0042     <span class="comment">%    isHeader - logical indicating whether src has a header line (recommended!)</span>
+0043     <span class="comment">%    header - the header info, each col stored in a cell array</span>
+0044     <span class="comment">%    isFormatting - logical indicating whether src has formatting information in the header (recommended!)</span>
+0045     <span class="comment">%    format - the format info, each col stored in a cell array</span>
+0046     <span class="comment">%    sosObj - the SOS object currently associated with the dataframe</span>
+0047     <span class="comment">%    zdata - the normalized data</span>
+0048     <span class="comment">%    outFile - target output file name</span>
+0049     <span class="comment">%</span>
+0050     <span class="comment">%PROPERTIES (Constant)</span>
+0051     <span class="comment">%   supportedFormats - cell array of supported data formats</span>
+0052     <span class="comment">%</span>
+0053     <span class="comment">%METHODS</span>
+0054     <span class="comment">%   dataFrame(varargin) - Constructor - see it's doc for args</span>
+0055     <span class="comment">%   item = popItem(obj,itemIndex) - pops and returns the item from {itemIndex}</span>
+0056     <span class="comment">%   item = appendItem(obj,item) - appends {item} to dataFrame</span>
+0057     <span class="comment">%   colNum = colName2colNum(colName) - finds the column number (index) of the named column</span>
+0058     <span class="comment">%   writeData() % writes the header and data from the dataframe to obj.outFile</span>
+0059     <span class="comment">%</span>
+0060     <span class="comment">%METHODS (STATIC)</span>
+0061     <span class="comment">%   a = aContainsb(a,b)  - ensures that data from dataframe obj 'a' contains the same rows as 'b'.</span>
+0062     <span class="comment">%   [a,b] = mergeHeaders(a,b) -  merges the headers from dataFrames a and b</span>
+0063     <span class="comment">%   [a,b] = aContainsbData(a,b) - ensures that data from dataframe obj 'a' contains the same data as 'b'.</span>
+0064     <span class="comment">%   p = dataFrameInputParser() - returns an input parser for the dataFrame constructor args</span>
+0065     <span class="comment">%   [data,header,format] = readDataFrameData(fileName,isHeader,isFormatting) - reads the data for a dataframe from a file</span>
+0066     <span class="comment">%   percent = overlap(df1,df2) % calculates the percent of overlapping items out of the total number of items in df1+df2.</span>
+0067     <span class="comment">%</span>
+0068     <span class="comment">%METHODS (STATIC,Acess = private)</span>
+0069     <span class="comment">%   p = parseConstructorArgs(varargin) - parses the dataFrame constructor arguments</span>
+0070         
+0071     <span class="comment">%% PROPERTIES</span>
+0072     properties   
+0073         fileName <span class="comment">% the name of the source file to be read in (if applicable)</span>
+0074         data <span class="comment">% the actual data (a cell array of cell arrays/arrays)</span>
+0075         isHeader <span class="comment">% logical indicating whether src has a header line (recommended!)</span>
+0076         header <span class="comment">% the header info, each col stored in a cell array</span>
+0077         isFormatting <span class="comment">% logical indicating whether src has formatting information in the header (recommended!)</span>
+0078         format <span class="comment">% the format info, each col stored in a cell array</span>
+0079         sosObj <span class="comment">% the SOS object currently associated with the dataframe</span>
+0080         zdata <span class="comment">% the normalized data</span>
+0081         outFile <span class="comment">% target output file name</span>
+0082     <span class="keyword">end</span> <span class="comment">%properties</span>
+0083     
+0084     <span class="comment">%%Properties (Constant)</span>
+0085     properties (Constant)
+0086         supportedFormats = {<span class="string">'s'</span> <span class="string">'f'</span>}; <span class="comment">% cell array of supported data formats</span>
+0087     <span class="keyword">end</span>
+0088         
+0089         
+0090     
+0091     methods
+0092         
+0093         <span class="comment">%% dataframe CONSTRUCTOR</span>
+0094         <a name="_sub0" href="#_subfunctions" class="code">function obj = dataFrame(varargin)</a>
+0095             <span class="comment">%Constructor - Creates a dataFrame object</span>
+0096             <span class="comment">%</span>
+0097             <span class="comment">% CALL:</span>
+0098             <span class="comment">% dataFrame(['filename',&lt;string&gt;, 'isHeader',&lt;logical&gt;, 'isFormatting',&lt;logical&gt;, 'outFile',&lt;string&gt;])</span>
+0099             <span class="comment">%</span>
+0100             <span class="comment">% SYNOPSIS:</span>
+0101             <span class="comment">% Constructor - Creates a dataFrame object</span>
+0102             <span class="comment">%</span>
+0103             <span class="comment">% PARAMETERS:</span>
+0104             <span class="comment">% OPTIONAL:</span>
+0105             <span class="comment">%   fileName/string - param/string-value pair indicating the</span>
+0106             <span class="comment">%       name of the file where data for the dataFrame is</span>
+0107             <span class="comment">%       stored.  Defaults to NaN.</span>
+0108             <span class="comment">%   isHeader/logical - param/logical-value pair indicating if</span>
+0109             <span class="comment">%       the source file has a header.  Defaults to false.</span>
+0110             <span class="comment">%   isFormatting/logical -  param/logical-value indicating if</span>
+0111             <span class="comment">%       the source file has formating.  Defaults to false.</span>
+0112             <span class="comment">%   outFile - param/string-value pair indicating the name</span>
+0113             <span class="comment">%       (inc. path, if other than pwd is desired) of</span>
+0114             <span class="comment">%       of file to save the residual population in after</span>
+0115             <span class="comment">%       optimization has been completed.  Outfile is not</span>
+0116             <span class="comment">%       validated until write.  Defaults to 'null'</span>
+0117             <span class="comment">%</span>
+0118             <span class="comment">% EXAMPLE:</span>
+0119             <span class="comment">%   d = dataFrame(); % creates an empty dataframe</span>
+0120             <span class="comment">%</span>
+0121             
+0122             p = dataFrame.parseConstructorArgs(varargin);
+0123 
+0124             obj.fileName = p.Results.fileName;
+0125             obj.isHeader = p.Results.isHeader;
+0126             obj.isFormatting = p.Results.isFormatting;
+0127             obj.outFile = p.Results.outFile;
+0128             
+0129             obj.header = {};
+0130             obj.format = {};
+0131 
+0132             <span class="comment">%if there is a valid input file to read from, do so</span>
+0133             <span class="keyword">if</span>(strcmp(obj.fileName,<span class="string">'null'</span>) == false)
+0134               [obj.data, obj.header, obj.format] = <span class="keyword">...</span>
+0135                  dataFrame.readDataFrameData(obj.fileName,obj.isHeader,obj.isFormatting);
+0136             <span class="keyword">end</span>     
+0137         <span class="keyword">end</span> <span class="comment">% dataFrame</span>
+0138 
+0139     
+0140         <span class="comment">%% item = popItem(itemIndex) METHOD</span>
+0141         <a name="_sub1" href="#_subfunctions" class="code">function item = popItem(obj,itemIndex)</a>
+0142             <span class="comment">% pops and returns the item from {itemIndex}</span>
+0143             <span class="comment">%</span>
+0144             <span class="comment">%CALL:</span>
+0145             <span class="comment">% item =  &lt;dataFrameObj&gt;.popItem(itemIndex)</span>
+0146             <span class="comment">%</span>
+0147             <span class="comment">%SYNOPSIS:</span>
+0148             <span class="comment">% pops and returns the item at {itemIndex}</span>
+0149             <span class="comment">%</span>
+0150             <span class="comment">%PARAMETERS:</span>
+0151             <span class="comment">%   itemIndex - the row index of the to-be-popped item</span>
+0152             
+0153             
+0154             p = inputParser;
+0155             
+0156             p.addRequired(<span class="string">'obj'</span>);
+0157             p.addRequired(<span class="string">'itemIndex'</span>,@(itemIndex)validateattributes(itemIndex, {<span class="string">'numeric'</span>}, <span class="keyword">...</span>
+0158                 {<span class="string">'scalar'</span>, <span class="string">'integer'</span>, <span class="string">'positive'</span>,<span class="string">'&gt;'</span> 0}));
+0159             p.parse(obj,itemIndex);
+0160             
+0161             <span class="keyword">if</span>(isempty(obj.data) == true)
+0162                 error(<span class="string">'No data in sample object - cannot pop item'</span>);
+0163             <span class="keyword">elseif</span> itemIndex &gt; length(obj.data{1})
+0164                 error(<span class="string">'{itemIndex} exceeds row range of data array'</span>);
+0165             <span class="keyword">end</span>
+0166             
+0167             
+0168             item = cell(1,length(obj.data));
+0169 
+0170             <span class="keyword">for</span> i=1:length(obj.data)
+0171                 cellpart = obj.data{i}(itemIndex);
+0172                 item(i) = {cellpart};
+0173                 obj.data{i}(itemIndex) = [];
+0174             <span class="keyword">end</span>
+0175         <span class="keyword">end</span> <span class="comment">% popItem</span>
+0176         
+0177         <span class="comment">%% appendItem(item) STATIC METHOD</span>
+0178         <a name="_sub2" href="#_subfunctions" class="code">function item = appendItem(obj,item)</a>
+0179             <span class="comment">% appends {item} to dataFrame</span>
+0180             <span class="comment">%</span>
+0181             <span class="comment">% Warning!!!  Method does not confirm that the column structure</span>
+0182             <span class="comment">% of {item} (i.e., what columns of data are in what order)</span>
+0183             <span class="comment">% match that of the sample's data.  This should be the case if</span>
+0184             <span class="comment">% SOS is manipulating the items since it will only insert items</span>
+0185             <span class="comment">% into the sample that belong to the corresponding population,</span>
+0186             <span class="comment">% which should be in sync.  However, manual invocation of this</span>
+0187             <span class="comment">% method does not have this guarantee.  Use carefully!</span>
+0188             <span class="comment">%</span>
+0189             <span class="comment">%CALL:</span>
+0190             <span class="comment">% &lt;dataFrameObj&gt;.insertItem(item)</span>
+0191             <span class="comment">%</span>
+0192             <span class="comment">%SYOPSIS:</span>
+0193             <span class="comment">%appends{item} to data in dataFrame</span>
+0194             <span class="comment">%</span>
+0195             <span class="comment">%PARAMETERS:</span>
+0196             <span class="comment">%item - an item (row) consistent with the population</span>
+0197             <span class="comment">%</span>
+0198             
+0199             <span class="keyword">if</span>(isempty(obj.data))
+0200                 obj.data = item;
+0201             <span class="keyword">else</span>
+0202                 <span class="keyword">for</span> i=1:length(obj.header)
+0203                     obj.data{i} = vertcat(obj.data{i},item{i}(1));
+0204                 <span class="keyword">end</span>
+0205             <span class="keyword">end</span>
+0206         <span class="keyword">end</span>    
+0207   
+0208         <span class="comment">%% colName2colNum</span>
+0209         <a name="_sub3" href="#_subfunctions" class="code">function colNum = colName2colNum(obj, colName)</a>
+0210             <span class="comment">%finds the column number (index) of the named column</span>
+0211             <span class="comment">%</span>
+0212             <span class="comment">%CALL:</span>
+0213             <span class="comment">% &lt;dataFrameObj&gt;.colName2colNum(colName);</span>
+0214             <span class="comment">%</span>
+0215             <span class="comment">%PARAMETERS:</span>
+0216             <span class="comment">% colName - name of column</span>
+0217             <span class="comment">%</span>
+0218             <span class="comment">%RETURNS:</span>
+0219             <span class="comment">% colNum with that colName, -1 if not found</span>
+0220             colNum = -1;
+0221             
+0222             <span class="keyword">for</span> i=1:length(obj.header)
+0223                 <span class="keyword">if</span> (strcmp(obj.header{i},colName) == 1)
+0224                    colNum = i; 
+0225                    <span class="keyword">break</span>;
+0226                 <span class="keyword">end</span>                        
+0227             <span class="keyword">end</span>
+0228         <span class="keyword">end</span>
+0229         
+0230         
+0231         <span class="comment">%% writeData() METHOD</span>
+0232         <a name="_sub4" href="#_subfunctions" class="code">function writeData(obj)</a>
+0233             <span class="comment">%writes the header and data from the dataframe to obj.outFile</span>
+0234                        
+0235             <span class="comment">% the name meets these very basic checks, try to open the file</span>
+0236             
+0237             <span class="keyword">try</span>
+0238                 fid = fopen(obj.outFile,<span class="string">'w'</span>);
+0239             <span class="keyword">catch</span> exception
+0240                 error([<span class="string">'Could not open file: '</span>, obj.outFile]);
+0241             <span class="keyword">end</span>
+0242             
+0243             <span class="comment">% write the data to the file</span>
+0244             <span class="keyword">try</span>
+0245                 <span class="comment">%write the header</span>
+0246                 <span class="keyword">for</span> i=1:length(obj.header)    
+0247                     fprintf(fid,<span class="string">'%s|%s\t'</span>,char(obj.header{i}), <span class="keyword">...</span>
+0248                            regexprep(char(obj.format{i}),<span class="string">'%'</span>,<span class="string">''</span>));
+0249                 <span class="keyword">end</span>
+0250                 
+0251                 fprintf(fid,<span class="string">'\r\n'</span>);
+0252                 
+0253                 <span class="keyword">if</span>(isempty(obj.data) == false)
+0254                     <span class="keyword">if</span>(isempty(obj.data{1}) == false)
+0255                         <span class="keyword">for</span> i=1:length(obj.data{1})
+0256                             <span class="keyword">for</span> j=1:length(obj.data)
+0257                                 <span class="keyword">if</span>(strcmp(obj.format{j},<span class="string">'%s'</span>))
+0258                                     fprintf(fid,<span class="string">'%s\t'</span>,char(obj.data{j}(i)));
+0259                                 <span class="keyword">elseif</span>(strcmp(obj.format{j},<span class="string">'%f'</span>))
+0260                                     <span class="comment">% try to format ints nicely</span>
+0261                                     <span class="keyword">if</span> int32(obj.data{j}(i)) == obj.data{j}(i)
+0262                                         fprintf(fid,<span class="string">'%d\t'</span>,obj.data{j}(i));
+0263                                     <span class="keyword">else</span>
+0264                                         <span class="comment">%try to format other numbers nicely</span>
+0265                                         fprintf(fid,<span class="string">'%s\t'</span>,num2str(obj.data{j}(i)));
+0266                                     <span class="keyword">end</span>
+0267                                     
+0268                                 <span class="keyword">else</span>
+0269                                    error(<span class="string">'Unrecognized column format'</span>); 
+0270                                 <span class="keyword">end</span>
+0271                             <span class="keyword">end</span>
+0272                             fprintf(fid,<span class="string">'\r\n'</span>);
+0273                         <span class="keyword">end</span>
+0274                     <span class="keyword">end</span>
+0275                 <span class="keyword">end</span>
+0276                 
+0277                 
+0278             <span class="keyword">catch</span> exception
+0279                 <span class="keyword">try</span>
+0280                     fclose(fid);
+0281                 <span class="keyword">catch</span> exception2 <span class="comment">%#ok&lt;NASGU&gt;</span>
+0282                 <span class="keyword">end</span>
+0283                 
+0284                 disp(exception);
+0285                 error([<span class="string">'Error while writing to file: '</span>, obj.outFile]);
+0286                 
+0287             <span class="keyword">end</span>
+0288       
+0289             fclose(fid);
+0290             
+0291             <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">'Data written to file: '</span>, obj.outFile], <span class="keyword">...</span>
+0292                 <span class="string">'dataFrame_writeData_done'</span>);
+0293         <span class="keyword">end</span> <span class="comment">%writeData()</span>
+0294     <span class="keyword">end</span>
+0295     
+0296     
+0297     
+0298     methods (Static)
+0299         
+0300         <span class="comment">%% a = aContainsb(a,b) STATIC METHOD</span>
+0301         <a name="_sub5" href="#_subfunctions" class="code">function a = aContainsb(a,b)</a>
+0302             <span class="comment">%ensures that data from dataframe obj 'a' contains the same rows as 'b'.</span>
+0303             <span class="comment">%</span>
+0304             <span class="comment">%CALL:</span>
+0305             <span class="comment">% dataFrame.aContainsb(a,b) % where a and b are dataframe objects</span>
+0306             <span class="comment">%</span>
+0307             <span class="comment">%SYNOPSIS:</span>
+0308             <span class="comment">%ensures that data from dataframe obj 'a' contains the same rows as 'b'.</span>
+0309             <span class="comment">%If 'a' does not contain said rows, they are added to the 'a',</span>
+0310             <span class="comment">%filled with the correct 'null' token for either strings</span>
+0311             <span class="comment">%(literal string 'null') or NaN for floats.  Also updates the</span>
+0312             <span class="comment">%header and format information for 'a' to reflect these new additions.</span>
+0313             <span class="comment">%Returns updated a.</span>
+0314             <span class="comment">%</span>
+0315             <span class="comment">%PARAMETERS:</span>
+0316             <span class="comment">%   a - a dataframe object</span>
+0317             <span class="comment">%   b - a dataframe object</span>
+0318             <span class="comment">%</span>
+0319             <span class="comment">%EXAMPLE:</span>
+0320             <span class="comment">%   dataFrame.aContainsb(a,b) % where a and b are dataframe objects</span>
+0321    
+0322             <span class="keyword">for</span> i=1:length(b.header)
+0323                 isPresent = false;
+0324 
+0325                 <span class="keyword">for</span> j=1:length(a.header)
+0326                     <span class="keyword">if</span> (strcmp(b.header{i},a.header{j}) == 1)
+0327                        isPresent = true; 
+0328                        <span class="keyword">break</span>;
+0329                     <span class="keyword">end</span>                        
+0330                 <span class="keyword">end</span>
+0331 
+0332                 <span class="keyword">if</span>(isPresent == false)     
+0333                    a.header = [a.header b.header(i)];
+0334                    a.format = [a.format b.format(i)];
+0335 
+0336                    <span class="comment">%need to fill the corresponding rows with NaN or</span>
+0337                    <span class="comment">%Null, if there is already data in the array</span>
+0338                     <span class="keyword">if</span>(isempty(a.data) == false)
+0339                        <span class="keyword">if</span>(strcmp(a.format{length(a.format)},<span class="string">'%s'</span>) ==1) 
+0340                            emptyArray = <a href="nullArray.html" class="code" title="function emptyArray = nullArray(length)">nullArray</a>(length(a.data{1}));
+0341                        <span class="keyword">elseif</span> (strcmp(a.format{length(a.format)},<span class="string">'%f'</span>) ==1)  
+0342                            emptyArray = <a href="NaNArray.html" class="code" title="function emptyArray = NaNArray(length)">NaNArray</a>(length(a.data{1}));
+0343                        <span class="keyword">else</span>
+0344                             error(<span class="string">'Unable to fill in empty column because format is invalid'</span>);
+0345                        <span class="keyword">end</span>
+0346 
+0347                        <span class="comment">%merge in the empty column</span>
+0348                        a.data = [a.data {emptyArray}];
+0349                     <span class="keyword">end</span>
+0350                 <span class="keyword">end</span>                  
+0351             <span class="keyword">end</span>         
+0352         <span class="keyword">end</span>
+0353                
+0354                 
+0355         <span class="comment">%% [a,b] = mergeHeaders(a,b) STATIC METHOD</span>
+0356         <a name="_sub6" href="#_subfunctions" class="code">function [a,b] = mergeHeaders(a,b)</a>
+0357             <span class="comment">% merges the headers from dataFrames a and b</span>
+0358             <span class="comment">%</span>
+0359             <span class="comment">% CALL:</span>
+0360             <span class="comment">%   [a, b] = dataFrame.mergeHeaders(a,b)</span>
+0361             <span class="comment">%</span>
+0362             <span class="comment">%PARAMETERS:</span>
+0363             <span class="comment">%   a - a dataFrame object</span>
+0364             <span class="comment">%   b - a dataFrame object</span>
+0365             <span class="comment">%</span>
+0366             <span class="comment">%RETURNS:</span>
+0367             <span class="comment">% [a, b] with merged headers</span>
+0368             <span class="comment">%</span>
+0369             <span class="comment">%Example:</span>
+0370             <span class="comment">%   [sample,population] =</span>
+0371             <span class="comment">%       dataFrame.mergeHeaders(sample,population);</span>
+0372 
+0373             <span class="comment">%check that each column in a is in b</span>
+0374             a = dataFrame.aContainsb(a,b);
+0375             <span class="comment">%check that each column in b is in a</span>
+0376             b = dataFrame.aContainsb(b,a);    
+0377 
+0378         <span class="keyword">end</span>        
+0379         
+0380         
+0381         <span class="comment">%% [a,b] = aContainsbData(a,b) STATIC METHOD</span>
+0382         <a name="_sub7" href="#_subfunctions" class="code">function [a,b] = aContainsbData(a,b)</a>
+0383            <span class="comment">%ensures that data from dataframe obj 'a' contains the same data as 'b'.</span>
+0384             <span class="comment">%</span>
+0385             <span class="comment">%CALL:</span>
+0386             <span class="comment">% dataFrame.aContainsbData(a,b) % where a and b are dataframe objects</span>
+0387             <span class="comment">%</span>
+0388             <span class="comment">%SYNOPSIS:</span>
+0389             <span class="comment">% ensures that a contains all of the data in b.  Currently</span>
+0390             <span class="comment">% useds as part of the normalization function to create a</span>
+0391             <span class="comment">% dataframe with all of the data in the SOS object.</span>
+0392             <span class="comment">%</span>
+0393             <span class="comment">%PARAMETERS:</span>
+0394             <span class="comment">%   a - a dataframe object</span>
+0395             <span class="comment">%   b - a dataframe object</span>
+0396             <span class="comment">%</span>
+0397             <span class="comment">%EXAMPLE:</span>
+0398             <span class="comment">%   dataFrame.aContainsbData(a,b) % where a and b are dataframe</span>
+0399             <span class="comment">%   objects</span>
+0400             
+0401             <span class="keyword">if</span>(isempty(a.data) == true)
+0402                a.data = {}; 
+0403             <span class="keyword">end</span>
+0404 
+0405             <span class="keyword">if</span>(isempty(b.data) == false) <span class="comment">%only need to merge if b contains data</span>
+0406                 l=length(b.data{1});
+0407                 <span class="keyword">for</span> i=1:length(a.header)
+0408                     index = -1;
+0409                     
+0410                     <span class="keyword">for</span> j=1:length(b.header)
+0411                          <span class="keyword">if</span> (strcmp(b.header{j},a.header{i}) == 1)
+0412                              <span class="comment">%there is data about the column in a stored in b</span>
+0413                              index=j;
+0414                              <span class="keyword">break</span>;
+0415                          <span class="keyword">end</span>
+0416                     <span class="keyword">end</span>
+0417 
+0418                     <span class="keyword">if</span> index == -1
+0419                        <span class="comment">%no data about the column in a in column of b; add in a</span>
+0420                        <span class="comment">%blank column of the appropriate length</span>
+0421                        <span class="keyword">if</span>(strcmp(a.format{i},<span class="string">'%s'</span>) ==1)            
+0422                            emptyArray = <a href="nullArray.html" class="code" title="function emptyArray = nullArray(length)">nullArray</a>(length(l));
+0423                        <span class="keyword">elseif</span> (strcmp(a.format{i},<span class="string">'%f'</span>) ==1)  
+0424                            emptyArray = <a href="NaNArray.html" class="code" title="function emptyArray = NaNArray(length)">NaNArray</a>(length(l));
+0425                        <span class="keyword">else</span>
+0426                             error(<span class="string">'Merging only supported for data types %s and %f'</span>);
+0427                        <span class="keyword">end</span>
+0428 
+0429 
+0430                        <span class="keyword">if</span>(isempty(a.data))
+0431                            a.data{i} = {emptyArray};
+0432                        <span class="keyword">else</span>
+0433                            <span class="keyword">if</span> (length(a.data) &gt;= i)
+0434                                 a.data{i} = vertcat(a.data{i},emptyArray);
+0435                            <span class="keyword">else</span>
+0436                                a.data{i} = {emptyArray};
+0437                            <span class="keyword">end</span>
+0438                        <span class="keyword">end</span>
+0439 
+0440                     <span class="keyword">else</span>
+0441                         <span class="comment">%need to move data over</span>
+0442                         <span class="keyword">if</span>(isempty(a.data))
+0443                             a.data{i} = b.data{index};
+0444                         <span class="keyword">else</span>
+0445                             <span class="keyword">if</span>(length(a.data) &gt;= i)
+0446                                 
+0447                                 a.data{i} = vertcat(a.data{i},b.data{index});
+0448                             <span class="keyword">else</span>
+0449                                a.data{i} = b.data{index};
+0450                             <span class="keyword">end</span>
+0451                         <span class="keyword">end</span>
+0452                     <span class="keyword">end</span>
+0453                 <span class="keyword">end</span>
+0454             <span class="keyword">end</span>
+0455         <span class="keyword">end</span>        
+0456 
+0457         
+0458         
+0459         <span class="comment">%% p = dataFrameInputParser() STATIC METHOD</span>
+0460         <a name="_sub8" href="#_subfunctions" class="code">function p = dataFrameInputParser()</a>
+0461             <span class="comment">% returns an input parser for the dataFrame constructor args</span>
+0462             <span class="comment">%</span>
+0463             <span class="comment">%CALL:</span>
+0464             <span class="comment">% p = dataFrame.dataFrameInputParser()</span>
+0465             <span class="comment">%</span>
+0466             <span class="comment">%SYNOPSIS:</span>
+0467             <span class="comment">% returns an input parser for the dataFrame constructor args</span>
+0468             <span class="comment">%</span>
+0469             <span class="comment">%EXAMPLE:</span>
+0470             <span class="comment">% p = dataFrame.dataFrameInputParser()</span>
+0471             <span class="comment">%</span>
+0472             
+0473              p = inputParser;
+0474 
+0475              <span class="comment">%use NaN as null, since matlab doesn't support standard</span>
+0476              <span class="comment">%NULL</span>
+0477              p.addParamValue(<span class="string">'fileName'</span>,<span class="string">'null'</span>,@(fileName)<a href="validFileNameOrNull.html" class="code" title="function flag = validFileNameOrNull(fileName)">validFileNameOrNull</a>(fileName));
+0478              p.addParamValue(<span class="string">'isHeader'</span>,false, <span class="keyword">...</span>
+0479                 @(isHeader)<a href="validLogical.html" class="code" title="function flag = validLogical(l)">validLogical</a>(isHeader));
+0480             p.addParamValue(<span class="string">'isFormatting'</span>,false, <span class="keyword">...</span>
+0481                 @(isFormatting)<a href="validLogical.html" class="code" title="function flag = validLogical(l)">validLogical</a>(isFormatting));
+0482             p.addParamValue(<span class="string">'outFile'</span>,NaN); 
+0483 
+0484         <span class="keyword">end</span>
+0485             
+0486  
+0487         <span class="comment">%% [data,header,format] = readDataFrameData(fileName,isHeader,isFormatting)  STATIC METHOD</span>
+0488         <a name="_sub9" href="#_subfunctions" class="code">function [data,header,format] = </a><span class="keyword">...</span>
+0489                         readDataFrameData(fileName,isHeader,isFormatting)
+0490             <span class="comment">% reads the data for a dataframe from a file</span>
+0491             <span class="comment">%</span>
+0492             <span class="comment">%CALL:</span>
+0493             <span class="comment">%   [data,header,format] = readDataFrameData(fileName,isHeader,isFormatting)</span>
+0494             <span class="comment">%</span>
+0495             <span class="comment">%SYNOPSIS:</span>
+0496             <span class="comment">%Reads the data for a dataframe from a file.  Will</span>
+0497             <span class="comment">%automatically attempt to generate header and formatting</span>
+0498             <span class="comment">%information if it is not present in the file.  The algorithm's</span>
+0499             <span class="comment">%ability to do so is quite basic though, so it is strongly</span>
+0500             <span class="comment">%reccomended that the file contain header and formatting</span>
+0501             <span class="comment">%information.</span>
+0502             <span class="comment">%</span>
+0503             <span class="comment">%PARAMETERS:</span>
+0504             <span class="comment">%   fileName - string containing the location of the file to be read in</span>
+0505             <span class="comment">%   isHeader - logical indicating if the file has header info</span>
+0506             <span class="comment">%   isFormatting - logical indicating if the file has formatting info</span>
+0507             <span class="comment">%</span>
+0508             <span class="comment">%RETURNS:</span>
+0509             <span class="comment">%   data - the data from the file</span>
+0510             <span class="comment">%   header - header, either from file or automatically generated</span>
+0511             <span class="comment">%   format - format, either from file or automatically generated</span>
+0512             <span class="comment">%</span>
+0513             <span class="comment">%EXAMPLE:</span>
+0514             <span class="comment">%[data,header,format] = ... readDataFrameData('p1.txt',true,true)</span>
+0515             
+0516     
+0517             <span class="keyword">if</span> isHeader == false &amp;&amp; isFormatting == true
+0518                 error(<span class="string">'Formatting information cannot be included without header information'</span>);
+0519             <span class="keyword">end</span>
+0520                         
+0521             <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">'Reading data from file: '</span>,fileName], <span class="keyword">...</span>
+0522                 <span class="string">'dataFrame_readDataFrameData_reading'</span>); 
+0523 
+0524             <span class="comment">%variable {filename} has already been checked in the constructor as</span>
+0525             <span class="comment">%being a valid filename, but some IO problems might still occur.</span>
+0526             <span class="keyword">try</span> 
+0527                 fid = fopen(fileName,<span class="string">'r'</span>);
+0528             <span class="keyword">catch</span> exception
+0529                 exception = MException(<span class="string">'IOError:InvalidFile'</span>, <span class="keyword">...</span>
+0530                 strcat(<span class="string">'dataFrame: Error when opening: '</span>, fileName));
+0531                 throw(exception);
+0532             <span class="keyword">end</span>
+0533 
+0534             <span class="comment">%some compleities to deal with depending on whether headers /</span>
+0535             <span class="comment">%formatting have been manually specified</span>
+0536             <span class="keyword">if</span>(isHeader)  
+0537                 <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>(<span class="string">'  Reading user-specified header'</span>, <span class="keyword">...</span>
+0538                         <span class="string">'dataFrame_readDataFrameData_HeaderPresent'</span>);        
+0539                 headerLine = fgetl(fid);
+0540                 headerLine = textscan(headerLine,<span class="string">'%s'</span>);
+0541                 headerLine = headerLine{1};
+0542 
+0543                 <span class="keyword">if</span>(isFormatting)
+0544                     <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>(<span class="string">'  Reading user-specified formatting'</span>, <span class="keyword">...</span>
+0545                         <span class="string">'dataFrame_readDataFrameData_FormattingPresent'</span>);    
+0546                     <span class="keyword">for</span> i=1:length(headerLine)
+0547                         parseFormat =  regexp(headerLine(i),<span class="string">'\|'</span>, <span class="string">'split'</span>,<span class="string">'once'</span>);
+0548                         parseFormat = parseFormat{1};
+0549                         header{i} = parseFormat(1); <span class="comment">%#ok&lt;AGROW&gt;</span>
+0550 
+0551                         <span class="keyword">try</span>
+0552                             format{i} = strcat(<span class="string">'%'</span>,parseFormat(2)); <span class="comment">%#ok&lt;AGROW&gt;</span>
+0553                         <span class="keyword">catch</span> <span class="comment">%#ok&lt;CTCH&gt;</span>
+0554                             exception = MException(<span class="string">'HeaderError:MissingFormat'</span>, <span class="keyword">...</span>
+0555                             strcat(<span class="string">'dataFrame: Format not specified for a'</span>,<span class="keyword">...</span>
+0556                             <span class="string">'variable. This can also happen if you have '</span>,<span class="keyword">...</span>
+0557                             <span class="string">'whitespace in your header / data'</span>));
+0558                             throw(exception); 
+0559                         <span class="keyword">end</span>
+0560 
+0561                         <span class="comment">%confirm that the format is valid</span>
+0562                         validFormat = false;
+0563                         <span class="keyword">for</span> j=1:length(dataFrame.supportedFormats)
+0564                             <span class="keyword">if</span>(char(parseFormat(2)) == dataFrame.supportedFormats{j})
+0565                                 validFormat = true;
+0566                             <span class="keyword">end</span>
+0567                         <span class="keyword">end</span>
+0568                             
+0569                         <span class="keyword">if</span> validFormat == false
+0570                             exception = MException(<span class="string">'HeaderError:InvalidFormat'</span>, <span class="keyword">...</span>
+0571                             strcat(<span class="string">'dataFrame: Variable format invalid'</span>));
+0572                             throw(exception); 
+0573                         <span class="keyword">end</span>
+0574                     <span class="keyword">end</span>
+0575 
+0576                 <span class="keyword">else</span> <span class="comment">%user-specified header, but no format information</span>
+0577                     <span class="keyword">for</span> i=1:length(headerLine)
+0578                         header{i} = headerLine(i); <span class="comment">%#ok&lt;AGROW&gt;</span>
+0579                     <span class="keyword">end</span>
+0580                 <span class="keyword">end</span>
+0581             <span class="keyword">else</span> <span class="comment">% no header or formatting information specified</span>
+0582                 
+0583                 <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>(<span class="string">'  Automatically generating header'</span>, <span class="keyword">...</span>
+0584                     <span class="string">'dataFrame_readDataFrameData_HeaderAbsent'</span>); 
+0585                 
+0586                 headerLine = fgetl(fid);
+0587                 headerLine = textscan(headerLine,<span class="string">'%s'</span>);
+0588                 headerLine = headerLine{1};
+0589                 <span class="keyword">for</span> i = 1:length(headerLine)
+0590                     header{i} = strcat(<span class="string">'v'</span>,num2str(i)); <span class="comment">%#ok&lt;AGROW&gt;</span>
+0591                 <span class="keyword">end</span>
+0592             <span class="keyword">end</span> <span class="comment">% if there was a header</span>
+0593 
+0594             <span class="comment">%if no formatting information supplied, must try to derive it</span>
+0595             <span class="keyword">if</span>(isFormatting == false)
+0596                <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>(<span class="string">'  Automatically generating format'</span>, <span class="keyword">...</span>
+0597                    <span class="string">'dataFrame_readDataFrameData_FormattingAbsent'</span>);   
+0598                
+0599                firstDataLine = fgetl(fid);
+0600                firstDataLine =  textscan(firstDataLine,<span class="string">'%s'</span>);
+0601                firstDataLine = firstDataLine{1};
+0602                
+0603                <span class="keyword">for</span> i=1:length(firstDataLine)
+0604                     <span class="keyword">try</span>
+0605                         conv = str2double(firstDataLine(i));
+0606                         <span class="keyword">if</span> isnan(conv) == false
+0607                             format{i} = <span class="string">'%f'</span>; <span class="comment">%#ok&lt;AGROW&gt;</span>
+0608                         <span class="keyword">else</span>
+0609                             format{i} = <span class="string">'%s'</span>; <span class="comment">%#ok&lt;AGROW&gt;</span>
+0610                         <span class="keyword">end</span>
+0611                     <span class="keyword">catch</span> <span class="comment">%#ok&lt;CTCH&gt;</span>
+0612                         format{i} = <span class="string">'%s'</span>; <span class="comment">%#ok&lt;AGROW&gt;</span>
+0613                     <span class="keyword">end</span>
+0614 
+0615                <span class="keyword">end</span>
+0616                
+0617             <span class="keyword">end</span> <span class="comment">% isFormatting == false</span>
+0618 
+0619             
+0620             <span class="comment">%at last, we can read in the data.</span>
+0621             <span class="comment">%we reset to the first line in the file; go to the second line</span>
+0622             <span class="comment">%if there was header information.</span>
+0623             fseek(fid,0,<span class="string">'bof'</span>);
+0624             
+0625             <span class="keyword">if</span> isHeader == true
+0626                 fgetl(fid);
+0627             <span class="keyword">end</span>
+0628             
+0629             <span class="comment">% create a meta-representation of each string using the newly</span>
+0630             <span class="comment">% derived formatting information</span>
+0631             formatStr = <span class="string">''</span>;
+0632             <span class="keyword">for</span> i=1:length(format)
+0633                 formatStr = strcat(formatStr,char(format{i}));
+0634             <span class="keyword">end</span>
+0635 
+0636             <span class="comment">%we can now read in the data</span>
+0637             <span class="keyword">try</span>
+0638                 <span class="comment">%read in the data.  Note that if there is a header present</span>
+0639                 <span class="comment">%but the user said that there was not, this next line may</span>
+0640                 <span class="comment">%not work properly!  Unfortunately, there does not appear</span>
+0641                 <span class="comment">%to be a straightforward workaround for this issue</span>
+0642                 <span class="comment">%presently.</span>
+0643                 data = textscan(fid,formatStr,<span class="string">'Delimiter'</span>,<span class="string">'\t'</span>);
+0644             <span class="keyword">catch</span> exception
+0645                 exception = MException(<span class="string">'FormatError:IncorrectFormat'</span>, <span class="keyword">...</span>
+0646                 strcat(<span class="string">'dataFrame: Data does not conform to column format'</span>));
+0647                 throw(exception); 
+0648             <span class="keyword">end</span>
+0649 
+0650             <span class="comment">%need to manually enter the last rows as NaN if they are</span>
+0651             <span class="comment">%missing.  By definition, if there was a row, the first value</span>
+0652             <span class="comment">%must be present.</span>
+0653             nrow = length(data{1});
+0654 
+0655             <span class="keyword">for</span> i=2:length(data);
+0656                 <span class="keyword">if</span> (length(data{i}) &lt; nrow)
+0657                     data{i} = vertcat(data{i},NaN);
+0658                 <span class="keyword">end</span>
+0659             <span class="keyword">end</span>
+0660 
+0661             <span class="comment">%done with the file.</span>
+0662             fclose(fid);
+0663             <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>(<span class="string">'Done reading in data'</span>, <span class="keyword">...</span>
+0664                     <span class="string">'dataFrame_readDataFrameData_DoneReadingData'</span>);  
+0665                 
+0666             [data,header,format]; <span class="comment">%#ok&lt;VUNUS&gt; % variables to return</span>
+0667         <span class="keyword">end</span>  <span class="comment">% readDataFrameData</span>
+0668         
+0669         
+0670         
+0671         <span class="comment">%% function percent = overlap(df1,df2) STATIC METHOD</span>
+0672         <a name="_sub10" href="#_subfunctions" class="code">function percent = overlap(df1,df2)</a>
+0673             <span class="comment">% calculates the percent of overlapping items out of the total</span>
+0674             <span class="comment">% number of items in df1+df2.  The method will generate errors</span>
+0675             <span class="comment">% if df1 and df2 do not contain items and if their</span>
+0676             <span class="comment">% header/formatting information is non-identical (it should be</span>
+0677             <span class="comment">% if they are both samples from the same optimization script).</span>
+0678             <span class="comment">% This algorithm also assumes that every item within each</span>
+0679             <span class="comment">% dataframe is unique.  It may produce incorrect results if</span>
+0680             <span class="comment">% there are multiple copies of the same item within a</span>
+0681             <span class="comment">% particular dataframe.</span>
+0682             <span class="comment">%</span>
+0683             <span class="comment">% PARAMETERS:</span>
+0684             <span class="comment">%   df1 -first dataframe</span>
+0685             <span class="comment">%   df2 -second dataframe</span>
+0686             <span class="comment">%</span>
+0687             <span class="comment">% RETURNS:</span>
+0688             <span class="comment">%   percent - percent of shared items as a function of the</span>
+0689             <span class="comment">%               total number of items</span>
+0690             
+0691             <span class="comment">%validate variables</span>
+0692             <span class="keyword">if</span> any(strcmp(superclasses(df1),<span class="string">'dataFrame'</span>)) == 0
+0693                 error(<span class="string">'argument 1 is not a dataFrame'</span>);
+0694             <span class="keyword">end</span>
+0695             
+0696             <span class="keyword">if</span> any(strcmp(superclasses(df2),<span class="string">'dataFrame'</span>)) == 0
+0697                 error(<span class="string">'argument 2 is not a dataFrame'</span>);
+0698             <span class="keyword">end</span>            
+0699             
+0700             
+0701             <span class="comment">% make sure that both dataFrames have at least one column</span>
+0702             
+0703             <span class="keyword">if</span> isempty(df1.header)
+0704                 error([df1.name, <span class="string">' does not contain any header information'</span>]);
+0705             <span class="keyword">end</span>
+0706             
+0707             <span class="keyword">if</span> isempty(df2.header)
+0708                 error([df2.name, <span class="string">' does not contain any header information'</span>]);
+0709             <span class="keyword">end</span>            
+0710             
+0711             
+0712             <span class="comment">% make sure that each dataframe contains some data</span>
+0713             <span class="keyword">if</span> isempty(df1.data)
+0714                 error([df1.name, <span class="string">' does not contain any data'</span>]);
+0715             <span class="keyword">end</span>
+0716 
+0717            <span class="keyword">if</span> isempty(df2.data)
+0718                 error([df2.name, <span class="string">' does not contain any data'</span>]);
+0719            <span class="keyword">end</span>
+0720            
+0721            <span class="keyword">if</span> isempty(df1.data{1})
+0722                error([df1.name, <span class="string">' does not contain any data'</span>]);
+0723            <span class="keyword">end</span>
+0724            
+0725            <span class="keyword">if</span> isempty(df2.data{1})
+0726                error([df2.name, <span class="string">' does not contain any data'</span>]);
+0727            <span class="keyword">end</span>
+0728            
+0729            <span class="comment">% make sure that both dataFrames have the same header</span>
+0730            <span class="comment">% information</span>
+0731            
+0732            <span class="keyword">if</span> length(df1.header) ~= length(df2.header)
+0733                error(<span class="string">'dataFrames must contain the same number of column headers'</span>);
+0734            <span class="keyword">end</span>
+0735            
+0736            <span class="keyword">for</span> i=1:length(df1.header)
+0737                <span class="keyword">if</span>(strcmp(df1.header(i),df2.header(i)))
+0738                    error([<span class="string">'dataFrame header column: '</span>, num2str(i), <span class="string">' do not match'</span>]);
+0739                <span class="keyword">end</span>
+0740                <span class="comment">%check formatting as well</span>
+0741                <span class="keyword">if</span>(strcmp(df1.format(i),df2.format(i)))
+0742                    error([<span class="string">'dataFrame format for column: '</span>, num2str(i), <span class="string">' do not match'</span>]);
+0743                <span class="keyword">end</span>
+0744            <span class="keyword">end</span>
+0745 
+0746            <span class="comment">%both dataFrames have at least some data in them and match in</span>
+0747            <span class="comment">%all other respect.  Now they can</span>
+0748            <span class="comment">%be compared to see how much overlap exists between them.</span>
+0749            
+0750            total = length(df1.data{1}) + length(df2.data{1});
+0751            <a href="#_sub11" class="code" title="subfunction percent = overlap(df1,df2)">overlap</a> = 0;
+0752            
+0753            <span class="keyword">for</span> i=1:length(df1.data{1})
+0754                itemMatch = false;
+0755                
+0756                <span class="keyword">for</span> j=1:length(df2.data{1})
+0757                    rowMatch = true;
+0758                    
+0759                    <span class="keyword">for</span> k=1:length(df1.header)
+0760 
+0761                        <span class="keyword">if</span> strcmp(df1.format{k},<span class="string">'%s'</span>)
+0762                            <span class="keyword">if</span> strcmp(df1.data{k}(i),df2.data{k}(j)) == 0
+0763                                rowMatch = false;
+0764                            <span class="keyword">end</span>
+0765                        <span class="keyword">elseif</span> strcmp(df1.format{k},<span class="string">'%f'</span>)
+0766                            <span class="keyword">if</span> df1.data{k}(i) ~= df2.data{k}(j)
+0767                                rowMatch = false;
+0768                            <span class="keyword">end</span>
+0769                        <span class="keyword">else</span>
+0770                            error([<span class="string">'Unrecognized column format: '</span>,df1.format{k}{1}]);
+0771                        <span class="keyword">end</span>
+0772              
+0773                    <span class="keyword">end</span>
+0774                    
+0775                    <span class="comment">% if rowMatch is still true at this point, then we have</span>
+0776                    <span class="comment">% an identical entry in both samples.  Cound that</span>
+0777                    
+0778                    <span class="keyword">if</span> rowMatch == true
+0779                        itemMatch = true;
+0780                        <span class="keyword">break</span>;
+0781                    <span class="keyword">end</span> 
+0782                <span class="keyword">end</span>
+0783                
+0784                <span class="keyword">if</span> itemMatch == true
+0785                    <a href="#_sub11" class="code" title="subfunction percent = overlap(df1,df2)">overlap</a> = <a href="#_sub11" class="code" title="subfunction percent = overlap(df1,df2)">overlap</a> + 2;
+0786                <span class="keyword">end</span>
+0787            <span class="keyword">end</span>
+0788            
+0789            percent = <a href="#_sub11" class="code" title="subfunction percent = overlap(df1,df2)">overlap</a>/total*100;
+0790            
+0791            <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">'Overlap between '</span>,df1.name,<span class="string">' and '</span>, df2.name, <span class="string">': '</span>,<span class="keyword">...</span>
+0792                         num2str(percent),<span class="string">'%'</span>],<span class="string">'dataFrame_overlap_percent'</span>);
+0793            
+0794             
+0795         <span class="keyword">end</span>
+0796         
+0797         
+0798    <span class="keyword">end</span>
+0799     
+0800     methods (Static, Access = private)
+0801 
+0802         <span class="comment">%% parseConstructorArgs PRIVATE STATIC METHOD</span>
+0803         <a name="_sub11" href="#_subfunctions" class="code">function p = parseConstructorArgs(varargin)</a>
+0804             <span class="comment">%parses the dataFrame constructor arguments</span>
+0805             <span class="comment">%</span>
+0806             <span class="comment">% CALL:</span>
+0807             <span class="comment">% p = dataFrame.parseConstructorArgs(varargin);</span>
+0808             <span class="comment">%</span>
+0809             <span class="comment">%parses the arguments from the dataFrame constructor.  Default</span>
+0810             <span class="comment">%values are substituted where appropriate.  Returns a struct</span>
+0811             <span class="comment">%with the parsed args</span>
+0812             <span class="comment">%</span>
+0813             <span class="comment">%PARAMETERS:</span>
+0814             <span class="comment">% SAME as dataFrame CONSTRUCTOR</span>
+0815             <span class="comment">%</span>
+0816             <span class="comment">%RETURNS:</span>
+0817             <span class="comment">%    p - parsed constructor input</span>
+0818             
+0819              varargin = varargin{1};
+0820 
+0821              p = dataFrame.dataFrameInputParser();
+0822              p.parse(varargin{:});
+0823         <span class="keyword">end</span> <span class="comment">% parseConstructorArgs</span>
+0824     <span class="keyword">end</span>
+0825     
+0826 <span class="keyword">end</span> <span class="comment">%dataFrame</span>
+0827 
+0828 
+0829 
+0830</pre></div>
+<hr><address>Generated on Fri 27-Jan-2012 16:18:41 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

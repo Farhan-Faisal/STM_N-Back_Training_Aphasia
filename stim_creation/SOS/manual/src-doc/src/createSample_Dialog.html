@@ -1,0 +1,386 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of createSample_Dialog</title>
+  <meta name="keywords" content="createSample_Dialog">
+  <meta name="description" content="- create sample dialog">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="#">src</a> &gt; createSample_Dialog.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for .\src&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>createSample_Dialog
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>- create sample dialog</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function varargout = createSample_Dialog(varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> - create sample dialog
+
+ copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut
+
+    This file is part of SOS
+
+    SOS is free software: you can redistribute it and/or modify
+    it for academic and non-commercial purposes
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.  For commercial or for-profit
+    uses, please contact the authors (sos@cnbc.cmu.edu).
+
+    SOS is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>	- master print function that regulates cmd line output based on verbosity flags</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="sos_gui.html" class="code" title="function varargout = sos_gui(varargin)">sos_gui</a>	- sos main GUI</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function createSample_Dialog_OpeningFcn(hObject, eventdata, handles, varargin)</a></li><li><a href="#_sub2" class="code">function varargout = createSample_Dialog_OutputFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub3" class="code">function pushbutton_setSampleSrc_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub4" class="code">function pushbutton_createSample_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub5" class="code">function edit_sampleName_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub6" class="code">function edit_sampleName_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub7" class="code">function edit1_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub8" class="code">function edit1_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub9" class="code">function pushbutton_setSampleOutfile_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub10" class="code">function edit_n_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub11" class="code">function edit_n_CreateFcn(hObject, eventdata, handles)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% - create sample dialog</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%    This file is part of SOS</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%    SOS is free software: you can redistribute it and/or modify</span>
+0008 <span class="comment">%    it for academic and non-commercial purposes</span>
+0009 <span class="comment">%    under the terms of the GNU General Public License as published by</span>
+0010 <span class="comment">%    the Free Software Foundation, either version 3 of the License, or</span>
+0011 <span class="comment">%    (at your option) any later version.  For commercial or for-profit</span>
+0012 <span class="comment">%    uses, please contact the authors (sos@cnbc.cmu.edu).</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%    SOS is distributed in the hope that it will be useful,</span>
+0015 <span class="comment">%    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+0016 <span class="comment">%    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+0017 <span class="comment">%    GNU General Public License for more details.</span>
+0018 
+0019 <span class="comment">%    You should have received a copy of the GNU General Public License</span>
+0020 <span class="comment">%    along with SOS (see COPYING.txt).</span>
+0021 <span class="comment">%    If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+0022 
+0023 
+0024 <a name="_sub0" href="#_subfunctions" class="code">function varargout = createSample_Dialog(varargin)</a>
+0025 <span class="comment">% CREATESAMPLE_DIALOG M-file for createSample_Dialog.fig</span>
+0026 <span class="comment">%      CREATESAMPLE_DIALOG, by itself, creates a new CREATESAMPLE_DIALOG or raises the existing</span>
+0027 <span class="comment">%      singleton*.</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">%      H = CREATESAMPLE_DIALOG returns the handle to a new CREATESAMPLE_DIALOG or the handle to</span>
+0030 <span class="comment">%      the existing singleton*.</span>
+0031 <span class="comment">%</span>
+0032 <span class="comment">%      CREATESAMPLE_DIALOG('CALLBACK',hObject,eventData,handles,...) calls the local</span>
+0033 <span class="comment">%      function named CALLBACK in CREATESAMPLE_DIALOG.M with the given input arguments.</span>
+0034 <span class="comment">%</span>
+0035 <span class="comment">%      CREATESAMPLE_DIALOG('Property','Value',...) creates a new CREATESAMPLE_DIALOG or raises the</span>
+0036 <span class="comment">%      existing singleton*.  Starting from the left, property value pairs are</span>
+0037 <span class="comment">%      applied to the GUI before createSample_Dialog_OpeningFcn gets called.  An</span>
+0038 <span class="comment">%      unrecognized property name or invalid value makes property application</span>
+0039 <span class="comment">%      stop.  All inputs are passed to createSample_Dialog_OpeningFcn via varargin.</span>
+0040 <span class="comment">%</span>
+0041 <span class="comment">%      *See GUI Options on GUIDE's Tools menu.  Choose &quot;GUI allows only one</span>
+0042 <span class="comment">%      instance to run (singleton)&quot;.</span>
+0043 <span class="comment">%</span>
+0044 <span class="comment">% See also: GUIDE, GUIDATA, GUIHANDLES</span>
+0045 
+0046 <span class="comment">% Edit the above text to modify the response to help createSample_Dialog</span>
+0047 
+0048 <span class="comment">% Last Modified by GUIDE v2.5 07-Sep-2010 10:06:25</span>
+0049 
+0050 <span class="comment">% Begin initialization code - DO NOT EDIT</span>
+0051 gui_Singleton = 1;
+0052 gui_State = struct(<span class="string">'gui_Name'</span>,       mfilename, <span class="keyword">...</span>
+0053                    <span class="string">'gui_Singleton'</span>,  gui_Singleton, <span class="keyword">...</span>
+0054                    <span class="string">'gui_OpeningFcn'</span>, @<a href="#_sub1" class="code" title="subfunction createSample_Dialog_OpeningFcn(hObject, eventdata, handles, varargin)">createSample_Dialog_OpeningFcn</a>, <span class="keyword">...</span>
+0055                    <span class="string">'gui_OutputFcn'</span>,  @<a href="#_sub2" class="code" title="subfunction varargout = createSample_Dialog_OutputFcn(hObject, eventdata, handles)">createSample_Dialog_OutputFcn</a>, <span class="keyword">...</span>
+0056                    <span class="string">'gui_LayoutFcn'</span>,  [] , <span class="keyword">...</span>
+0057                    <span class="string">'gui_Callback'</span>,   []);
+0058 <span class="keyword">if</span> nargin &amp;&amp; ischar(varargin{1})
+0059     gui_State.gui_Callback = str2func(varargin{1});
+0060 <span class="keyword">end</span>
+0061 
+0062 <span class="keyword">if</span> nargout
+0063     [varargout{1:nargout}] = gui_mainfcn(gui_State, varargin{:});
+0064 <span class="keyword">else</span>
+0065     gui_mainfcn(gui_State, varargin{:});
+0066 <span class="keyword">end</span>
+0067 <span class="comment">% End initialization code - DO NOT EDIT</span>
+0068 
+0069 
+0070 <span class="comment">% --- Executes just before createSample_Dialog is made visible.</span>
+0071 <a name="_sub1" href="#_subfunctions" class="code">function createSample_Dialog_OpeningFcn(hObject, eventdata, handles, varargin)</a>
+0072 <span class="comment">% This function has no output args, see OutputFcn.</span>
+0073 <span class="comment">% hObject    handle to figure</span>
+0074 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0075 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0076 <span class="comment">% varargin   command line arguments to createSample_Dialog (see VARARGIN)</span>
+0077 
+0078 <span class="comment">% Choose default command line output for createSample_Dialog</span>
+0079 handles.output = hObject;
+0080 
+0081 <span class="comment">% Update handles structure</span>
+0082 guidata(hObject, handles);
+0083 
+0084 <span class="comment">% UIWAIT makes createSample_Dialog wait for user response (see UIRESUME)</span>
+0085 <span class="comment">% uiwait(handles.figure_createSample);</span>
+0086 
+0087 
+0088 <span class="comment">% --- Outputs from this function are returned to the command line.</span>
+0089 <a name="_sub2" href="#_subfunctions" class="code">function varargout = createSample_Dialog_OutputFcn(hObject, eventdata, handles) </a>
+0090 <span class="comment">% varargout  cell array for returning output args (see VARARGOUT);</span>
+0091 <span class="comment">% hObject    handle to figure</span>
+0092 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0093 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0094 
+0095 <span class="comment">% Get default command line output from handles structure</span>
+0096 varargout{1} = handles.output;
+0097 
+0098 
+0099 <span class="comment">% --- Executes on button press in pushbutton_setSampleSrc.</span>
+0100 <a name="_sub3" href="#_subfunctions" class="code">function pushbutton_setSampleSrc_Callback(hObject, eventdata, handles)</a>
+0101 <span class="comment">% hObject    handle to pushbutton_setSampleSrc (see GCBO)</span>
+0102 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0103 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0104 
+0105     <span class="comment">% let user navigate to the script to run</span>
+0106     [fileName,pathName] = uigetfile(<span class="string">'*'</span>,<span class="string">'Run Script...'</span>);
+0107     
+0108     <span class="comment">% check to make sure user didn't cancel (which cases fileName == 0)</span>
+0109     <span class="keyword">if</span> fileName ~= 0
+0110         fullName = strcat(pathName,fileName);
+0111 
+0112         set(handles.text_SampleSrc,<span class="string">'String'</span>,fullName);
+0113     <span class="keyword">end</span>
+0114     
+0115 
+0116 <span class="comment">% --- Executes on button press in pushbutton_createSample.</span>
+0117 <a name="_sub4" href="#_subfunctions" class="code">function pushbutton_createSample_Callback(hObject, eventdata, handles)</a>
+0118 <span class="comment">% hObject    handle to pushbutton_createSample (see GCBO)</span>
+0119 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0120 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0121     
+0122     makeObj = true;
+0123     noSrc = false; <span class="comment">% is there a sample src file</span>
+0124     
+0125     <span class="comment">% do basic validation on each variable</span>
+0126     
+0127     <span class="comment">%get number of items</span>
+0128     n = get(handles.edit_n,<span class="string">'String'</span>);
+0129     valid = regexp(n,<span class="string">'^[1-9]+[0-9]*$'</span>);
+0130     
+0131 
+0132     <span class="keyword">if</span> isempty(valid)
+0133         <span class="comment">% name is not currently valid, tell the user.</span>
+0134         msgbox(<span class="string">'Sample size must be a whole number &gt; 0'</span>,<span class="keyword">...</span>
+0135                 <span class="string">'Invalid sample size!'</span>);
+0136         makeObj = false;
+0137     <span class="keyword">end</span>
+0138     
+0139     <span class="comment">% validate the object name</span>
+0140     varName = get(handles.edit_sampleName,<span class="string">'String'</span>);
+0141     valid = regexp(varName,<span class="string">'^[a-zA-Z]+\w*$'</span>);
+0142     
+0143 
+0144     <span class="comment">% check if the pointer is valid, but only if n is valid so as to</span>
+0145     <span class="comment">% not clutter the user with msgboxes</span>
+0146     <span class="keyword">if</span> isempty(valid) &amp;&amp; makeObj == true
+0147         <span class="comment">% name is not currently valid, tell the user.</span>
+0148         msgbox(<span class="string">'Only letters, numbers, and underscores are permitted in the name of the sample object.  The first character must also be a letter.'</span>,<span class="keyword">...</span>
+0149                 <span class="string">'Invalid name!'</span>);
+0150         makeObj = false;            
+0151     <span class="keyword">end</span>    
+0152     
+0153     <span class="comment">% get src</span>
+0154     src = get(handles.text_SampleSrc,<span class="string">'String'</span>);
+0155     
+0156     <span class="keyword">if</span> isempty(src)
+0157         noSrc = true;
+0158     <span class="keyword">end</span>
+0159     
+0160 
+0161     <span class="comment">% get header and formatting switches, in string form</span>
+0162     <span class="comment">% these data must always have reasonable values</span>
+0163     header = get(get(handles.uipanel_containsHeader,<span class="string">'SelectedObject'</span>),<span class="keyword">...</span>
+0164                 <span class="string">'String'</span>);
+0165     format = get(get(handles.uipanel_containsFormatting,<span class="string">'SelectedObject'</span>),<span class="keyword">...</span>
+0166                 <span class="string">'String'</span>);            
+0167     
+0168     <span class="comment">% the outfile will either have been set by the user to a reasonable</span>
+0169     <span class="comment">% state via the GUI, or will be empty and the default value will be</span>
+0170     <span class="comment">% substituted.</span>
+0171     outFile = get(handles.text_sampleOutfile,<span class="string">'String'</span>);
+0172     
+0173     <span class="comment">% fill in outFile if it was left blank.</span>
+0174     <span class="keyword">if</span> isempty(outFile)
+0175         outFile = strcat(varName,<span class="string">'.out.txt'</span>);
+0176     <span class="keyword">end</span>
+0177     
+0178     <span class="keyword">if</span> makeObj == true
+0179         <span class="comment">% a sample will be created:</span>
+0180         
+0181         <span class="comment">% the command to run to create a sample</span>
+0182         command = strcat(varName,<span class="string">'='</span>,<span class="string">'sample('</span>,num2str(n),<span class="string">',''isHeader'','</span>,<span class="keyword">...</span>
+0183                 header,<span class="string">',''isFormatting'','</span>,format,<span class="string">',''outFile'','''</span>,outFile,<span class="keyword">...</span>
+0184                 <span class="string">''',''name'','</span>,<span class="string">''''</span>,varName,<span class="string">''''</span>); 
+0185         
+0186         <span class="comment">%tweak the end of the command based on whether a partial sample</span>
+0187         <span class="comment">%will be read in or not.</span>
+0188 
+0189         <span class="keyword">if</span> noSrc == true
+0190             command = strcat(command,<span class="string">');'</span>);
+0191         <span class="keyword">else</span>
+0192             command = strcat(command,<span class="string">',''fileName'','''</span>,src,<span class="string">''');'</span>);
+0193         <span class="keyword">end</span>
+0194         
+0195         <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">'Executing command: '</span>,<span class="string">''''</span>,command,<span class="string">''''</span>],<span class="string">'createSample_Dialog_Create'</span>);
+0196         evalin(<span class="string">'base'</span>,command);
+0197         
+0198         close(handles.figure_createSample);
+0199     <span class="keyword">end</span>
+0200     
+0201 
+0202 <a name="_sub5" href="#_subfunctions" class="code">function edit_sampleName_Callback(hObject, eventdata, handles)</a>
+0203 <span class="comment">% hObject    handle to edit_sampleName (see GCBO)</span>
+0204 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0205 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0206 
+0207 <span class="comment">% Hints: get(hObject,'String') returns contents of edit_sampleName as text</span>
+0208 <span class="comment">%        str2double(get(hObject,'String')) returns contents of edit_sampleName as a double</span>
+0209 
+0210     varName = get(hObject,<span class="string">'String'</span>);
+0211     
+0212     <span class="comment">%check to make sure that the name is a valid variable name:</span>
+0213     valid = regexp(varName,<span class="string">'^[a-zA-Z]+\w*$'</span>);
+0214     
+0215 
+0216     <span class="keyword">if</span> isempty(valid)
+0217         <span class="comment">% name is not currently valid, tell the user.</span>
+0218         msgbox(<span class="string">'Only letters, numbers, and underscores are permitted in the name of the sample object.  The first character must also be a letter.'</span>,<span class="keyword">...</span>
+0219                 <span class="string">'Invalid name!'</span>);
+0220     <span class="keyword">else</span>
+0221         <span class="comment">% check to make sure that the new variable name doesn't already exist.</span>
+0222         command = strcat(<span class="string">'whos('''</span>,varName,<span class="string">''')'</span>);
+0223         varExists = evalin(<span class="string">'base'</span>,command);
+0224 
+0225 
+0226         <span class="comment">% if a variable with this name already exists, warns the user</span>
+0227         <span class="keyword">if</span> isempty(varExists) == 0
+0228             msgbox(<span class="string">'A sample with this name already exists and will be overridden if you continue'</span>,<span class="keyword">...</span>
+0229                     <span class="string">'Sample exists!'</span>);
+0230         <span class="keyword">end</span>
+0231     <span class="keyword">end</span>
+0232         
+0233         
+0234         
+0235     
+0236 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0237 <a name="_sub6" href="#_subfunctions" class="code">function edit_sampleName_CreateFcn(hObject, eventdata, handles)</a>
+0238 <span class="comment">% hObject    handle to edit_sampleName (see GCBO)</span>
+0239 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0240 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0241 
+0242 <span class="comment">% Hint: edit controls usually have a white background on Windows.</span>
+0243 <span class="comment">%       See ISPC and COMPUTER.</span>
+0244 <span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+0245     set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0246 <span class="keyword">end</span>
+0247 
+0248 
+0249 
+0250 <a name="_sub7" href="#_subfunctions" class="code">function edit1_Callback(hObject, eventdata, handles)</a>
+0251 <span class="comment">% hObject    handle to edit1 (see GCBO)</span>
+0252 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0253 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0254 
+0255 <span class="comment">% Hints: get(hObject,'String') returns contents of edit1 as text</span>
+0256 <span class="comment">%        str2double(get(hObject,'String')) returns contents of edit1 as a double</span>
+0257 
+0258 
+0259 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0260 <a name="_sub8" href="#_subfunctions" class="code">function edit1_CreateFcn(hObject, eventdata, handles)</a>
+0261 <span class="comment">% hObject    handle to edit1 (see GCBO)</span>
+0262 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0263 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0264 
+0265 <span class="comment">% Hint: edit controls usually have a white background on Windows.</span>
+0266 <span class="comment">%       See ISPC and COMPUTER.</span>
+0267 <span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+0268     set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0269 <span class="keyword">end</span>
+0270 
+0271 
+0272 <span class="comment">% --- Executes on button press in pushbutton_setSampleOutfile.</span>
+0273 <a name="_sub9" href="#_subfunctions" class="code">function pushbutton_setSampleOutfile_Callback(hObject, eventdata, handles)</a>
+0274 <span class="comment">% hObject    handle to pushbutton_setSampleOutfile (see GCBO)</span>
+0275 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0276 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0277 
+0278     [fileName,pathName] = uiputfile(<span class="string">'*'</span>,<span class="string">'Save optimized sample as...'</span>);
+0279     
+0280     <span class="comment">% check to make sure user didn't cancel (which cases fileName == 0)</span>
+0281     <span class="keyword">if</span> fileName ~= 0
+0282         fullName = strcat(pathName,fileName);
+0283     
+0284         set(handles.text_sampleOutfile,<span class="string">'String'</span>,fullName);  
+0285     <span class="keyword">end</span>
+0286 
+0287 
+0288 
+0289 <a name="_sub10" href="#_subfunctions" class="code">function edit_n_Callback(hObject, eventdata, handles)</a>
+0290 <span class="comment">% hObject    handle to edit_n (see GCBO)</span>
+0291 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0292 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0293 
+0294 <span class="comment">% Hints: get(hObject,'String') returns contents of edit_n as text</span>
+0295 <span class="comment">%        str2double(get(hObject,'String')) returns contents of edit_n as a double</span>
+0296 
+0297     varName = get(hObject,<span class="string">'String'</span>);
+0298     
+0299     <span class="comment">%check to make sure that the name is a valid variable name:</span>
+0300     valid = regexp(varName,<span class="string">'^[1-9]+[0-9]*$'</span>);
+0301     
+0302 
+0303     <span class="keyword">if</span> isempty(valid)
+0304         <span class="comment">% name is not currently valid, tell the user.</span>
+0305         msgbox(<span class="string">'Sample size must be a whole number &gt; 0'</span>,<span class="keyword">...</span>
+0306                 <span class="string">'Invalid sample size!'</span>);
+0307     <span class="keyword">end</span>
+0308 
+0309 
+0310 
+0311 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0312 <a name="_sub11" href="#_subfunctions" class="code">function edit_n_CreateFcn(hObject, eventdata, handles)</a>
+0313 <span class="comment">% hObject    handle to edit_n (see GCBO)</span>
+0314 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0315 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0316 
+0317 <span class="comment">% Hint: edit controls usually have a white background on Windows.</span>
+0318 <span class="comment">%       See ISPC and COMPUTER.</span>
+0319 <span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+0320     set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0321 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Fri 27-Jan-2012 16:18:41 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

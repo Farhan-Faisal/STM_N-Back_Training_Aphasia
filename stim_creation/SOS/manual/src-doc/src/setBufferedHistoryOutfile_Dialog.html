@@ -1,0 +1,216 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of setBufferedHistoryOutfile_Dialog</title>
+  <meta name="keywords" content="setBufferedHistoryOutfile_Dialog">
+  <meta name="description" content="- dialog for setting output file for buffered history output">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="#">src</a> &gt; setBufferedHistoryOutfile_Dialog.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for .\src&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>setBufferedHistoryOutfile_Dialog
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>- dialog for setting output file for buffered history output</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function varargout = setBufferedHistoryOutfile_Dialog(varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> - dialog for setting output file for buffered history output
+
+ copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut
+
+    This file is part of SOS
+
+    SOS is free software: you can redistribute it and/or modify
+    it for academic and non-commercial purposes
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.  For commercial or for-profit
+    uses, please contact the authors (sos@cnbc.cmu.edu).
+
+    SOS is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="getdfName.html" class="code" title="function dfName = getdfName(handle,dfType)">getdfName</a>	-  extracts a dataframe name selected in the GUI</li><li><a href="sos_gui.html" class="code" title="function varargout = sos_gui(varargin)">sos_gui</a>	- sos main GUI</li><li><a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>	- master print function that regulates cmd line output based on verbosity flags</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="sos_gui.html" class="code" title="function varargout = sos_gui(varargin)">sos_gui</a>	- sos main GUI</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function setBufferedHistoryOutfile_Dialog_OpeningFcn(hObject, eventdata, handles, varargin)</a></li><li><a href="#_sub2" class="code">function varargout = setBufferedHistoryOutfile_Dialog_OutputFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub3" class="code">function pushbutton_setHistoryOutFile_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub4" class="code">function pushbutton_setBufferedHistoryOutfile_Callback(hObject, eventdata, handles)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% - dialog for setting output file for buffered history output</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%    This file is part of SOS</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%    SOS is free software: you can redistribute it and/or modify</span>
+0008 <span class="comment">%    it for academic and non-commercial purposes</span>
+0009 <span class="comment">%    under the terms of the GNU General Public License as published by</span>
+0010 <span class="comment">%    the Free Software Foundation, either version 3 of the License, or</span>
+0011 <span class="comment">%    (at your option) any later version.  For commercial or for-profit</span>
+0012 <span class="comment">%    uses, please contact the authors (sos@cnbc.cmu.edu).</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%    SOS is distributed in the hope that it will be useful,</span>
+0015 <span class="comment">%    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+0016 <span class="comment">%    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+0017 <span class="comment">%    GNU General Public License for more details.</span>
+0018 
+0019 <span class="comment">%    You should have received a copy of the GNU General Public License</span>
+0020 <span class="comment">%    along with SOS (see COPYING.txt).</span>
+0021 <span class="comment">%    If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+0022 
+0023 
+0024 
+0025 <a name="_sub0" href="#_subfunctions" class="code">function varargout = setBufferedHistoryOutfile_Dialog(varargin)</a>
+0026 <span class="comment">% SETBUFFEREDHISTORYOUTFILE_DIALOG M-file for setBufferedHistoryOutfile_Dialog.fig</span>
+0027 <span class="comment">%      SETBUFFEREDHISTORYOUTFILE_DIALOG, by itself, creates a new SETBUFFEREDHISTORYOUTFILE_DIALOG or raises the existing</span>
+0028 <span class="comment">%      singleton*.</span>
+0029 <span class="comment">%</span>
+0030 <span class="comment">%      H = SETBUFFEREDHISTORYOUTFILE_DIALOG returns the handle to a new SETBUFFEREDHISTORYOUTFILE_DIALOG or the handle to</span>
+0031 <span class="comment">%      the existing singleton*.</span>
+0032 <span class="comment">%</span>
+0033 <span class="comment">%      SETBUFFEREDHISTORYOUTFILE_DIALOG('CALLBACK',hObject,eventData,handles,...) calls the local</span>
+0034 <span class="comment">%      function named CALLBACK in SETBUFFEREDHISTORYOUTFILE_DIALOG.M with the given input arguments.</span>
+0035 <span class="comment">%</span>
+0036 <span class="comment">%      SETBUFFEREDHISTORYOUTFILE_DIALOG('Property','Value',...) creates a new SETBUFFEREDHISTORYOUTFILE_DIALOG or raises the</span>
+0037 <span class="comment">%      existing singleton*.  Starting from the left, property value pairs are</span>
+0038 <span class="comment">%      applied to the GUI before setBufferedHistoryOutfile_Dialog_OpeningFcn gets called.  An</span>
+0039 <span class="comment">%      unrecognized property name or invalid value makes property application</span>
+0040 <span class="comment">%      stop.  All inputs are passed to setBufferedHistoryOutfile_Dialog_OpeningFcn via varargin.</span>
+0041 <span class="comment">%</span>
+0042 <span class="comment">%      *See GUI Options on GUIDE's Tools menu.  Choose &quot;GUI allows only one</span>
+0043 <span class="comment">%      instance to run (singleton)&quot;.</span>
+0044 <span class="comment">%</span>
+0045 <span class="comment">% See also: GUIDE, GUIDATA, GUIHANDLES</span>
+0046 
+0047 <span class="comment">% Edit the above text to modify the response to help setBufferedHistoryOutfile_Dialog</span>
+0048 
+0049 <span class="comment">% Last Modified by GUIDE v2.5 09-Sep-2010 19:38:38</span>
+0050 
+0051 <span class="comment">% Begin initialization code - DO NOT EDIT</span>
+0052 gui_Singleton = 1;
+0053 gui_State = struct(<span class="string">'gui_Name'</span>,       mfilename, <span class="keyword">...</span>
+0054                    <span class="string">'gui_Singleton'</span>,  gui_Singleton, <span class="keyword">...</span>
+0055                    <span class="string">'gui_OpeningFcn'</span>, @<a href="#_sub1" class="code" title="subfunction setBufferedHistoryOutfile_Dialog_OpeningFcn(hObject, eventdata, handles, varargin)">setBufferedHistoryOutfile_Dialog_OpeningFcn</a>, <span class="keyword">...</span>
+0056                    <span class="string">'gui_OutputFcn'</span>,  @<a href="#_sub2" class="code" title="subfunction varargout = setBufferedHistoryOutfile_Dialog_OutputFcn(hObject, eventdata, handles)">setBufferedHistoryOutfile_Dialog_OutputFcn</a>, <span class="keyword">...</span>
+0057                    <span class="string">'gui_LayoutFcn'</span>,  [] , <span class="keyword">...</span>
+0058                    <span class="string">'gui_Callback'</span>,   []);
+0059 <span class="keyword">if</span> nargin &amp;&amp; ischar(varargin{1})
+0060     gui_State.gui_Callback = str2func(varargin{1});
+0061 <span class="keyword">end</span>
+0062 
+0063 <span class="keyword">if</span> nargout
+0064     [varargout{1:nargout}] = gui_mainfcn(gui_State, varargin{:});
+0065 <span class="keyword">else</span>
+0066     gui_mainfcn(gui_State, varargin{:});
+0067 <span class="keyword">end</span>
+0068 <span class="comment">% End initialization code - DO NOT EDIT</span>
+0069 
+0070 
+0071 <span class="comment">% --- Executes just before setBufferedHistoryOutfile_Dialog is made visible.</span>
+0072 <a name="_sub1" href="#_subfunctions" class="code">function setBufferedHistoryOutfile_Dialog_OpeningFcn(hObject, eventdata, handles, varargin)</a>
+0073 <span class="comment">% This function has no output args, see OutputFcn.</span>
+0074 <span class="comment">% hObject    handle to figure</span>
+0075 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0076 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0077 <span class="comment">% varargin   command line arguments to setBufferedHistoryOutfile_Dialog (see VARARGIN)</span>
+0078 
+0079 <span class="comment">% Choose default command line output for setBufferedHistoryOutfile_Dialog</span>
+0080 handles.output = hObject;
+0081 
+0082 <span class="comment">% Update handles structure</span>
+0083 guidata(hObject, handles);
+0084 
+0085 <span class="comment">% UIWAIT makes setBufferedHistoryOutfile_Dialog wait for user response (see UIRESUME)</span>
+0086 <span class="comment">% uiwait(handles.figure_setBufferedHistoryOutfile);</span>
+0087 
+0088 
+0089 <span class="comment">% --- Outputs from this function are returned to the command line.</span>
+0090 <a name="_sub2" href="#_subfunctions" class="code">function varargout = setBufferedHistoryOutfile_Dialog_OutputFcn(hObject, eventdata, handles) </a>
+0091 <span class="comment">% varargout  cell array for returning output args (see VARARGOUT);</span>
+0092 <span class="comment">% hObject    handle to figure</span>
+0093 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0094 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0095 
+0096 <span class="comment">% Get default command line output from handles structure</span>
+0097 varargout{1} = handles.output;
+0098 
+0099 
+0100 <span class="comment">% --- Executes on button press in pushbutton_setHistoryOutFile.</span>
+0101 <a name="_sub3" href="#_subfunctions" class="code">function pushbutton_setHistoryOutFile_Callback(hObject, eventdata, handles)</a>
+0102 <span class="comment">% hObject    handle to pushbutton_setHistoryOutFile (see GCBO)</span>
+0103 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0104 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0105 
+0106     [fileName,pathName] = uiputfile(<span class="string">'*'</span>,<span class="string">'Save history as...'</span>);
+0107     
+0108     <span class="comment">% check to make sure user didn't cancel (which cases fileName == 0)</span>
+0109     <span class="keyword">if</span> fileName ~= 0
+0110         fullName = strcat(pathName,fileName);
+0111     
+0112         set(handles.text_historyOutFile,<span class="string">'String'</span>,fullName);  
+0113     <span class="keyword">end</span>
+0114 
+0115 
+0116 <span class="comment">% --- Executes on button press in pushbutton_setBufferedHistoryOutfile.</span>
+0117 <a name="_sub4" href="#_subfunctions" class="code">function pushbutton_setBufferedHistoryOutfile_Callback(hObject, eventdata, handles)</a>
+0118 <span class="comment">% hObject    handle to pushbutton_setBufferedHistoryOutfile (see GCBO)</span>
+0119 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0120 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0121     outFile = get(handles.text_historyOutFile,<span class="string">'String'</span>);
+0122     
+0123     write = true;
+0124     
+0125     <span class="comment">% don't write if no file specified;</span>
+0126     <span class="keyword">if</span> isempty(outFile)
+0127         write = false;
+0128         msgbox(<span class="string">'A valid file must be specified'</span>,<span class="string">'Write error'</span>);
+0129         
+0130     <span class="keyword">end</span>
+0131     
+0132     <span class="keyword">if</span> write == true
+0133         mainWindowHandle = <a href="sos_gui.html" class="code" title="function varargout = sos_gui(varargin)">sos_gui</a>;
+0134         mainWindowData = guidata(mainWindowHandle);
+0135 
+0136         sosObjName = <a href="getdfName.html" class="code" title="function dfName = getdfName(handle,dfType)">getdfName</a>(mainWindowData.popupmenu_SOSSelector,<span class="string">'SOS'</span>);
+0137 
+0138         <span class="keyword">if</span> isempty(sosObjName) == 0    
+0139             <span class="comment">% write the file</span>
+0140              command = [sosObjName,<span class="string">'.setBufferedHistoryOutfile('''</span>,outFile,<span class="string">''');'</span>];
+0141 
+0142             <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">'Executing command: '</span>,<span class="string">''''</span>,command,<span class="string">''''</span>],<span class="string">'setBufferedHistoryOutfile_Dialog_create'</span>);
+0143             evalin(<span class="string">'base'</span>,command);         
+0144 
+0145             close(handles.figure_setBufferedHistoryOutfile);
+0146         <span class="keyword">else</span>
+0147             <span class="comment">% no need to do anything, all methods called generate errors if</span>
+0148             <span class="comment">% they contain invalid fields.</span>
+0149         <span class="keyword">end</span>
+0150     <span class="keyword">end</span>
+0151</pre></div>
+<hr><address>Generated on Fri 27-Jan-2012 16:18:41 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

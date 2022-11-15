@@ -1,0 +1,476 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of sosPlots</title>
+  <meta name="keywords" content="sosPlots">
+  <meta name="description" content="- object used to create detailed plots of SOS optimization">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="#">src</a> &gt; sosPlots.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for .\src&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>sosPlots
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>- object used to create detailed plots of SOS optimization</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> - object used to create detailed plots of SOS optimization 
+
+ copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut
+
+    This file is part of SOS
+
+    SOS is free software: you can redistribute it and/or modify
+    it for academic and non-commercial purposes
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.  For commercial or for-profit
+    uses, please contact the authors (sos@cnbc.cmu.edu).
+
+    SOS is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="plt.html" class="code" title="function [Volv1,Volv2] = plt(varargin);">plt</a>	- plt package by Paul Mennen</li><li><a href="sosPlots.html" class="code" title="">sosPlots</a>	- object used to create detailed plots of SOS optimization</li><li><a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>	- master print function that regulates cmd line output based on verbosity flags</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="sos.html" class="code" title="">sos</a>	- SOS optimization object</li><li><a href="sosPlots.html" class="code" title="">sosPlots</a>	- object used to create detailed plots of SOS optimization</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function obj = sosPlots(sosObj,histObj,dispIt,startIt)</a></li><li><a href="#_sub2" class="code">function updatePlots(obj)</a></li><li><a href="#_sub3" class="code">function namesBTN(obj,~,~,t)</a></li><li><a href="#_sub4" class="code">function curLim = updateAxis(obj,x,curLim,subPlotIndex)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% - object used to create detailed plots of SOS optimization</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%    This file is part of SOS</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%    SOS is free software: you can redistribute it and/or modify</span>
+0008 <span class="comment">%    it for academic and non-commercial purposes</span>
+0009 <span class="comment">%    under the terms of the GNU General Public License as published by</span>
+0010 <span class="comment">%    the Free Software Foundation, either version 3 of the License, or</span>
+0011 <span class="comment">%    (at your option) any later version.  For commercial or for-profit</span>
+0012 <span class="comment">%    uses, please contact the authors (sos@cnbc.cmu.edu).</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%    SOS is distributed in the hope that it will be useful,</span>
+0015 <span class="comment">%    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+0016 <span class="comment">%    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+0017 <span class="comment">%    GNU General Public License for more details.</span>
+0018 
+0019 <span class="comment">%    You should have received a copy of the GNU General Public License</span>
+0020 <span class="comment">%    along with SOS (see COPYING.txt).</span>
+0021 <span class="comment">%    If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+0022 
+0023 classdef <a href="sosPlots.html" class="code" title="">sosPlots</a> &lt; handle
+0024     <span class="comment">%% plots detailed history data</span>
+0025     <span class="comment">%</span>
+0026     <span class="comment">% This class provides support for creating plots of various metrics</span>
+0027     <span class="comment">% related to the optimization process.</span>
+0028     <span class="comment">% plots various metrics related to the optimization process</span>
+0029     <span class="comment">% Specifically, the following items are recorded:</span>
+0030     <span class="comment">%</span>
+0031     <span class="comment">% creates plots for several optimization parameters, as follows:</span>
+0032     <span class="comment">%   - cost</span>
+0033     <span class="comment">%   - deltaCost</span>
+0034     <span class="comment">%   - temperature</span>
+0035     <span class="comment">%   - pFlipHistory</span>
+0036     <span class="comment">%   - sosStatTestpvals (for all stat tests in the sos Object)</span>
+0037     <span class="comment">%</span>
+0038     <span class="comment">% This code uses the plt library by Paul Mennen (may 11, 2010 version)</span>
+0039     <span class="comment">% and also takes some of its implementational inspiration</span>
+0040     <span class="comment">% from the demos therein.</span>
+0041     <span class="comment">%</span>
+0042     <span class="comment">% This class also inherits from the handle CLASS to gain standard</span>
+0043     <span class="comment">% object-oriented behavior</span>
+0044     <span class="comment">%</span>
+0045     <span class="comment">% PROPERTIES</span>
+0046     <span class="comment">%     sosObj % the sos object the plots are associated with</span>
+0047     <span class="comment">%     histObj % pointer to history object in SOS object that is to be displayed</span>
+0048     <span class="comment">%     hFig % handle to the plot graphic object</span>
+0049     <span class="comment">%     pFig % pointer to traces in figure</span>
+0050     <span class="comment">%     dispIt % range of iterations to show on the plots at any one time</span>
+0051     <span class="comment">%     startIt % iteration that the plot was created at (plots from then on after)</span>
+0052     <span class="comment">%     startRow % starting row when plotObj was created from which information will begin being plotted</span>
+0053     <span class="comment">%     pvalTestNames % names of the stat tests to plot. these names are stored seperately than those in histObj so as to be able to discern if the stat tests to plot have changed.</span>
+0054     <span class="comment">%     curXLim % range limit for x-axis</span>
+0055     <span class="comment">%     curCostYLim % range limit for Cost Y axis</span>
+0056     <span class="comment">%     curdeltaCostYLim % range limit for deltaCost Y axis</span>
+0057     <span class="comment">%     curTempYLim % range limit for tempreature Y axis</span>
+0058     <span class="comment">%</span>
+0059     <span class="comment">% METHODS</span>
+0060     <span class="comment">%   sosPlots(sosObj,histObj,dispIt,startIt) % constructor</span>
+0061     <span class="comment">%   updatePlots() % updates the plot based on the most recent history information</span>
+0062     <span class="comment">%   namesBTN(~,~,t) % call linked to names button that toggles display of stat test names.</span>
+0063     <span class="comment">%   namesBTN(obj,~,~,t) % call linked to names button that toggles display of stat test names.</span>
+0064     
+0065     <span class="comment">%% PROPERTIES</span>
+0066     properties
+0067         sosObj <span class="comment">% the sos object the plots are associated with</span>
+0068         histObj <span class="comment">% pointer to history object in SOS object that is to be displayed</span>
+0069         hFig <span class="comment">% handle to the plot graphic object</span>
+0070         pFig <span class="comment">% pointer to traces in figure</span>
+0071         dispIt <span class="comment">% range of iterations to show on the plots at any one time</span>
+0072         startIt <span class="comment">% iteration that the plot was created at (plots from then on after)</span>
+0073         startRow <span class="comment">% starting row when plotObj was created from which information will begin being plotted</span>
+0074         pvalTestNames <span class="comment">% names of the stat tests to plot. these names are stored seperately than those in histObj so as to be able to discern if the stat tests to plot have changed.</span>
+0075         curXLim <span class="comment">% range limit for x-axis</span>
+0076         curCostYLim <span class="comment">% range limit for Cost Y axis</span>
+0077         curdeltaCostYLim <span class="comment">% range limit for deltaCost Y axis</span>
+0078         curTempYLim <span class="comment">% range limit for tempreature Y axis</span>
+0079     <span class="keyword">end</span>
+0080     
+0081     <span class="comment">%% METHODS</span>
+0082     methods
+0083         
+0084         <span class="comment">%% obj = sosPlots(sosObj,histObj,dispIt,startIt) CONSTRUCTOR</span>
+0085         <a name="_sub0" href="#_subfunctions" class="code">function obj = sosPlots(sosObj,histObj,dispIt,startIt)</a>
+0086            <span class="comment">% creates plots of optimization history metrics</span>
+0087            <span class="comment">%</span>
+0088            <span class="comment">% PARAMETERS:</span>
+0089            <span class="comment">%    sosObj % sos object associated with the plot</span>
+0090            <span class="comment">%    histObj % history object whose data will be plotted</span>
+0091            <span class="comment">%    dispIt % default number of iterations to display on the plot at any one time</span>
+0092            <span class="comment">%    startit % iteration that the plot was started on (plotting begins thereafter)</span>
+0093            
+0094             <span class="comment">% validate inputs</span>
+0095             <span class="keyword">if</span> exist(<span class="string">'dispIt'</span>,<span class="string">'var'</span>) == 0
+0096                 dispIt = 100000;
+0097             <span class="keyword">else</span>
+0098                 validateattributes(dispIt, {<span class="string">'numeric'</span>}, <span class="keyword">...</span>
+0099                 {<span class="string">'scalar'</span>, <span class="string">'integer'</span>, <span class="string">'positive'</span>, <span class="string">'&gt;'</span>, 0});
+0100             <span class="keyword">end</span>
+0101             
+0102             obj.sosObj = sosObj;
+0103             obj.histObj = histObj;
+0104             obj.dispIt = dispIt;
+0105             obj.startIt = startIt;            
+0106             obj.pvalTestNames = obj.histObj.pvalTestNames;
+0107             
+0108             <span class="comment">% begin the plot creation process:</span>
+0109             
+0110             <span class="comment">% prepare abbreviated trace names for p-vals</span>
+0111             shortNames = {};
+0112             <span class="keyword">for</span> i=1:length(obj.pvalTestNames)
+0113                 shortNames = [shortNames ; strcat(<span class="string">'Test #'</span>,num2str(i))]; <span class="comment">%#ok&lt;AGROW&gt;</span>
+0114             <span class="keyword">end</span>
+0115             
+0116 
+0117             minX = obj.startIt;
+0118 
+0119             <span class="comment">% find the row in the history that the starting iteration</span>
+0120             <span class="comment">% appears in</span>
+0121             obj.startRow = 1;
+0122             <span class="keyword">for</span> i=1:length(obj.histObj.itHistory)
+0123                 <span class="keyword">if</span> obj.histObj.itHistory(i) &lt; minX
+0124                     obj.startRow = i+1;
+0125                 <span class="keyword">else</span>
+0126                     <span class="keyword">break</span>;
+0127                 <span class="keyword">end</span>
+0128             <span class="keyword">end</span>
+0129             
+0130             <span class="comment">%need to include NaN's for as many traces as there are</span>
+0131             <span class="comment">%statTests when first buiding the stat test.  There also needs</span>
+0132             <span class="comment">%to be at least 1 stat test so that the stat test plot is</span>
+0133             <span class="comment">%created, even if it will ultimately be empty.</span>
+0134             numStatTests = length(obj.pvalTestNames);
+0135             
+0136             initStatTraces = nan(1,max(numStatTests,1));
+0137             
+0138             <span class="comment">% create initial x-limits based on the starting iteration and</span>
+0139             <span class="comment">% the number of iterations to keep on the screen.</span>
+0140             obj.curXLim = [minX minX+obj.dispIt];
+0141 
+0142             <span class="comment">% set the initial ranges for the y axis of the plots</span>
+0143             
+0144             <span class="comment">% create a small initial range on the axes;  The intent is to</span>
+0145             <span class="comment">% have this range be overridden with the real data range</span>
+0146             <span class="comment">% because that range will be bigger than smallNum.  This is a</span>
+0147             <span class="comment">% somewhat awkward bit of the code that hopefully won't be too</span>
+0148             <span class="comment">% troublesome, but is apparently needed because the plot must</span>
+0149             <span class="comment">% take two real value min and max bounds such that min&lt;max, and</span>
+0150             <span class="comment">% more sophisticated overriding code probably isn't worth it</span>
+0151             <span class="comment">% presently.</span>
+0152             smallNum = 0.0000001;
+0153             
+0154             <span class="comment">% range of probabilities is always 0-1</span>
+0155             probYLim = [0 1];
+0156             
+0157             <span class="comment">% cost and deltaCost can have both positive and negative</span>
+0158             <span class="comment">% values, so make their initial ranges symmetric around 1</span>
+0159             obj.curdeltaCostYLim = [-smallNum smallNum];
+0160             obj.curCostYLim = [-smallNum smallNum];
+0161             <span class="comment">%temperature can only be negative, have it be bounded by zero</span>
+0162             obj.curTempYLim = [0 smallNum];
+0163             
+0164             <span class="comment">% create empty initial traces for as many traces as will</span>
+0165             <span class="comment">% ultimately be in the plot.</span>
+0166             initYs = [NaN,NaN,NaN,NaN,initStatTraces];
+0167             
+0168             <span class="comment">% have each individual data point marked with a star, below.</span>
+0169             <span class="comment">% There are as many stars for trace marks as there are traces,</span>
+0170             <span class="comment">% above.</span>
+0171             mark = <span class="string">''</span>;
+0172             <span class="keyword">for</span> j=1:length(initYs)
+0173                 mark = strcat(mark,<span class="string">'*'</span>);
+0174             <span class="keyword">end</span>
+0175 
+0176             <span class="comment">% create the figure.</span>
+0177             obj.pFig = <a href="plt.html" class="code" title="function [Volv1,Volv2] = plt(varargin);">plt</a>(NaN,initYs, <span class="keyword">...</span><span class="comment"> % create NaN's for x-axis and y-axis traces</span>
+0178                 <span class="string">'FigName'</span>,<span class="string">'plotObj'</span>, <span class="keyword">...</span><span class="comment"> % name of figure</span>
+0179                 <span class="string">'SubPlot'</span>,[20 20 20 20 20] <span class="keyword">...</span><span class="comment"> % percent of figure occupied by each subplot</span>
+0180                 ,<span class="string">'Xlim'</span>,obj.curXLim, <span class="keyword">...</span><span class="comment"> % set initial Xlimits</span>
+0181                 <span class="string">'Options'</span>,<span class="string">'Ticks'</span>,<span class="keyword">...</span><span class="comment"> init plots /w tick marks</span>
+0182                 <span class="string">'Options'</span>,<span class="string">'-Ylog'</span>,<span class="keyword">...</span><span class="comment"> % remove logy transform of y axis</span>
+0183                 <span class="string">'Options'</span>,<span class="string">'-Xlog'</span>,<span class="keyword">...</span><span class="comment">% remove logx transform of xaxis</span>
+0184                 <span class="string">'Options'</span>,<span class="string">'-Rotate'</span>,<span class="keyword">...</span><span class="comment"> % 2-d plots don't need 3d rotation</span>
+0185                 <span class="string">'Options'</span>,<span class="string">'-Help'</span>,<span class="keyword">...</span><span class="comment"> % remove (non-existent) help access</span>
+0186                 <span class="string">'Options'</span>,<span class="string">'S'</span>,<span class="keyword">...</span><span class="comment"> % enable x-axis slider</span>
+0187                 <span class="string">'ENApre'</span>, [0 0],<span class="keyword">...</span><span class="comment"> % disables unit scaling and uses scientific notation.</span>
+0188                 <span class="string">'TraceID'</span>,shortNames,<span class="keyword">...</span><span class="comment"> % name all of the stat test traces</span>
+0189                 <span class="string">'Markers'</span>,mark,<span class="keyword">...</span><span class="comment"> % add marks for each actual value on the plot that is not interpolated</span>
+0190                 <span class="string">'LabelX'</span>,<span class="string">'Iteration'</span>,<span class="keyword">...</span>
+0191                 <span class="string">'LabelY'</span>,{<span class="string">'p-val'</span>,<span class="string">'p(swap)'</span>,<span class="string">'deltaCost'</span>,<span class="string">'cost'</span>,<span class="string">'temperature'</span>},<span class="keyword">...</span>
+0192                 <span class="string">'FigBKc'</span>,[0.3 0.3 0.3]);  <span class="comment">% sets plot bg color to dark grey</span>
+0193             
+0194             <span class="comment">% get a pointer to the newly created figure.</span>
+0195             obj.hFig = gcf();
+0196 
+0197             <span class="comment">%update the axes for all of the other plots to their</span>
+0198             <span class="comment">%default bounds</span>
+0199             hAxes = getappdata(obj.hFig,<span class="string">'axis'</span>);
+0200 
+0201             set(hAxes(1),<span class="string">'Ylim'</span>,probYLim); <span class="comment">% pval plot</span>
+0202             set(hAxes(2),<span class="string">'Ylim'</span>,probYLim); <span class="comment">% p(swap) plot</span>
+0203             set(hAxes(3),<span class="string">'Ylim'</span>,obj.curdeltaCostYLim); <span class="comment">% deltaCost</span>
+0204             set(hAxes(4),<span class="string">'Ylim'</span>,obj.curCostYLim); <span class="comment">% cost</span>
+0205             set(hAxes(5),<span class="string">'Ylim'</span>,obj.curTempYLim); <span class="comment">% temperature</span>
+0206     
+0207                     
+0208             <span class="comment">% create a message listing the names of all the stat tests</span>
+0209             dispMsg = sprintf(<span class="string">'\nThe names of the stats tests are:\n\n'</span>);
+0210         
+0211             <span class="keyword">for</span> i=1:length(obj.pvalTestNames)
+0212                 dispMsg = sprintf(<span class="string">'  %s#%s: %s\n'</span>,dispMsg,num2str(i),<span class="keyword">...</span>
+0213                                     obj.pvalTestNames{i});
+0214             <span class="keyword">end</span>
+0215 
+0216             <span class="comment">%add the 'names' button that displays the plot names</span>
+0217             <span class="comment">% snippet inspired from plt demo trigplt.m by Paul Mennen</span>
+0218             plot.names = text(2,3,dispMsg,<span class="keyword">...</span><span class="comment"> % first 2 params are x,y offset</span>
+0219                           <span class="string">'HorizontalAlignment'</span>,<span class="string">'left'</span>,<span class="keyword">...</span>
+0220                           <span class="string">'BackgroundColor'</span>,[0.5 0.5 0.5],<span class="keyword">...</span>
+0221                           <span class="string">'EdgeColor'</span>,<span class="string">'red'</span>,<span class="string">'Color'</span>,<span class="string">'black'</span>,<span class="string">'Editing'</span>,<span class="string">'off'</span>);
+0222         
+0223             <span class="comment">% try to adjust the color (plt seems to override this on</span>
+0224             <span class="comment">% initialization though).</span>
+0225             set(plot.names,<span class="string">'units'</span>,<span class="string">'norm'</span>,<span class="string">'color'</span>,[1 .7 .7]);
+0226   
+0227             <span class="comment">% add the names button</span>
+0228             uicontrol(<span class="string">'string'</span>,<span class="string">'Names'</span>,<span class="string">'pos'</span>,[5 500 50 20],<span class="keyword">...</span>
+0229                         <span class="string">'CallBack'</span>,{@obj.namesBTN,plot.names});
+0230              
+0231             <span class="comment">% hide names on plot creation.</span>
+0232             set(plot.names,<span class="string">'visible'</span>,<span class="string">'off'</span>);
+0233             
+0234             <span class="comment">% if the plot is closed via the plot's gui, have it delete the</span>
+0235             <span class="comment">% plotObj in the main SOS variable:</span>
+0236             set(obj.hFig, <span class="string">'closeReq'</span>,strcat(<span class="string">'delete('</span>,num2str(obj.hFig),<span class="keyword">...</span>
+0237                     <span class="string">'); mySOS.plotObj = {}; '</span>)); 
+0238             
+0239             
+0240             <span class="comment">% ensure that the whole plot has been updated.</span>
+0241             drawnow;
+0242                       
+0243             <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>(<span class="string">'Plotting detailed optimization history...'</span>, <span class="keyword">...</span>
+0244                 <span class="string">'sosPlots_constructor_end'</span>);     
+0245            
+0246         <span class="keyword">end</span> <span class="comment">% constructor</span>
+0247         
+0248         
+0249         <span class="comment">%% function updatePlots() METHOD</span>
+0250         <a name="_sub1" href="#_subfunctions" class="code">function updatePlots(obj)</a>
+0251             <span class="comment">% updates the plot based on the most recent history information</span>
+0252             
+0253             <span class="comment">%number of data points in the history</span>
+0254             histLength = length(obj.histObj.itHistory);
+0255             
+0256             <span class="keyword">if</span> histLength == 0
+0257                 error(<span class="string">'updatePlots() was called but detailed optimization was not stored'</span>);
+0258             <span class="keyword">else</span>
+0259                 lastPoint = histLength;
+0260                 firstPoint = obj.startRow;
+0261                 
+0262                 <span class="comment">% find the number of iterations on the last datapoint</span>
+0263                 lastIt = max(obj.dispIt,obj.histObj.itHistory(length(obj.histObj.itHistory)));
+0264                 firstIt = max(0,lastIt-obj.dispIt);
+0265                
+0266                 <span class="comment">% check to see if the x-axes need to be updated.  This</span>
+0267                 <span class="comment">% should only happen if there are at least two datapoints;</span>
+0268                 newXLim = [firstIt lastIt];
+0269               
+0270                 <span class="comment">% only try updating the original axes if more than one data</span>
+0271                 <span class="comment">% point is present; otherwise the initial value will be</span>
+0272                 <span class="comment">% fine</span>
+0273                 <span class="keyword">if</span> firstPoint &lt; lastPoint &amp;&amp; <span class="keyword">...</span>
+0274                         (newXLim(1) ~= obj.curXLim(1) || <span class="keyword">...</span>
+0275                          newXLim(2) ~= obj.curXLim(2))
+0276                     hAxes = getappdata(obj.hFig,<span class="string">'axis'</span>);
+0277                     obj.curXLim = newXLim;
+0278                     
+0279                     <span class="keyword">for</span> i=1:5 <span class="comment">% for every subplot</span>
+0280                     set(hAxes(i),<span class="string">'Xlim'</span>, <span class="keyword">...</span>
+0281                         obj.curXLim); 
+0282                     <span class="keyword">end</span>
+0283                 <span class="keyword">end</span>
+0284                     
+0285                 <span class="comment">% update datapoints on the p-val plot</span>
+0286                 <span class="keyword">for</span> i=1:length(obj.pvalTestNames)
+0287                     set(obj.pFig(i),<span class="string">'x'</span>,obj.histObj.itHistory(firstPoint:lastPoint), <span class="keyword">...</span>
+0288                        <span class="string">'y'</span>,obj.histObj.pvalHistory(firstPoint:lastPoint,i));                
+0289                 <span class="keyword">end</span>
+0290 
+0291                 
+0292                 nextIndex = i+1;
+0293                 
+0294                 <span class="comment">% update pFlip</span>
+0295                 set(obj.pFig(nextIndex),<span class="string">'x'</span>,obj.histObj.itHistory(firstPoint:lastPoint), <span class="keyword">...</span>
+0296                        <span class="string">'y'</span>,obj.histObj.pFlipHistory(firstPoint:lastPoint));
+0297                     
+0298                                    
+0299                 <span class="comment">% from hereon out, it may be necessary to update the YLim</span>
+0300                 <span class="comment">% since they are not bounded</span>
+0301                 
+0302                 <span class="comment">% update deltaCost Axis</span>
+0303                 obj.curdeltaCostYLim = obj.updateAxis(<span class="keyword">...</span>
+0304                             obj.histObj.deltaCostHistory(lastPoint), <span class="keyword">...</span>
+0305                             obj.curdeltaCostYLim, 3);        
+0306         
+0307                 <span class="comment">% update deltaCost plot</span>
+0308                 nextIndex = nextIndex+1;
+0309                 set(obj.pFig(nextIndex),<span class="string">'x'</span>,obj.histObj.itHistory(firstPoint:lastPoint), <span class="keyword">...</span>
+0310                    <span class="string">'y'</span>,obj.histObj.deltaCostHistory(firstPoint:lastPoint));   
+0311 
+0312                
+0313                <span class="comment">% same for cost</span>
+0314                 obj.curCostYLim = obj.updateAxis(<span class="keyword">...</span>
+0315                             obj.histObj.costHistory(lastPoint), <span class="keyword">...</span>
+0316                             obj.curCostYLim, 4);                      
+0317                                
+0318                 nextIndex = nextIndex+1;
+0319                 set(obj.pFig(nextIndex),<span class="string">'x'</span>,obj.histObj.itHistory(firstPoint:lastPoint), <span class="keyword">...</span>
+0320                         <span class="string">'y'</span>,obj.histObj.costHistory(firstPoint:lastPoint));    
+0321 
+0322                 <span class="comment">% same for temp</span>
+0323              
+0324                 obj.curTempYLim = obj.updateAxis(<span class="keyword">...</span>
+0325                             obj.histObj.tempHistory(lastPoint), <span class="keyword">...</span>
+0326                             obj.curTempYLim, 5);          
+0327                         
+0328                 nextIndex = nextIndex+1;
+0329                 set(obj.pFig(nextIndex),<span class="string">'x'</span>,obj.histObj.itHistory(firstPoint:lastPoint), <span class="keyword">...</span>
+0330                         <span class="string">'y'</span>,obj.histObj.tempHistory(firstPoint:lastPoint));                                       
+0331                                     
+0332                 
+0333             <span class="keyword">end</span> <span class="comment">% if histLength == 0</span>
+0334 
+0335             drawnow;
+0336       
+0337         <span class="keyword">end</span> <span class="comment">% updatePlots</span>
+0338         
+0339         
+0340 
+0341         
+0342         
+0343         
+0344         <span class="comment">%% namesBTN(~,~,t) METHOD</span>
+0345         <a name="_sub2" href="#_subfunctions" class="code">function namesBTN(obj,~,~,t)  </a>
+0346             <span class="comment">% call linked to names button that toggles display of stat test</span>
+0347             <span class="comment">% names.</span>
+0348             <span class="comment">%</span>
+0349             <span class="comment">% PARAMETERS:</span>
+0350             <span class="comment">% ~ -- standard graphic parameters for button calls - not used.</span>
+0351             <span class="comment">%   t - pionter to text object that displays the names</span>
+0352             <span class="comment">%</span>
+0353             <span class="comment">% snippet inspried from plt demo trigplt.m by Paul Mennen, in</span>
+0354             <span class="comment">% the plt package demos</span>
+0355         
+0356             dispMsg = sprintf(<span class="string">'\nThe names of the stats tests are:\n'</span>);
+0357         
+0358             <span class="keyword">for</span> i=1:length(obj.pvalTestNames)
+0359                 dispMsg = sprintf(<span class="string">'%s#%s: %s\n'</span>,dispMsg,num2str(i), <span class="keyword">...</span>
+0360                     obj.pvalTestNames{i});
+0361             <span class="keyword">end</span>
+0362 
+0363            v = get(t(1),<span class="string">'visible'</span>);
+0364            <span class="keyword">if</span> v(2)==<span class="string">'n'</span>; v=<span class="string">'off'</span>; <span class="keyword">else</span> v=<span class="string">'on'</span>; <span class="keyword">end</span>;
+0365            set(t,<span class="string">'visible'</span>,v);
+0366 
+0367            drawnow;
+0368            
+0369         <span class="keyword">end</span>    
+0370         
+0371     <span class="keyword">end</span> <span class="comment">% methods</span>
+0372 
+0373     
+0374     <span class="comment">%% METHODS (Access = private)</span>
+0375     methods (Access = private)
+0376         
+0377         <span class="comment">%% curLim = updateAxis(x,curLim,subPlotIndex) METHOD</span>
+0378         <a name="_sub3" href="#_subfunctions" class="code">function curLim = updateAxis(obj,x,curLim,subPlotIndex)</a>
+0379             <span class="comment">% determines whether the y-axis for a given plot need to be</span>
+0380             <span class="comment">% updated based on the new data, which may have changed the</span>
+0381             <span class="comment">% min/max values for the axis.</span>
+0382             <span class="comment">%</span>
+0383             <span class="comment">% PARAMETERS:</span>
+0384             <span class="comment">%   x - new data point in history array</span>
+0385             <span class="comment">%   curLim - 2-entry array containing the current min/max vals</span>
+0386             <span class="comment">%   subPlotIndex - index of subplot in hFig handle obj</span>
+0387             
+0388             update = false;
+0389             
+0390             <span class="keyword">if</span> x &lt; curLim(1)
+0391                 curLim(1) = x;
+0392                 update = true;
+0393             <span class="keyword">end</span>
+0394 
+0395             <span class="keyword">if</span> x &gt; curLim(2)
+0396                 curLim(2) = x;
+0397                 update = true;
+0398             <span class="keyword">end</span>                
+0399 
+0400             <span class="keyword">if</span> update == true
+0401                 hAxes = getappdata(obj.hFig,<span class="string">'axis'</span>);
+0402                 set(hAxes(subPlotIndex),<span class="string">'Ylim'</span>, <span class="keyword">...</span>
+0403                     curLim); 
+0404             <span class="keyword">end</span>                            
+0405             
+0406         <span class="keyword">end</span>
+0407     <span class="keyword">end</span>
+0408 
+0409 <span class="keyword">end</span>
+0410 
+0411</pre></div>
+<hr><address>Generated on Fri 27-Jan-2012 16:18:41 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

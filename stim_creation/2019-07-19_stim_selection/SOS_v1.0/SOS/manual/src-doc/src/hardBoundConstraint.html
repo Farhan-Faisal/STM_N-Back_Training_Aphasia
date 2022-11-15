@@ -1,0 +1,362 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of hardBoundConstraint</title>
+  <meta name="keywords" content="hardBoundConstraint">
+  <meta name="description" content="- hard bound constraint object">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="#">src</a> &gt; hardBoundConstraint.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for .\src&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>hardBoundConstraint
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>- hard bound constraint object</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> - hard bound constraint object
+
+ copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut
+
+    This file is part of SOS
+
+    SOS is free software: you can redistribute it and/or modify
+    it for academic and non-commercial purposes
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.  For commercial or for-profit
+    uses, please contact the authors (sos@cnbc.cmu.edu).
+
+    SOS is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="genericConstraint.html" class="code" title="">genericConstraint</a>	- parent class for constraints</li><li><a href="hardBoundConstraint.html" class="code" title="">hardBoundConstraint</a>	- hard bound constraint object</li><li><a href="hardConstraint.html" class="code" title="">hardConstraint</a>	- parent class for hard constraints</li><li><a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>	- master print function that regulates cmd line output based on verbosity flags</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="genericConstraint.html" class="code" title="">genericConstraint</a>	- parent class for constraints</li><li><a href="hardBoundConstraint.html" class="code" title="">hardBoundConstraint</a>	- hard bound constraint object</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function obj = hardBoundConstraint(varargin)</a></li><li><a href="#_sub2" class="code">function cost = initCost(obj)</a></li><li><a href="#_sub3" class="code">function swCost = swapCost(obj, targSample, targSampleIndex, feederdf, feederdfIndex)</a></li><li><a href="#_sub4" class="code">function cost = itemCost(obj, targSample,targSampleIndex,feederdf, feederdfIndex)</a></li><li><a href="#_sub5" class="code">function cost = itemCostFilling(obj,  targSample,targSampleIndex,feederdf, feederdfIndex)</a></li><li><a href="#_sub6" class="code">function cost = acceptSwap(obj)</a></li><li><a href="#_sub7" class="code">function p = hardBoundConstraintInputParser()</a></li><li><a href="#_sub8" class="code">function p = parseConstructorArgs(varargin)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% - hard bound constraint object</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%    This file is part of SOS</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%    SOS is free software: you can redistribute it and/or modify</span>
+0008 <span class="comment">%    it for academic and non-commercial purposes</span>
+0009 <span class="comment">%    under the terms of the GNU General Public License as published by</span>
+0010 <span class="comment">%    the Free Software Foundation, either version 3 of the License, or</span>
+0011 <span class="comment">%    (at your option) any later version.  For commercial or for-profit</span>
+0012 <span class="comment">%    uses, please contact the authors (sos@cnbc.cmu.edu).</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%    SOS is distributed in the hope that it will be useful,</span>
+0015 <span class="comment">%    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+0016 <span class="comment">%    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+0017 <span class="comment">%    GNU General Public License for more details.</span>
+0018 
+0019 <span class="comment">%    You should have received a copy of the GNU General Public License</span>
+0020 <span class="comment">%    along with SOS (see COPYING.txt).</span>
+0021 <span class="comment">%    If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+0022 
+0023 
+0024 
+0025 classdef <a href="hardBoundConstraint.html" class="code" title="">hardBoundConstraint</a> &lt; <a href="hardConstraint.html" class="code" title="">hardConstraint</a>
+0026     <span class="comment">%% creates and supports hardBoundConstraints</span>
+0027     <span class="comment">%</span>
+0028     <span class="comment">% Creates constraint objects that measure the number of items which</span>
+0029     <span class="comment">% violate a specified hard bound in a sample, and which evaluates</span>
+0030     <span class="comment">% whether a new item which could be swapped into a sample would also</span>
+0031     <span class="comment">% violate this same hards bound.</span>
+0032     <span class="comment">%</span>
+0033     <span class="comment">% Additional functionality and interface requirements are inherited</span>
+0034     <span class="comment">% from hardConstraint</span>
+0035     <span class="comment">%</span>
+0036     <span class="comment">% PROPERTIES</span>
+0037     <span class="comment">%     comparison - handle to specific comparison method to use</span>
+0038     <span class="comment">%     bound   - the bound to evaluate an item against</span>
+0039     <span class="comment">%     s1 - the sample</span>
+0040     <span class="comment">%     s1Col   - the column in the sample</span>
+0041     <span class="comment">%     s1ColName   - the name of the data stored in the column of the sample</span>
+0042     <span class="comment">%</span>
+0043     <span class="comment">% METHODS:</span>
+0044     <span class="comment">%   hardBoundConstraint(varargin) - CONSTRUCTOR</span>
+0045     <span class="comment">%   cost = initCost(obj) Calculates, saves, and returns the cost value for the current  items in the sample.</span>
+0046     <span class="comment">%   swCost = swapCost(obj, targSample, targSampleIndex, feederdf, feederdfIndex) Calculates the new cost if items from targSample and feederdf were swapped.</span>
+0047     <span class="comment">%   cost = itemCost(obj, targSample,targSampleIndex,feederdf, feederdfIndex) Calculates the cost of the specified item in df.</span>
+0048     <span class="comment">%   cost = itemCostFilling(obj,  targSample,targSampleIndex,feederdf, feederdfIndex) Calculates the cost of the specified item in df to the sample.</span>
+0049     <span class="comment">%</span>
+0050     <span class="comment">% METHODS (Static)</span>
+0051     <span class="comment">%   p = hardBoundConstraintInputParser() - generates input parser for constructor args</span>
+0052     <span class="comment">%</span>
+0053     <span class="comment">% METHODS (Static, Access = private)</span>
+0054     <span class="comment">%    p = parseConstructorArgs(varargin) - parses the construcvtor args</span>
+0055     
+0056     
+0057     <span class="comment">%% PROPERTIES</span>
+0058     properties
+0059         comparison <span class="comment">% handle to specific comparison method to use</span>
+0060         bound   <span class="comment">% the bound to evaluate an item against</span>
+0061         s1 <span class="comment">% the sample</span>
+0062         s1Col   <span class="comment">% the column in the sample</span>
+0063         s1ColName   <span class="comment">% the name of the data stored in the column of the sample</span>
+0064     <span class="keyword">end</span>
+0065     
+0066     methods
+0067         
+0068         <span class="comment">%% hardBoundConstraint CONSTRUCTOR</span>
+0069         <a name="_sub0" href="#_subfunctions" class="code">function obj = hardBoundConstraint(varargin)</a>
+0070             <span class="comment">% CONSTRUCTOR - creates a hardBoundConstraint object</span>
+0071             <span class="comment">%</span>
+0072             <span class="comment">% CALL:</span>
+0073             <span class="comment">% hardBoundConstraint(varargin &lt;defined below&gt; )</span>
+0074             <span class="comment">%</span>
+0075             <span class="comment">%PARAMETERS:</span>
+0076             <span class="comment">%</span>
+0077             <span class="comment">%   'sosObj'/sos object - the SOS object the constraint will be linked to, and which contains the samples the constraint operates on.</span>
+0078             <span class="comment">%   'constraintType'/'hard' - the type of contraint - must be 'hard'</span>
+0079             <span class="comment">%   'fnc'/'floor'|'ceiling' the type of bound to create</span>
+0080             <span class="comment">%   'sample1'/sample     - the sample to apply the constraint to</span>
+0081             <span class="comment">%   's1ColName'/string - name of column in 1st sample</span>
+0082             <span class="comment">%   'value'/numeric -   value of the bound</span>
+0083             <span class="comment">%</span>
+0084             <span class="comment">% EXAMPLE:</span>
+0085             <span class="comment">% mySOS.addConstraint('constraintType','hard','fnc','ceiling','sample1',s1,'s1ColName','Lg10WF','value',1.5);</span>
+0086   
+0087             p = hardBoundConstraint.parseConstructorArgs(varargin);
+0088             
+0089             
+0090             <span class="comment">%now check additional characteristics of the input parameters.</span>
+0091             
+0092             <span class="keyword">if</span>(p.Results.sosObj.containsSample(p.Results.sample1) == false)
+0093                 error(<span class="string">'Cannot create hard bound constraint: sos Object does not contain the sample1'</span>);
+0094             <span class="keyword">end</span>
+0095             
+0096             col = p.Results.sample1.colName2colNum(p.Results.s1ColName);
+0097             
+0098             <span class="keyword">if</span>(col == -1)
+0099                 error(<span class="string">'Specified column name not found in sample1'</span>);
+0100             <span class="keyword">end</span>
+0101             
+0102             <span class="keyword">if</span>(strcmp(p.Results.sample1.format{col},<span class="string">'%f'</span>) == 0)
+0103                 error(<span class="string">'Specified column is not of numeric (%f) format, so cannot use as hard bound'</span>);
+0104             <span class="keyword">end</span>
+0105 
+0106             <span class="comment">% properties meet requirements, assign properties to new obj</span>
+0107             
+0108             <span class="comment">%give a handle to either hte less than or greater than function</span>
+0109              <span class="keyword">if</span> (strcmp(p.Results.fnc,<span class="string">'floor'</span>))
+0110                 comp = @ge;
+0111             <span class="keyword">elseif</span> (strcmp(p.Results.fnc,<span class="string">'ceiling'</span>))
+0112                 comp = @le;
+0113             <span class="keyword">else</span>
+0114                 error(<span class="string">'Specified bound function not suported'</span>);
+0115              <span class="keyword">end</span>
+0116                          
+0117             <span class="comment">%parent property</span>
+0118             obj.sosObj = p.Results.sosObj;
+0119             obj.constraintType = p.Results.constraintType;
+0120             obj.fnc = p.Results.fnc;
+0121 
+0122             obj.comparison = comp;
+0123             obj.bound = p.Results.value;
+0124             obj.s1 = p.Results.sample1;
+0125             obj.s1Col = col;
+0126             obj.s1ColName = p.Results.s1ColName;       
+0127             
+0128             
+0129             obj.cost = NaN;
+0130             obj.swCost = NaN;
+0131             
+0132             <span class="comment">% add the name and the label</span>
+0133             obj.label = [obj.constraintType,<span class="string">'_'</span>,obj.fnc,<span class="string">'_'</span>,<span class="keyword">...</span>
+0134                     obj.s1.name,<span class="string">'_'</span>,obj.s1ColName,<span class="string">'_'</span>,num2str(obj.bound)];              
+0135             <span class="keyword">if</span> any(strcmp(p.UsingDefaults,<span class="string">'name'</span>))                 
+0136                 obj.name = obj.label;
+0137             <span class="keyword">else</span>
+0138                  obj.name = p.Results.name;  
+0139             <span class="keyword">end</span>
+0140              
+0141             
+0142             <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>(<span class="string">'Hard Bound Constraint has been created'</span>, <span class="keyword">...</span>
+0143                     <span class="string">'hardBoundConstraint_Constructor_endObjCreation'</span>);
+0144                       
+0145         <span class="keyword">end</span> <span class="comment">%constructor</span>
+0146         
+0147         <span class="comment">%% cost = initCost() METHOD</span>
+0148         <a name="_sub1" href="#_subfunctions" class="code">function cost = initCost(obj)</a>
+0149             <span class="comment">% Calculates, saves, and returns the cost value for the current items in the sample.</span>
+0150             <span class="comment">%</span>
+0151             <span class="comment">%CALL:</span>
+0152             <span class="comment">% &lt;hardBoundConstraint&gt;.initCost();</span>
+0153             <span class="comment">%</span>
+0154             <span class="comment">% Calculates the cost of the hard bound for each item in the</span>
+0155             <span class="comment">% sample.  As hard bounds should generally not be violated, a</span>
+0156             <span class="comment">% warning message will also be displayed if items violating</span>
+0157             <span class="comment">% a bound are present in the set.  This should indicate that</span>
+0158             <span class="comment">% the user has forced items into the sample (e.g., by putting</span>
+0159             <span class="comment">% them in a file listing items to be read into the sample</span>
+0160             <span class="comment">% object when it is created).  It should not be displayed</span>
+0161             <span class="comment">% otherwise if SOS is operating as inteded.</span>
+0162             
+0163             cost = 0;
+0164             <span class="keyword">for</span> i=1:length(obj.s1.data{obj.s1Col})
+0165                 <span class="keyword">if</span>(obj.comparison(obj.s1.data{obj.s1Col}(i),obj.bound) == 0)
+0166                     
+0167                     <span class="comment">%bca: may want to make this print statement more useful...</span>
+0168                     <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">'Warning: Item '</span>, num2str(i), <span class="string">' violated the hard bound constraint!'</span>], <span class="keyword">...</span>
+0169                         <span class="string">'hardBoundConstraint_initCost'</span>);
+0170                     cost = cost + 1;
+0171                 <span class="keyword">end</span>
+0172             <span class="keyword">end</span>
+0173             
+0174             obj.cost=cost;
+0175             obj.swCost = NaN;
+0176         <span class="keyword">end</span>
+0177         
+0178         
+0179          <span class="comment">%%  swCost(targSample,targSampleIndex, feederdf,feederdfIndex) FUNCTION</span>
+0180         <a name="_sub2" href="#_subfunctions" class="code">function swCost = swapCost(obj, targSample, targSampleIndex, feederdf, feederdfIndex)</a>
+0181             <span class="comment">% Calculates the new cost if items from targSample and feederdf were swapped.</span>
+0182             <span class="comment">%</span>
+0183             <span class="comment">%By definition, if this method is called it means that at least</span>
+0184             <span class="comment">% one of the two swap objects is implicated in this function</span>
+0185             <span class="comment">%</span>
+0186             <span class="comment">%PARAMETERS:</span>
+0187             <span class="comment">%   targSample - the target sample (i.e., the object that will call it's swapSample() method if a swap later occurs).</span>
+0188             <span class="comment">%   targSampleIndex - row index of item to swap</span>
+0189             <span class="comment">%   feederdf - dataframe (sample/pop) containin the other item to swap</span>
+0190             <span class="comment">%   feederdfIndex - row index of item to swap.</span>
+0191                         
+0192             curItemCost = obj.itemCost(<span class="string">'null'</span>,<span class="string">'null'</span>,targSample, targSampleIndex);
+0193             newItemCost = obj.itemCost(<span class="string">'null'</span>,<span class="string">'null'</span>,feederdf, feederdfIndex);
+0194           
+0195            
+0196             <span class="comment">%can swap to another item that violates the constraint if you</span>
+0197             <span class="comment">%currently violate the constraint</span>
+0198             <span class="keyword">if</span> curItemCost == 1 &amp;&amp; newItemCost == 1
+0199                 newSubCost = 0;
+0200             <span class="keyword">elseif</span> curItemCost == 0 &amp;&amp; newItemCost == 1
+0201                 newSubCost = 1;
+0202             <span class="comment">%must swap if current item violates constraint and new one</span>
+0203             <span class="comment">%doesn't</span>
+0204             <span class="keyword">elseif</span> curItemCost == 1 &amp;&amp; newItemCost == 0
+0205                 newSubCost = -1;
+0206             <span class="keyword">elseif</span> curItemCost == 0 &amp;&amp; newItemCost == 0
+0207                 newSubCost = 0;
+0208             <span class="keyword">else</span>
+0209                 error(<span class="string">'This condition should not have been met'</span>);
+0210             <span class="keyword">end</span>
+0211             
+0212             swCost = obj.cost + newSubCost;
+0213             obj.swCost = swCost;
+0214             
+0215         <span class="keyword">end</span>
+0216 
+0217         <span class="comment">%% itemCost(targSample,targSampleIndex,feederdf, feederdfIndex) METHOD</span>
+0218         <a name="_sub3" href="#_subfunctions" class="code">function cost = itemCost(obj, targSample,targSampleIndex,feederdf, feederdfIndex)</a>
+0219             <span class="comment">%Calculates the cost of the specified item in df.</span>
+0220             <span class="comment">%Should usually be invoked once a sample is filled with items.</span>
+0221             <span class="comment">%</span>
+0222             <span class="comment">%NOTE:</span>
+0223             <span class="comment">% Other parameters are provided only for consistency, but are not</span>
+0224             <span class="comment">% used.</span>
+0225             <span class="comment">%</span>
+0226             <span class="comment">%SEE swCost() doc/help for more details</span>
+0227             
+0228             cost = obj.itemCostFilling(targSample,targSampleIndex,feederdf, feederdfIndex);
+0229         <span class="keyword">end</span>
+0230         
+0231         <span class="comment">%% cost = itemCostFilling(targSample,targSampleIndex,feederdf, feederdfIndex) METHOD</span>
+0232         <a name="_sub4" href="#_subfunctions" class="code">function cost = itemCostFilling(obj,  targSample,targSampleIndex,feederdf, feederdfIndex) </a><span class="comment">%#ok&lt;INUSL&gt;</span>
+0233             <span class="comment">%Calculates the cost of the specified item in df to the sample.</span>
+0234             <span class="comment">% Should usually only be invoked when initially filling a</span>
+0235             <span class="comment">% sample</span>
+0236             <span class="comment">%</span>
+0237             <span class="comment">%NOTE:</span>
+0238             <span class="comment">% Other parameters are provided only for consistency, but are not</span>
+0239             <span class="comment">% used.</span>
+0240             <span class="comment">%</span>
+0241             <span class="comment">%SEE swCost() doc/help for more details</span>
+0242             
+0243             cost = 0;
+0244             
+0245             <span class="keyword">if</span>(obj.comparison(feederdf.data{obj.s1Col}(feederdfIndex),obj.bound))
+0246                 <span class="comment">%do nothing</span>
+0247             <span class="keyword">else</span>
+0248                cost = 1;
+0249             <span class="keyword">end</span>            
+0250         <span class="keyword">end</span>
+0251             
+0252         <a name="_sub5" href="#_subfunctions" class="code">function cost = acceptSwap(obj)</a>
+0253             <a href="#_sub6" class="code" title="subfunction cost = acceptSwap(obj)">acceptSwap</a>@<a href="genericConstraint.html" class="code" title="">genericConstraint</a>(obj);
+0254             cost = obj.cost;
+0255         <span class="keyword">end</span>
+0256         
+0257     <span class="keyword">end</span>
+0258     
+0259     methods(Static)
+0260         <span class="comment">%% p = hardBoundConstraintInputParser() STATIC METHOD</span>
+0261         <a name="_sub6" href="#_subfunctions" class="code">function p = hardBoundConstraintInputParser()</a>
+0262             <span class="comment">% generates input parser for constructor args</span>
+0263             p = inputParser;
+0264 
+0265             <span class="comment">%Note: some of these 'optional' parameters are de facto</span>
+0266             <span class="comment">%required by making the default value fail validation</span>
+0267             p.addParamValue(<span class="string">'sosObj'</span>,<span class="string">'null'</span>, <span class="keyword">...</span>
+0268                 @(sosObj)strcmp(class(sosObj),<span class="string">'sos'</span>));
+0269             p.addParamValue(<span class="string">'constraintType'</span>, <span class="string">'null'</span>, <span class="keyword">...</span>
+0270                 @(constraintType)any(strcmp({<span class="string">'hard'</span>},constraintType)));
+0271             p.addParamValue(<span class="string">'fnc'</span>,<span class="string">'null'</span>, <span class="keyword">...</span>
+0272                  @(fnc)any(strcmp({<span class="string">'floor'</span> <span class="string">'ceiling'</span>},fnc)));
+0273             p.addParamValue(<span class="string">'sample1'</span>,<span class="string">'null'</span>, <span class="keyword">...</span>
+0274             @(sample1)strcmp(class(sample1),<span class="string">'sample'</span>));
+0275             p.addParamValue(<span class="string">'s1ColName'</span>,<span class="string">''</span>,@(s1ColName)ischar(s1ColName));
+0276             p.addParamValue(<span class="string">'value'</span>,<span class="string">'null'</span>,@(value)isnumeric(value));
+0277             p.addParamValue(<span class="string">'name'</span>,<span class="string">'noname'</span>,@(name)ischar(name));
+0278             
+0279         <span class="keyword">end</span> <span class="comment">% hardBoundConstraintInputParser()</span>
+0280     <span class="keyword">end</span>
+0281     
+0282     methods(Static, Access = private)
+0283         
+0284         <span class="comment">%% parseConstructorArgs STATIC PRIVATE FUNCTION</span>
+0285         <a name="_sub7" href="#_subfunctions" class="code">function p = parseConstructorArgs(varargin)</a>
+0286             <span class="comment">% parses the construcvtor args</span>
+0287             <span class="comment">%</span>
+0288             <span class="comment">% see construcor help/doc for more info</span>
+0289             
+0290             varargin = varargin{1};            
+0291             p = hardBoundConstraint.hardBoundConstraintInputParser();
+0292             p.parse(varargin{:});            
+0293         <span class="keyword">end</span>
+0294     <span class="keyword">end</span>
+0295     
+0296 <span class="keyword">end</span>
+0297</pre></div>
+<hr><address>Generated on Fri 27-Jan-2012 16:18:41 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

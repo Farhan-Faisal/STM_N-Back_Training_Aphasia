@@ -1,0 +1,470 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of sosHistory</title>
+  <meta name="keywords" content="sosHistory">
+  <meta name="description" content="- object for storing the detailed history of an optimization">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="#">src</a> &gt; sosHistory.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for .\src&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>sosHistory
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>- object for storing the detailed history of an optimization</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> - object for storing the detailed history of an optimization
+
+ copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut
+
+    This file is part of SOS
+
+    SOS is free software: you can redistribute it and/or modify
+    it for academic and non-commercial purposes
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.  For commercial or for-profit
+    uses, please contact the authors (sos@cnbc.cmu.edu).
+
+    SOS is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="sosHistory.html" class="code" title="">sosHistory</a>	- object for storing the detailed history of an optimization</li><li><a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>	- master print function that regulates cmd line output based on verbosity flags</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="sos.html" class="code" title="">sos</a>	- SOS optimization object</li><li><a href="sosHistory.html" class="code" title="">sosHistory</a>	- object for storing the detailed history of an optimization</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function obj = sosHistory(sosObj)</a></li><li><a href="#_sub2" class="code">function updateHistory(obj,curIt,cost,deltaCost,pFlip,</a></li><li><a href="#_sub3" class="code">function setBufferedHistoryOutfile(obj,outFile)</a></li><li><a href="#_sub4" class="code">function disableBufferedHistoryWrite(obj)</a></li><li><a href="#_sub5" class="code">function enableBufferedHistoryWrite(obj)</a></li><li><a href="#_sub6" class="code">function writeBuffer(obj,updateHeader)</a></li><li><a href="#_sub7" class="code">function writeHistory(obj,outFile)</a></li><li><a href="#_sub8" class="code">function addStatTestName(obj,name)</a></li><li><a href="#_sub9" class="code">function writeHeader(obj,fid)</a></li><li><a href="#_sub10" class="code">function writeData(obj,fid,index)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% - object for storing the detailed history of an optimization</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%    This file is part of SOS</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%    SOS is free software: you can redistribute it and/or modify</span>
+0008 <span class="comment">%    it for academic and non-commercial purposes</span>
+0009 <span class="comment">%    under the terms of the GNU General Public License as published by</span>
+0010 <span class="comment">%    the Free Software Foundation, either version 3 of the License, or</span>
+0011 <span class="comment">%    (at your option) any later version.  For commercial or for-profit</span>
+0012 <span class="comment">%    uses, please contact the authors (sos@cnbc.cmu.edu).</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%    SOS is distributed in the hope that it will be useful,</span>
+0015 <span class="comment">%    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+0016 <span class="comment">%    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+0017 <span class="comment">%    GNU General Public License for more details.</span>
+0018 
+0019 <span class="comment">%    You should have received a copy of the GNU General Public License</span>
+0020 <span class="comment">%    along with SOS (see COPYING.txt).</span>
+0021 <span class="comment">%    If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+0022 
+0023 classdef <a href="sosHistory.html" class="code" title="">sosHistory</a> &lt; handle
+0024     <span class="comment">%% records and provides writing support for detailed optimization history data</span>
+0025     <span class="comment">%</span>
+0026     <span class="comment">% This class provides support for recording and writing several metrics</span>
+0027     <span class="comment">% related to the optimization process.  Specifically, the following</span>
+0028     <span class="comment">% items are recorded:</span>
+0029     <span class="comment">%</span>
+0030     <span class="comment">% creates plots for several optimization parameters, as follows:</span>
+0031     <span class="comment">%   - cost</span>
+0032     <span class="comment">%   - deltaCost</span>
+0033     <span class="comment">%   - temperature</span>
+0034     <span class="comment">%   - pFlipHistory</span>
+0035     <span class="comment">%   - sosStatTestpvals (for all stat tests in the sos Object)</span>
+0036     <span class="comment">%</span>
+0037     <span class="comment">% This class also inherits from the handle CLASS to gain standard</span>
+0038     <span class="comment">% object-oriented behavior</span>
+0039     <span class="comment">%</span>
+0040     <span class="comment">% PROPERTIES:</span>
+0041     <span class="comment">%     sosObj % the sos object the history data originated from</span>
+0042     <span class="comment">%     itHistory % history of iteration numbers where reports were made</span>
+0043     <span class="comment">%     tempHistory % history of temperature</span>
+0044     <span class="comment">%     costHistory % history of cost</span>
+0045     <span class="comment">%     deltaCostHistory % history of deltaCost</span>
+0046     <span class="comment">%     pFlipHistory % history of the probability of flipping</span>
+0047     <span class="comment">%     pvalTestNames % names of the ttests for use as labels</span>
+0048     <span class="comment">%     pvalHistory % history of pvalues for t-tests (2d; seperate column for each test)</span>
+0049     <span class="comment">%     outFile % filename to write buffered output to</span>
+0050     <span class="comment">%     bufferedWrite % switch indicating whether buffered writing is enabled/disabled</span>
+0051     <span class="comment">%</span>
+0052     <span class="comment">% METHODS</span>
+0053     <span class="comment">%   obj = sosHistory(sosObj) % Constructor - creates an sosHistory object</span>
+0054     <span class="comment">%   updateHistory(curIt,cost,deltaCost,pFlip,testNames,testps,temp) % updates the history with the passed data</span>
+0055     <span class="comment">%   setBufferedHistoryOutfile(outFile) % writes the history on-line, one update at a time.  Overrides the existing file.</span>
+0056     <span class="comment">%   disableBufferedHistoryWrite() % disables buffered writing</span>
+0057     <span class="comment">%   enableBufferedHistoryWrite() % enables buffered writing</span>
+0058     <span class="comment">%   writeBuffer(updateHeader) % writes out the most recent update to outFile.</span>
+0059     <span class="comment">%   writeHistory(outFile) % writes the entire history to outFile</span>
+0060     <span class="comment">%   addStatTestName(name) % adds a new stat test name to the list of stat test names.</span>
+0061     <span class="comment">%</span>
+0062     <span class="comment">% METHODS (Private)</span>
+0063     <span class="comment">%    writeHeader(fid) % writes the header information to fid</span>
+0064     <span class="comment">%</span>
+0065  
+0066     
+0067     <span class="comment">%% PROPERTIES</span>
+0068     properties
+0069         sosObj <span class="comment">% the sos object the history data originated from</span>
+0070         itHistory <span class="comment">% history of iteration numbers where reports were made</span>
+0071         tempHistory <span class="comment">% history of temperature</span>
+0072         costHistory <span class="comment">% history of cost</span>
+0073         deltaCostHistory <span class="comment">% history of deltaCost</span>
+0074         pFlipHistory <span class="comment">% history of the probability of flipping</span>
+0075         pvalTestNames <span class="comment">% names of the ttests for use as labels</span>
+0076         pvalHistory <span class="comment">% history of pvalues for t-tests (2d; seperate column for each test)</span>
+0077         outFile <span class="comment">% filename to write buffered output to</span>
+0078         bufferedWrite <span class="comment">% switch indicating whether buffered writing is enabled/disabled</span>
+0079     <span class="keyword">end</span> <span class="comment">%# properties</span>
+0080 
+0081     <span class="comment">%% METHODS</span>
+0082     methods
+0083         
+0084         <span class="comment">%% sosHistory() CONSTRUCTOR</span>
+0085         <a name="_sub0" href="#_subfunctions" class="code">function obj = sosHistory(sosObj)</a>
+0086             <span class="comment">% Constructor - creates an sosHistory object</span>
+0087             <span class="comment">%</span>
+0088             <span class="comment">% PARAMETERS:</span>
+0089             <span class="comment">%   -sosObj - SOS object the history will be associated with</span>
+0090            
+0091             obj.sosObj = sosObj;
+0092             
+0093             obj.costHistory = [];
+0094             obj.deltaCostHistory = [];
+0095             obj.pvalTestNames = {}; 
+0096             obj.pvalHistory = [];
+0097             obj.tempHistory= [];
+0098             obj.pFlipHistory = [];      
+0099             obj.itHistory = [];  
+0100             
+0101             obj.bufferedWrite = false;
+0102             
+0103             
+0104             <span class="comment">% get the labels for all of the ttests that already exist</span>
+0105             <span class="keyword">for</span> i=1:length(sosObj.sosstattests)
+0106                 obj.pvalTestNames = horzcat(obj.pvalTestNames,<span class="keyword">...</span>
+0107                     sosObj.sosstattests{i}.label);
+0108             <span class="keyword">end</span>
+0109  
+0110             <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>(<span class="string">'Detailed optimization history will now be recorded...'</span>, <span class="keyword">...</span>
+0111                 <span class="string">'sosHistory_constructor_end'</span>);     
+0112             
+0113         <span class="keyword">end</span> <span class="comment">% constructor</span>
+0114         
+0115         
+0116         <span class="comment">%% updateHistory(obj,curIt,cost,deltaCost,pFlip,testNames,testps,temp) METHOD</span>
+0117         <a name="_sub1" href="#_subfunctions" class="code">function updateHistory(obj,curIt,cost,deltaCost,pFlip, </a><span class="keyword">...</span>
+0118                             testNames,testps,temp)
+0119             <span class="comment">% updates the history with the passed data</span>
+0120             <span class="comment">%</span>
+0121             <span class="comment">% PARAMETERS:</span>
+0122             <span class="comment">%   curIt - current iteration</span>
+0123             <span class="comment">%   cost - current cost</span>
+0124             <span class="comment">%   deltaCost - current deltaCost</span>
+0125             <span class="comment">%   pFlip - current pFlip</span>
+0126             <span class="comment">%   testNames - cell array containing names of all stattests</span>
+0127             <span class="comment">%   testps - array containing p-values for all stattests</span>
+0128             <span class="comment">%   temp - current temperature</span>
+0129               
+0130             
+0131             <span class="comment">% append data</span>
+0132             obj.costHistory = vertcat(obj.costHistory,cost);
+0133             obj.deltaCostHistory = vertcat(obj.deltaCostHistory,deltaCost);
+0134             obj.tempHistory= vertcat(obj.tempHistory, temp);
+0135             obj.pFlipHistory = vertcat(obj.pFlipHistory, pFlip);    
+0136             obj.itHistory = vertcat(obj.itHistory, curIt); 
+0137             
+0138             <span class="comment">% check to make sure that no stat tests have been added</span>
+0139             
+0140             newRow = nan(1,length(obj.pvalTestNames));
+0141             updateHeader = false;
+0142             
+0143             <span class="keyword">for</span> i=1:length(testNames)
+0144                 index = -1;
+0145                 <span class="keyword">for</span> j =1:length(obj.pvalTestNames)
+0146                     <span class="keyword">if</span> strcmp(testNames{i},obj.pvalTestNames{j})
+0147                         index = j;
+0148                         <span class="keyword">break</span>;
+0149                     <span class="keyword">end</span>
+0150                 <span class="keyword">end</span>
+0151                 
+0152                 <span class="comment">%if the index was never found, a new column must be created</span>
+0153                 <span class="comment">%to hold its data.</span>
+0154                 <span class="keyword">if</span> index == -1 
+0155                     updateHeader = true;
+0156                     obj.pvalTestNames = horzcat(obj.pvalTestNames,testNames{i});
+0157                     newRow = horzcat(newRow,testps(i)); <span class="comment">%#ok&lt;AGROW&gt;</span>
+0158                 <span class="keyword">else</span>
+0159                    <span class="comment">%the index already exists. Put in the p-value</span>
+0160                    newRow(index)=testps(i);
+0161                 <span class="keyword">end</span>
+0162         
+0163             <span class="keyword">end</span>
+0164             
+0165             <span class="comment">%check to see if new ttests have been added.  If they have,</span>
+0166             <span class="comment">%newRow will be longer than an existing row in the pvalHistory,</span>
+0167             <span class="comment">%and you'll need to add some NaN fillers.</span>
+0168             
+0169             <span class="keyword">if</span>(size(obj.pvalHistory,2) == length(newRow))            
+0170                 obj.pvalHistory = vertcat(obj.pvalHistory, newRow);
+0171             <span class="keyword">elseif</span>(size(obj.pvalHistory,2) &lt; length(newRow))
+0172                 <span class="comment">% add in NaN's to the existing matrix</span>
+0173                 diff = length(newRow) - size(obj.pvalHistory,2);
+0174                 len = size(obj.pvalHistory,1);
+0175                 newCols = nan(len,diff);
+0176                 
+0177                 <span class="comment">%append the pval data</span>
+0178                 obj.pvalHistory = horzcat(obj.pvalHistory,newCols);
+0179                 obj.pvalHistory = vertcat(obj.pvalHistory, newRow);
+0180             <span class="keyword">else</span>
+0181                 error(<span class="string">'An error occured when adding a new row to pvalHistory'</span>);
+0182             <span class="keyword">end</span>
+0183             
+0184             <span class="comment">% if buffered output is enabled, write out the new line.</span>
+0185             <span class="keyword">if</span> obj.bufferedWrite
+0186                 obj.writeBuffer(updateHeader);
+0187             <span class="keyword">end</span>
+0188                            
+0189         <span class="keyword">end</span> <span class="comment">% updateHistory</span>
+0190     
+0191         
+0192         <span class="comment">%% setBufferedHistoryOutfile(outFile) METHOD</span>
+0193         <a name="_sub2" href="#_subfunctions" class="code">function setBufferedHistoryOutfile(obj,outFile)</a>
+0194             <span class="comment">% writes the history on-line, one update at a time.  Overrides</span>
+0195             <span class="comment">% the existing file.</span>
+0196             <span class="comment">%</span>
+0197             <span class="comment">% PARAMETERS:</span>
+0198             <span class="comment">%   outFile - string name of file to write to.</span>
+0199             <span class="comment">%</span>
+0200             
+0201             <span class="comment">% test to make sure that the outFile is valid</span>
+0202             <span class="keyword">if</span> exist(<span class="string">'outFile'</span>,<span class="string">'var'</span>) == 0
+0203                 error(<span class="string">'&quot;Outfile&quot; argument was not supplied to writeHistory()'</span>);
+0204             <span class="keyword">end</span>
+0205 
+0206             <span class="keyword">if</span>(ischar(outFile) == false)
+0207                 error(<span class="string">'Outfile has not been set to a string != &quot;null&quot;.'</span>);
+0208             <span class="keyword">end</span>
+0209 
+0210             <span class="keyword">if</span> ischar(outFile) == false || strcmp(outFile,<span class="string">'null'</span>)
+0211                 error(<span class="string">'Outfile has not been set to a string != &quot;null&quot;.'</span>);
+0212             <span class="keyword">end</span>
+0213 
+0214             <span class="comment">%outFile name is valid.  Try writing the header</span>
+0215 
+0216             <span class="keyword">try</span>
+0217                 fid = fopen(outFile,<span class="string">'w'</span>);
+0218             <span class="keyword">catch</span> exception
+0219                 error([<span class="string">'Could not open file: '</span>, outFile]);
+0220             <span class="keyword">end</span>
+0221             
+0222             obj.writeHeader(fid);
+0223 
+0224             fclose(fid);
+0225 
+0226             obj.outFile = outFile;
+0227             obj.bufferedWrite = true;
+0228             
+0229             <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">'Current and future history will be written to: '</span> outFile,<span class="string">' on each report...'</span>],<span class="keyword">...</span>
+0230                 <span class="string">'sosHistory_bufferedHistoryWrite_end'</span>);                      
+0231         <span class="keyword">end</span>
+0232 
+0233         
+0234         <span class="comment">%% disableBufferedHistoryWrite() METHOD</span>
+0235         <a name="_sub3" href="#_subfunctions" class="code">function disableBufferedHistoryWrite(obj)</a>
+0236             <span class="comment">% disables buffered writing</span>
+0237             
+0238             obj.bufferedWrite = false;
+0239             
+0240             <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>(<span class="string">'Buffered writing of history disabled'</span>,<span class="keyword">...</span>
+0241                 <span class="string">'sosHistory_disableBufferedHistoryWrite_end'</span>);   
+0242         <span class="keyword">end</span>
+0243         
+0244         
+0245         <span class="comment">%% enableBufferedHistoryWrite() METHOD</span>
+0246         <a name="_sub4" href="#_subfunctions" class="code">function enableBufferedHistoryWrite(obj)</a>
+0247             <span class="comment">% enables buffered writing</span>
+0248             
+0249             <span class="comment">% can only enable writing if an outFile has been set</span>
+0250             <span class="keyword">if</span> isempty(obj.outFile) ==  0
+0251        
+0252                 obj.bufferedWrite = true;
+0253 
+0254                 <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>(<span class="string">'Buffered writing of history enabled'</span>,<span class="keyword">...</span>
+0255                     <span class="string">'sosHistory_enableBufferedHistoryWrite_end'</span>); 
+0256             <span class="keyword">else</span>
+0257                 error(<span class="string">'bufferedHistoryWrite(outFile) must be called to specify an outFile first!'</span>);
+0258             <span class="keyword">end</span>
+0259         <span class="keyword">end</span>        
+0260         
+0261         
+0262         <span class="comment">%% writeBuffer(updateHeader)</span>
+0263         <a name="_sub5" href="#_subfunctions" class="code">function writeBuffer(obj,updateHeader)</a>
+0264             <span class="comment">% writes out the most recent update to outFile.</span>
+0265             <span class="comment">%</span>
+0266             <span class="comment">% PARAMETERS:</span>
+0267             <span class="comment">%   updateHeader - flag indicating if the header changed and</span>
+0268             <span class="comment">%                   hence needs to be reprinted</span>
+0269             <span class="comment">%</span>
+0270            
+0271             <span class="keyword">try</span>
+0272                 fid = fopen(obj.outFile,<span class="string">'a'</span>);
+0273             <span class="keyword">catch</span> exception
+0274                 error([<span class="string">'Could not open file: '</span>, obj.outFile]);
+0275             <span class="keyword">end</span>      
+0276             
+0277             <span class="keyword">if</span> updateHeader
+0278                obj.writeHeader(fid);                 
+0279             <span class="keyword">end</span>
+0280             
+0281             <span class="comment">% write the data</span>
+0282             <span class="keyword">for</span> i=length(obj.itHistory):length(obj.itHistory)
+0283                 obj.writeData(fid,i);
+0284             <span class="keyword">end</span>
+0285                        
+0286             fclose(fid);
+0287             
+0288         <span class="keyword">end</span>
+0289             
+0290         
+0291         <span class="comment">%% writeHistory(outFile) METHOD</span>
+0292         <a name="_sub6" href="#_subfunctions" class="code">function writeHistory(obj,outFile)</a>
+0293             <span class="comment">% writes the entire history to outFile</span>
+0294             <span class="comment">%</span>
+0295             <span class="comment">% PARAMETERS:</span>
+0296             <span class="comment">%   outFile - string name of file to write to</span>
+0297             <span class="comment">%</span>
+0298 
+0299             <span class="comment">% check to see if the outFile is valid</span>
+0300             <span class="keyword">if</span> exist(<span class="string">'outFile'</span>,<span class="string">'var'</span>) == 0
+0301                 error(<span class="string">'&quot;Outfile&quot; argument was not supplied to writeHistory()'</span>);
+0302             <span class="keyword">end</span>
+0303 
+0304             <span class="keyword">if</span>(ischar(outFile) == false)
+0305                 error(<span class="string">'Outfile has not been set to a string != &quot;null&quot;.'</span>);
+0306             <span class="keyword">end</span>
+0307 
+0308             <span class="keyword">if</span> ischar(outFile) == false || strcmp(outFile,<span class="string">'null'</span>)
+0309                 error(<span class="string">'Outfile has not been set to a string != &quot;null&quot;.'</span>);
+0310             <span class="keyword">end</span>
+0311 
+0312             <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">'Writing optimization history to: '</span> outFile,<span class="string">' ...'</span>],<span class="keyword">...</span>
+0313                 <span class="string">'sosHistory_writeHistory_begin'</span>);      
+0314 
+0315             <span class="keyword">try</span>
+0316                 fid = fopen(outFile,<span class="string">'w'</span>);
+0317             <span class="keyword">catch</span> exception
+0318                 error([<span class="string">'Could not open file: '</span>, outFile]);
+0319             <span class="keyword">end</span>            
+0320             
+0321             <span class="comment">% write the header</span>
+0322             obj.writeHeader(fid);
+0323             
+0324             <span class="comment">%now we can write the data.  Since we forcibly collect all data</span>
+0325             <span class="comment">%at the same time (i.e., no missing data allowed in any column)</span>
+0326             <span class="comment">%we can just index the itHistory</span>
+0327             
+0328             <span class="comment">% print each piece of data</span>
+0329             <span class="keyword">for</span> i=1:length(obj.itHistory)
+0330                 obj.writeData(fid,i);
+0331             <span class="keyword">end</span>
+0332                       
+0333             fclose(fid);
+0334             
+0335         <span class="keyword">end</span>
+0336         
+0337         <span class="comment">%% addStatTestName(name) METHOD</span>
+0338         <a name="_sub7" href="#_subfunctions" class="code">function addStatTestName(obj,name)</a>
+0339             <span class="comment">% adds a new stat test name to the list of stat test names.</span>
+0340             <span class="comment">%</span>
+0341             <span class="comment">% This function is currently used by the sos object which owns</span>
+0342             <span class="comment">% the history object to inform the history</span>
+0343             <span class="comment">% object when a new stat test is added</span>
+0344             <span class="comment">%</span>
+0345             <span class="comment">% PARAMETERS:</span>
+0346             <span class="comment">%   name - string name of new stat test</span>
+0347             
+0348             obj.pvalTestNames = horzcat(obj.pvalTestNames,name);
+0349             
+0350         <span class="keyword">end</span>
+0351         
+0352     <span class="keyword">end</span> <span class="comment">% methods</span>
+0353 
+0354     <span class="comment">%% METHODS (Access = private)</span>
+0355     methods (Access = private)
+0356        
+0357         <span class="comment">%% writeHeader(fid) METHOD</span>
+0358         <a name="_sub8" href="#_subfunctions" class="code">function writeHeader(obj,fid)</a>
+0359             <span class="comment">% writes the header information to fid</span>
+0360             <span class="comment">%</span>
+0361             <span class="comment">% PARAMETERS:</span>
+0362             <span class="comment">%   fid - pointer to file to write to</span>
+0363             
+0364             fprintf(fid,<span class="string">'%s\t'</span>,<span class="string">'iteration'</span>);
+0365             fprintf(fid,<span class="string">'%s\t'</span>,<span class="string">'temp'</span>);
+0366             fprintf(fid,<span class="string">'%s\t'</span>,<span class="string">'cost'</span>);
+0367             fprintf(fid,<span class="string">'%s\t'</span>,<span class="string">'deltaCost'</span>);
+0368             fprintf(fid,<span class="string">'%s\t'</span>,<span class="string">'pFlip'</span>);
+0369 
+0370             <span class="keyword">for</span> i=1:length(obj.pvalTestNames)
+0371                 fprintf(fid,<span class="string">'%s\t'</span>,obj.pvalTestNames{i});
+0372             <span class="keyword">end</span>
+0373 
+0374             fprintf(fid,<span class="string">'\r\n'</span>);    
+0375             
+0376         <span class="keyword">end</span>
+0377         
+0378         <span class="comment">%% writeData(fid,index) METHOD</span>
+0379         <a name="_sub9" href="#_subfunctions" class="code">function writeData(obj,fid,index)</a>
+0380             <span class="comment">% writes the data at row 'index' to fid</span>
+0381             <span class="comment">%</span>
+0382             <span class="comment">% PARAMETERS:</span>
+0383             <span class="comment">%   fid - pointer to file to write to</span>
+0384             <span class="comment">%   index - row number to write</span>
+0385             
+0386             fprintf(fid,<span class="string">'%s\t'</span>,num2str(obj.itHistory(index)));
+0387             fprintf(fid,<span class="string">'%s\t'</span>,num2str(obj.tempHistory(index)));
+0388             fprintf(fid,<span class="string">'%s\t'</span>,num2str(obj.costHistory(index)));
+0389             fprintf(fid,<span class="string">'%s\t'</span>,num2str(obj.deltaCostHistory(index)));
+0390             fprintf(fid,<span class="string">'%s\t'</span>,num2str(obj.pFlipHistory(index)));
+0391 
+0392             <span class="comment">%print the p-vals</span>
+0393 
+0394             <span class="keyword">for</span> j=1:length(obj.pvalTestNames)
+0395               fprintf(fid,<span class="string">'%s\t'</span>,num2str(obj.pvalHistory(index,j)));
+0396             <span class="keyword">end</span>
+0397 
+0398             fprintf(fid,<span class="string">'\r\n'</span>);            
+0399             
+0400         <span class="keyword">end</span>
+0401         
+0402     <span class="keyword">end</span> <span class="comment">% methods (private)</span>
+0403     
+0404 <span class="keyword">end</span>
+0405</pre></div>
+<hr><address>Generated on Fri 27-Jan-2012 16:18:41 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

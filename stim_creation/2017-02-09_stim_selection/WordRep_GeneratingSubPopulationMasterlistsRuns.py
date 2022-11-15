@@ -1,0 +1,219 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Jan 31 09:23:22 2017
+
+@author: pshah-basak
+This is a script file to generate subpopulation from the lists created using SOS - 
+matched on Frequency and Syllabes.
+"""
+######################################################################################################################################################
+#import fileinput
+#import itertools
+import os
+import glob
+import random
+import numpy
+import pandas as pd 
+os.getcwd()
+textfilepath = "C:\\Users\\pshah-basak\\Documents\\Priyanka\\Word Repetition task\\UpdatedMasterList\\"
+textfiledir = os.path.dirname(textfilepath)
+os.chdir(textfiledir)
+
+therapyfilepath = "C:\\Users\\pshah-basak\\Documents\\NIBS_treatment\\tDCS_treatment\\Presentation\\"
+therapyfiledir = os.path.dirname(therapyfilepath)      
+os.chdir(therapyfiledir)
+######################################################################################################################################################
+# This section of the script creates a subpopulation from SOS condition lists
+# The subpopulation used as an input to create final 7 lists that are matched on bigram frequency and number of letters
+######################################################################################################################################################
+reltextfilepath = ["highfreq_1syll_GREEDY.txt", "highfreq_3syll_GREEDY.txt", "lowfreq_1syll_GREEDY.txt", "lowfreq_3syll_GREEDY.txt"]
+conditionnames = ["high1", "high3", "low1", "low3"]
+ifix    = 1;
+iword   = 2;
+idelay  = 3;
+iresp   = 4;
+with open('2017-02-27_subpopulation_allvars.txt', 'w') as out_file:
+    for ntxt, txtfile in enumerate(reltextfilepath):
+        with open(os.path.join(textfiledir, txtfile)) as in_file:            
+            for iline, line in enumerate(in_file):
+                values = line.split()
+                if ntxt == 0 and iline == 0:                    
+                    if values: 
+                        values.append("cond_name|s")     
+                        values.append("cond_code|f") 
+                        values.append("trigger_code|f") 
+                        values.append("len|f")
+                        values.append("corr_resp|f")
+                        values.append("fix_code|f")
+                        values.append("word_code|f")
+                        values.append("delay_code|f") 
+                        values.append("audioresp_code|f")                                                                                               
+                    out_file.write('\t'.join(values)+'\n')
+                elif ntxt !=0 and iline == 0:
+                    print('Skip the header')
+                else:                    
+                    if values:
+                        icondid = ntxt+1
+                        values.append(conditionnames[ntxt]) # cond_name|s
+                        values.append(str(icondid)) # cond_code|f
+                        values.append(str(icondid*10)) # trigger_code|f
+                        values.append("1") # len|f
+                        values.append("2") # corr_resp|f
+                        values.append(str(ifix+(icondid*10))) # fix_code|f
+                        values.append(str(iword+(icondid*10))) # word_code|f
+                        values.append(str(idelay+(icondid*10))) # delay_code|f
+                        values.append(str(iresp+(icondid*10))) # audioresp_code|f
+                    out_file.write('\t'.join(values)+'\n') 
+out_file.close()                
+in_file.close()
+######################################################################################################################################################
+# This section of the script concatenates masterlists 1-7 and creates columns/field names to be used as 
+# PRESENTATION input files
+######################################################################################################################################################
+#reltextfilepath = ["wordrep3Sample1GREEDY.txt", "wordrep3Sample2GREEDY.txt", 
+#"wordrep3Sample3GREEDY.txt", "wordrep3Sample4GREEDY.txt", "wordrep3Sample5GREEDY.txt",
+#"wordrep3Sample6GREEDY.txt", "wordrep3Sample7GREEDY.txt"]
+reltextfilepath = ["wordrepSample1EXP.txt", "wordrepSample2EXP.txt", 
+"wordrepSample3EXP.txt", "wordrepSample4EXP.txt", "wordrepSample5EXP.txt",
+"wordrepSample6EXP.txt", "wordrepSample7EXP.txt"]
+listnames = ["list1", "list2", "list3", "list4", "list5", "list6", "list7"]
+with open('2017-02-27_visual_wordrep_masterlists1-7.txt', 'w') as out_file:
+    for ntxt, ntxtfile in enumerate(reltextfilepath):
+        with open(os.path.join(textfiledir, ntxtfile)) as in_file:
+           listname = listnames[ntxt]       
+           for iline, line in enumerate(in_file):
+               values = line.split()
+               if ntxt==0 and iline==0:                
+                    if values: 
+                        values.append("list|f") #header: column name
+                        values.append("list_name|s") #header: column name
+                        values.append("file_num|s")                                       
+                    out_file.write('\t'.join(values)+'\n')
+               elif ntxt !=0 and iline == 0:
+                    print('Skip the header')
+               else:                
+                    if values:  
+                        ilistid = ntxt+1
+                        values.append(str(ilistid)) # list|f
+                        values.append(listnames[ntxt]) # list_name|s
+                        values.append(listnames[ntxt]+"_"+values[0]+"_"+values[2]+"_"+values[22]) # file_num|s e.g. list1_6608_flair_low1
+                    out_file.write('\t'.join(values)+'\n')
+
+out_file.close()                
+in_file.close()
+
+# Add jitter for fixation to the masterlists 
+jitteredisifile = "jitteredISI1400.txt" #this file is created using matlab  
+with open('2017-02-27_visual_wordrep_masterlists1-7_wjitter.txt', 'w') as out_file: 
+    with open('2017-02-27_visual_wordrep_masterlists1-7.txt') as in_file:
+        for idx, line in enumerate(in_file):
+            values = line.split()                        
+            if line.startswith("n"):
+                #if values:
+                values.append("jittered_ISI|f")
+                values.append("total_time|f")
+                out_file.write('\t'.join(values)+'\n')              
+            else:
+                with open(os.path.join(textfiledir, jitteredisifile)) as in2_file:
+                    for line2 in in2_file:
+                        jitvalues = line2.split()
+                        values.append(jitvalues[idx-1])
+                        totime = int(jitvalues[idx-1]) + 500 + 3500 + 4000
+                        values.append(str(totime))
+                    out_file.write('\t'.join(values)+'\n')
+out_file.close()                
+in_file.close()                
+in2_file.close()                
+
+######################################################################################################################################################
+#Split files by lists                        
+######################################################################################################################################################
+#number_of_files = 7
+#with open('2017-01-30_visual_wordrep_masterlists1-7_wjitter.txt') as in_file: 
+#    files = [open('%d.txt' % i, 'w') for i in range(number_of_files)]
+#    for i, line in enumerate(in_file):
+#        files[i % number_of_files].write(line)
+#    for f in files:
+#        f.close()          
+nsplit = 7                                    
+masterfile = open('2017-02-27_visual_wordrep_masterlists1-7_wjitter.txt', 'r')
+masterfilecont = masterfile.readlines()
+nmasterfile = len(masterfilecont)
+headerlist = masterfilecont[0]
+masterfilecont = masterfilecont[1:]                       
+len(masterfilecont)
+listsize = len(masterfilecont) // nsplit
+for indx, lines in enumerate(range(0,len(masterfilecont),listsize)):
+    with open('2017-02-27_visual_wordrep_masterlist'+'%d.txt' % (indx+1), 'w') as out_file: 
+        splitdata = masterfilecont[lines:lines+listsize]        
+        for nwlines, wlines in enumerate(splitdata):
+            wvalues = wlines.split()            
+            if nwlines == 0:
+                out_file.write(headerlist+wlines)
+            else:
+                out_file.write(wlines)
+out_file.close()                
+in_file.close()       
+######################################################################################################################################################
+#Organize runs for PRESENTATION            
+######################################################################################################################################################
+inclcol = [31,33,23,24,25,26,27,28,29,30,34,35,2,15,16,17,18]
+with open('2017-02-27_visual_wordrep_masterlist1-7_run1-5.txt', 'w') as out_file:    #open('2017-01-30_visual_wordrep_masterlist%d_run%d.txt' % (idx+1,run+1), 'w')
+    for idxlist, idx in enumerate(range(0,7)):
+        reltextfilepath = ['wordrep_masterlist'+ '%d_GREEDY_run1.txt' % (idx+1), #GREEDY  EXP
+                           'wordrep_masterlist'+ '%d_GREEDY_run2.txt' % (idx+1),                        
+                           'wordrep_masterlist'+ '%d_GREEDY_run3.txt' % (idx+1),
+                           'wordrep_masterlist'+ '%d_GREEDY_run4.txt' % (idx+1), 
+                           'wordrep_masterlist'+ '%d_GREEDY_run5.txt' % (idx+1)]
+        for run, runfile in enumerate(reltextfilepath):  
+           with open(os.path.join(textfiledir, runfile)) as in_file:
+                    for idxline, lines in enumerate(in_file):
+                        #temp=[]
+                        values = lines.split()
+                        if idx == 0 and idxline == 0 and run==0:
+                            temp = []
+                            temp.append('run')
+                            for icol, col in enumerate(inclcol): 
+                                temp.append(values[int(col)][:-2])
+                            out_file.write('\t'.join(temp)+'\n') 
+                        elif idxline == 0 and (idx!=0 or run!=0):                                                     
+                            print('Skipping the header')
+                        else:
+                            temp = []
+                            temp.append('run%d' % (run+1))
+                            for icol, col in enumerate(inclcol): 
+                                temp.append(values[int(col)])
+                            out_file.write('\t'.join(temp)+'\n')                                     
+out_file.close()                
+in_file.close()        
+
+inclcol = [31,33,23,24,25,26,27,28,29,30,34,35,2,15,16,17,18]
+#with open('2017-01-30_visual_wordrep_masterlist1-7_run1-5.txt', 'w') as out_file:    #open('2017-01-30_visual_wordrep_masterlist%d_run%d.txt' % (idx+1,run+1), 'w')
+
+for idxlist, idx in enumerate(range(0,7)):
+    reltextfilepath = ['wordrep_masterlist'+ '%d_GREEDY_run1.txt' % (idx+1), #GREEDY  EXP
+                       'wordrep_masterlist'+ '%d_GREEDY_run2.txt' % (idx+1),                        
+                       'wordrep_masterlist'+ '%d_GREEDY_run3.txt' % (idx+1),
+                       'wordrep_masterlist'+ '%d_GREEDY_run4.txt' % (idx+1), 
+                       'wordrep_masterlist'+ '%d_GREEDY_run5.txt' % (idx+1)]
+
+    for run, runfile in enumerate(reltextfilepath):  
+        with open('2017-02-27_visual_wordrep_masterlist%d_run%d.txt' % (idx+1,run+1), 'w') as out_file:
+            with open(os.path.join(textfiledir, runfile)) as in_file:
+                for idxline, lines in enumerate(in_file):
+                    #temp=[]
+                    values = lines.split()
+                    if idxline == 0:
+                        temp = []
+                        temp.append('run')
+                        for icol, col in enumerate(inclcol): 
+                            temp.append(values[int(col)][:-2])
+                        out_file.write('\t'.join(temp)+'\n')                     
+                    else:
+                        temp = []
+                        temp.append('run%d' % (run+1))
+                        for icol, col in enumerate(inclcol): 
+                            temp.append(values[int(col)])
+                        out_file.write('\t'.join(temp)+'\n')                                     
+out_file.close()                
+in_file.close()     

@@ -1,0 +1,1319 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of softDistanceConstraint</title>
+  <meta name="keywords" content="softDistanceConstraint">
+  <meta name="description" content="- parent class for soft distance constraints">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="#">src</a> &gt; softDistanceConstraint.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for .\src&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>softDistanceConstraint
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>- parent class for soft distance constraints</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> - parent class for soft distance constraints
+
+ copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut
+
+    This file is part of SOS
+
+    SOS is free software: you can redistribute it and/or modify
+    it for academic and non-commercial purposes
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.  For commercial or for-profit
+    uses, please contact the authors (sos@cnbc.cmu.edu).
+
+    SOS is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="genericConstraint.html" class="code" title="">genericConstraint</a>	- parent class for constraints</li><li><a href="softConstraint.html" class="code" title="">softConstraint</a>	- parent class for soft constraints</li><li><a href="softDistanceConstraint.html" class="code" title="">softDistanceConstraint</a>	- parent class for soft distance constraints</li><li><a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>	- master print function that regulates cmd line output based on verbosity flags</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="genericConstraint.html" class="code" title="">genericConstraint</a>	- parent class for constraints</li><li><a href="softDistanceConstraint.html" class="code" title="">softDistanceConstraint</a>	- parent class for soft distance constraints</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function  obj = softDistanceConstraint(varargin)</a></li><li><a href="#_sub2" class="code">function obj = construct2SampleSoftDistanceConstraint(obj,varargin)</a></li><li><a href="#_sub3" class="code">function obj = construct1SampleSoftDistanceConstraint(obj,varargin)</a></li><li><a href="#_sub4" class="code">function cost = initCost(obj)</a></li><li><a href="#_sub5" class="code">function swCost = swapCost(obj,targSample,targSampleIndex, feederdf,feederdfIndex)</a></li><li><a href="#_sub6" class="code">function obj = initGroupMeans(obj)</a></li><li><a href="#_sub7" class="code">function obj = initPairedMeans(obj)</a></li><li><a href="#_sub8" class="code">function obj = initGroupStdev(obj)</a></li><li><a href="#_sub9" class="code">function obj = initPairedStdev(obj)</a></li><li><a href="#_sub10" class="code">function obj = initSingleMeanandTarg(obj)</a></li><li><a href="#_sub11" class="code">function obj = initSingleStdevandTarg(obj)</a></li><li><a href="#_sub12" class="code">function swGroupMeans(obj,targSample,targSampleIndex, feederdf,feederdfIndex)</a></li><li><a href="#_sub13" class="code">function swPairedMeans(obj,targSample,targSampleIndex, feederdf,feederdfIndex)</a></li><li><a href="#_sub14" class="code">function swGroupStdev(obj,targSample,targSampleIndex, feederdf,feederdfIndex)</a></li><li><a href="#_sub15" class="code">function swPairedStdev(obj,targSample,targSampleIndex, feederdf,feederdfIndex)</a></li><li><a href="#_sub16" class="code">function swSingleMean(obj,targSample,targSampleIndex, feederdf,feederdfIndex)</a></li><li><a href="#_sub17" class="code">function swSingleStdev(obj,targSample,targSampleIndex, feederdf,feederdfIndex)</a></li><li><a href="#_sub18" class="code">function cost = minDiff(obj,x1,x2)</a></li><li><a href="#_sub19" class="code">function cost = maxDiff(obj,x1,x2)</a></li><li><a href="#_sub20" class="code">function cost = orderedMaxDiff(obj,x1,x2)</a></li><li><a href="#_sub21" class="code">function cost = acceptSwap(obj)</a></li><li><a href="#_sub22" class="code">function cost = rejectSwap(obj)</a></li><li><a href="#_sub23" class="code">function acceptSwapMeans(obj)</a></li><li><a href="#_sub24" class="code">function rejectSwapMeans(obj)</a></li><li><a href="#_sub25" class="code">function acceptSwapStdev(obj)</a></li><li><a href="#_sub26" class="code">function rejectSwapStdev(obj)</a></li><li><a href="#_sub27" class="code">function p = softDistanceConstraintInputParser2Sample()</a></li><li><a href="#_sub28" class="code">function p = softDistanceConstraintInputParser1Sample()</a></li><li><a href="#_sub29" class="code">function p = parse2SampleConstructorArgs(varargin)</a></li><li><a href="#_sub30" class="code">function p = parse1SampleConstructorArgs(varargin)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% - parent class for soft distance constraints</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%    This file is part of SOS</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%    SOS is free software: you can redistribute it and/or modify</span>
+0008 <span class="comment">%    it for academic and non-commercial purposes</span>
+0009 <span class="comment">%    under the terms of the GNU General Public License as published by</span>
+0010 <span class="comment">%    the Free Software Foundation, either version 3 of the License, or</span>
+0011 <span class="comment">%    (at your option) any later version.  For commercial or for-profit</span>
+0012 <span class="comment">%    uses, please contact the authors (sos@cnbc.cmu.edu).</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%    SOS is distributed in the hope that it will be useful,</span>
+0015 <span class="comment">%    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+0016 <span class="comment">%    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+0017 <span class="comment">%    GNU General Public License for more details.</span>
+0018 
+0019 <span class="comment">%    You should have received a copy of the GNU General Public License</span>
+0020 <span class="comment">%    along with SOS (see COPYING.txt).</span>
+0021 <span class="comment">%    If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+0022 
+0023 
+0024 classdef <a href="softDistanceConstraint.html" class="code" title="">softDistanceConstraint</a> &lt; <a href="softConstraint.html" class="code" title="">softConstraint</a>
+0025     <span class="comment">%% creates and supports soft distance constraints</span>
+0026     <span class="comment">%</span>
+0027     <span class="comment">% This class creates softDistanceConstraint objects that measure the</span>
+0028     <span class="comment">% cost (in terms of minimizing or maximizing a distance of a particular stat)</span>
+0029     <span class="comment">% associated with the current items in a set, and subsequent to</span>
+0030     <span class="comment">% swapping a particular item with another items.</span>
+0031     <span class="comment">%</span>
+0032     <span class="comment">% Additional functionality and interface requirements are inherited</span>
+0033     <span class="comment">% from softConstraint.</span>
+0034     <span class="comment">%</span>
+0035     <span class="comment">% Currently allows for the following:</span>
+0036     <span class="comment">%</span>
+0037     <span class="comment">%   min/max/OrderedMax of Group Means, Paired means, Group Stdev,</span>
+0038     <span class="comment">%   Paired Stdev, Matching Mean to target, Matching stdev to target</span>
+0039     <span class="comment">%</span>
+0040     <span class="comment">%</span>
+0041     <span class="comment">%PROPERTIES</span>
+0042     <span class="comment">%     stat % the statistic to calculate</span>
+0043     <span class="comment">%     paired - logical indicating if paired differences or group differences are bieng used</span>
+0044     <span class="comment">%     comparison - handle to specific comparison calculator</span>
+0045     <span class="comment">%     initStats % handle to global stat initialization method</span>
+0046     <span class="comment">%     swStats % handle to local stat update method</span>
+0047     <span class="comment">%     acceptsw % handle to local accept swap method</span>
+0048     <span class="comment">%     rejectsw % handle to local reject swap method</span>
+0049     <span class="comment">%     s1 - sample1</span>
+0050     <span class="comment">%     s2 - sample2</span>
+0051     <span class="comment">%     s1Col - s1 column index</span>
+0052     <span class="comment">%     s2Col - s2 column index</span>
+0053     <span class="comment">%     s1ColName - name of column in s1</span>
+0054     <span class="comment">%     s2ColName - name of column in s2</span>
+0055     <span class="comment">%     stat1 - current stat of sample 1</span>
+0056     <span class="comment">%     stat2 - current stat of sample2</span>
+0057     <span class="comment">%     swstat1 - stat of sample 1 if swap occurs</span>
+0058     <span class="comment">%     swstat2 - stat of sample2 if swap occurs</span>
+0059     <span class="comment">%     sumx1sq % sum of the squared values, x, in an array.  Used in stdev calculation</span>
+0060     <span class="comment">%     meanx1 % square of the mean value of x in an array.  Used in stdev calculation</span>
+0061     <span class="comment">%     swpsumx1sq % swap sum of the squared values, x, in an array.  Used in stdev calculation</span>
+0062     <span class="comment">%     swpmeanx1 % swap square of the mean value of x in an array.  Used in stdev calculation</span>
+0063     <span class="comment">%     sumx2sq % sum of the squared values, x, in an array.  Used in stdev calculation</span>
+0064     <span class="comment">%     meanx2 % square of the mean value of x in an array.  Used in stdev calculation</span>
+0065     <span class="comment">%     swpsumx2sq % swap sum of the squared values, x, in an array.  Used in stdev calculation</span>
+0066     <span class="comment">%     swpmeanx2 % swap square of the mean value of x in an array.  Used in stdev calculation</span>
+0067     <span class="comment">%     targVal % target value to match for 1 sample-to-value matching</span>
+0068     <span class="comment">%     zTargVal % normalized target value</span>
+0069     <span class="comment">%</span>
+0070     <span class="comment">%METHODS</span>
+0071     <span class="comment">%   obj =softDistanceConstraint(varargin) - constructor</span>
+0072     <span class="comment">%   obj = construct2SampleSoftDistanceConstraint(varargin) % creates a constraint object for cases wehre 2 samples are implicated.</span>
+0073     <span class="comment">%   obj = construct1SampleSoftDistanceConstraint(varargin)  % creates a constraint object for cases where 1 sample is implicated.</span>
+0074     <span class="comment">%   cost = initCost() - Calculates, saves, and returns the cost value for the currentitems in the sample.</span>
+0075     <span class="comment">%   swCost = swapCost(targSample,targSampleIndex, feederdf,feederdfIndex) - Calculates the new cost if items from targSample and feederdf were swapped.</span>
+0076     <span class="comment">%   acceptSwap() - updates variables when the proposed swap is accepted</span>
+0077     <span class="comment">%   initGroupMeans() - calculates the means of the samples</span>
+0078     <span class="comment">%   initPairedMeans() % prepares data for paired mean calculation</span>
+0079     <span class="comment">%   initGroupStdev() %calculates the stdevs of the samples</span>
+0080     <span class="comment">%   initPairedStdev() % prepares data for paired stdev calculation</span>
+0081     <span class="comment">%   initSingleMeanandTarg()  % calculates the mean of the sample1 and sets the target as the target stat</span>
+0082     <span class="comment">%   obj = initSingleStdevandtarg(obj) %calculates the stdevs of the samples</span>
+0083     <span class="comment">%   swGroupMeans(targSample,targSampleIndex, feederdf,feederdfIndex) - Calculates the new (swap) means if items from targSample and feederd were swapped.</span>
+0084     <span class="comment">%   swPairedMeans(targSample,targSampleIndex, feederdf,feederdfIndex) % Calculates the new (swap) means if items from targSample and  feederd were swapped.</span>
+0085     <span class="comment">%   swGroupStdev(targSample,targSampleIndex, feederdf,feederdfIndex) % Calculates the new (swap) stdevs if items from targSample and feederd were swapped.</span>
+0086     <span class="comment">%   swPairedStdev(targSample,targSampleIndex, feederdf,feederdfIndex) % Calculates the new (swap) stdev if items from targSample and feederdf were swapped.</span>
+0087     <span class="comment">%   swSingleMean(targSample,targSampleIndex, feederdf,feederdfIndex) % Calculates the new (swap) mean if items from targSample and  feederd were swapped.</span>
+0088     <span class="comment">%   swSingleStdev(targSample,targSampleIndex, feederdf,feederdfIndex)  % Calculates the new (swap) stdevs if items from targSample and feederd were swapped.</span>
+0089     <span class="comment">%   cost = minDiff(x1,x2) -  cost function minimized by reduced differences on the statistic</span>
+0090     <span class="comment">%   cost = maxDiff(x1,x2) - cost function minimized by maximizing differences on the stat.  Many uses may want to use orderedMaxDiff, instead.</span>
+0091     <span class="comment">%   cost = orderedMaxDiff(x1,x2) - cost function minimized by maximizing a difference between the two groups that adheres to s1.stat &lt; s2.stat cost function minimized by reduced differences on the statistic for paired groups</span>
+0092     <span class="comment">%   acceptSwapMeans() % updates variables when the proposed swap is accepted for  means</span>
+0093     <span class="comment">%   acceptSwapStdev()   % updates variables when the proposed swap is accepted for standard deviations</span>
+0094     <span class="comment">%   cost = acceptSwap() % generic reject function</span>
+0095     <span class="comment">%   rejectSwapMeans() % updates variables when swap is rejected</span>
+0096     <span class="comment">%   rejectSwapStdev()  % updates variables when the proposed swap is rejected</span>
+0097     <span class="comment">%</span>
+0098     <span class="comment">%METHODS (Static)</span>
+0099     <span class="comment">%   p = softDistanceConstraintInputParser2Sample() generates an input parser with parameter / value pairs and validators for the constructor args</span>
+0100     <span class="comment">%</span>
+0101     <span class="comment">%METHODS (Static, Access = private)</span>
+0102     <span class="comment">%   p = parse2SampleConstructorArgs(varargin) - parses the constructor args for cases invovling 2 samples</span>
+0103     <span class="comment">%   p = parse1SampleConstructorArgs(varargin)  % parses the constructor args for cases invovling 1 sample</span>
+0104     
+0105     <span class="comment">%% PROPERTIES</span>
+0106     properties
+0107         stat <span class="comment">% the statistic to calculate</span>
+0108         paired <span class="comment">% logical indicating if paired differences or group differences are bieng used</span>
+0109         comparison <span class="comment">% handle to specific comparison calculator</span>
+0110         initStats <span class="comment">% handle to global stat initialization method</span>
+0111         swStats <span class="comment">% handle to local stat update method</span>
+0112         acceptsw <span class="comment">% handle to local accept swap method</span>
+0113         rejectsw <span class="comment">% handle to local reject swap method</span>
+0114         s1 <span class="comment">% sample1</span>
+0115         s2 <span class="comment">% sample2</span>
+0116         s1Col <span class="comment">%s1 column index</span>
+0117         s2Col <span class="comment">%s2 column index</span>
+0118         s1ColName <span class="comment">% name of column in s1</span>
+0119         s2ColName <span class="comment">% name of column in s2</span>
+0120         stat1 <span class="comment">% current stat of sample 1</span>
+0121         stat2 <span class="comment">% current stat of sample2</span>
+0122         swstat1 <span class="comment">% stat of sample 1 if swap occurs</span>
+0123         swstat2 <span class="comment">% stat of sample2 if swap occurs</span>
+0124         sumx1sq <span class="comment">% sum of the squared values, x, in an array.  Used in stdev calculation</span>
+0125         meanx1 <span class="comment">% square of the mean value of x in an array.  Used in stdev calculation</span>
+0126         swpsumx1sq <span class="comment">% swap sum of the squared values, x, in an array.  Used in stdev calculation</span>
+0127         swpmeanx1 <span class="comment">% swap square of the mean value of x in an array.  Used in stdev calculation</span>
+0128         sumx2sq <span class="comment">% sum of the squared values, x, in an array.  Used in stdev calculation</span>
+0129         meanx2 <span class="comment">% square of the mean value of x in an array.  Used in stdev calculation</span>
+0130         swpsumx2sq <span class="comment">% swap sum of the squared values, x, in an array.  Used in stdev calculation</span>
+0131         swpmeanx2 <span class="comment">% swap square of the mean value of x in an array.  Used in stdev calculation</span>
+0132         targVal <span class="comment">% target value to match for 1 sample-to-value matching</span>
+0133         zTargVal <span class="comment">% normalized target value</span>
+0134     <span class="keyword">end</span>
+0135     
+0136     methods
+0137         
+0138         <span class="comment">%% softDistanceConstraint CONSTRUCTOR</span>
+0139         <a name="_sub0" href="#_subfunctions" class="code">function  obj = softDistanceConstraint(varargin)</a>
+0140             <span class="comment">% Creates a softDistance Constraint object.  See the</span>
+0141             <span class="comment">% constructors for the 2Sample and 1Sample case for additional</span>
+0142             <span class="comment">% parameters</span>
+0143             
+0144             
+0145             <span class="comment">%first, decide what type of object to create.  This will be</span>
+0146             <span class="comment">%based on whether the desired function involves 2 means, or 1.</span>
+0147             p = inputParser;
+0148             p.addParamValue(<span class="string">'fnc'</span>,<span class="string">'null'</span>, <span class="keyword">...</span>
+0149                  @(fnc)any(strcmp({<span class="string">'min'</span>, <span class="string">'max'</span>,<span class="string">'orderedMax'</span>,<span class="string">'match1SampleVal'</span>},fnc)));
+0150             p.KeepUnmatched = true;
+0151             p.parse(varargin{:});
+0152             
+0153             <span class="comment">%cases involving 2 samples</span>
+0154             <span class="keyword">if</span> any([strcmp(p.Results.fnc,<span class="string">'min'</span>), <span class="keyword">...</span>
+0155                     strcmp(p.Results.fnc,<span class="string">'max'</span>), <span class="keyword">...</span>
+0156                     strcmp(p.Results.fnc,<span class="string">'orderedMax'</span>)])
+0157                 obj = <a href="#_sub2" class="code" title="subfunction obj = construct2SampleSoftDistanceConstraint(obj,varargin)">construct2SampleSoftDistanceConstraint</a>(obj,varargin);
+0158             <span class="comment">% cases invovling 1 sample matched to a value</span>
+0159             <span class="keyword">elseif</span> any(strcmp(p.Results.fnc,<span class="string">'match1SampleVal'</span>))
+0160                 obj = <a href="#_sub3" class="code" title="subfunction obj = construct1SampleSoftDistanceConstraint(obj,varargin)">construct1SampleSoftDistanceConstraint</a>(obj,varargin);                
+0161             <span class="keyword">else</span> 
+0162                 error([<span class="string">'Could not create a soft constraint with &lt;fnc&gt;: '</span>, <span class="keyword">...</span>
+0163                         p.Results.fnc]);
+0164             <span class="keyword">end</span>
+0165              
+0166             obj.cost = NaN;
+0167             obj.swCost = NaN;
+0168                
+0169             
+0170             <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>(<span class="string">'Soft Distance Constraint has been created'</span>, <span class="keyword">...</span>
+0171                     <span class="string">'softDistanceConstraint_Constructor_endObjCreation'</span>);
+0172         <span class="keyword">end</span> <span class="comment">% constructor</span>
+0173         
+0174         <span class="comment">%% obj = construct2SampleSoftDistanceConstraint(varargin) METHOD</span>
+0175         <a name="_sub1" href="#_subfunctions" class="code">function obj = construct2SampleSoftDistanceConstraint(obj,varargin)</a>
+0176             <span class="comment">% creates a constraint object for cases where 2 samples are implicated.</span>
+0177             <span class="comment">% CONSTRUCTOR - Creates a softDistanceConstraint object</span>
+0178             <span class="comment">%</span>
+0179             <span class="comment">% CALL:</span>
+0180             <span class="comment">% softDistanceConstraint(varargin&lt;defined below&gt;)</span>
+0181             <span class="comment">%</span>
+0182             <span class="comment">% PARAMETERS:</span>
+0183             <span class="comment">% REQUIRED:</span>
+0184             <span class="comment">%   'sosObj'/sos object - the SOS object the constraint will be linked to, and which contains the samples the constraint operates on.</span>
+0185             <span class="comment">%   'constraintType'/'soft' - the type of contraint - must be 'soft'</span>
+0186             <span class="comment">%   'fnc'/'min'|'max'|'orderedMax' the distance function to create.  If orderedMax, s1 &lt; s2 on the specified dimension</span>
+0187             <span class="comment">%   'stat'/'mean'|'stdev' - the statistic to calculate the difference on</span>
+0188             <span class="comment">%   'sample1'/sample - the first sample</span>
+0189             <span class="comment">%   'sample2'/sample - the second sample</span>
+0190             <span class="comment">%   's1ColName'/string - name of column in 1st sample</span>
+0191             <span class="comment">%   's2ColName'/string - name of column in 2nd sample</span>
+0192             <span class="comment">%   'paired'/logical - should pairwise or group level distances be calculated</span>
+0193             <span class="comment">% OPTIONAL:</span>
+0194             <span class="comment">%   'exponent'/numeric - defaults to 2 (quadratic difference)</span>
+0195             <span class="comment">%   'weight'/numeric - defaults to 1 (equal weighting of all soft costs)</span>
+0196             <span class="comment">%</span>
+0197             <span class="comment">% EXAMPLE:</span>
+0198             <span class="comment">% mySOS.addConstraint('sosObj',mySOS,'constraintType','soft', ...</span>
+0199             <span class="comment">%   'fnc','min','stat','mean','sample1',s1,'sample2',s2,'s1ColName','Lg10WF', ...</span>
+0200             <span class="comment">%   's2ColName','Lg10WF','exponent',2,'paired',false,'weight', 1);</span>
+0201             
+0202                         
+0203             p = softDistanceConstraint.parse2SampleConstructorArgs(varargin{:});
+0204             
+0205             <span class="keyword">if</span>(p.Results.sosObj.containsSample(p.Results.sample1) == false)
+0206                 error(<span class="string">'Cannot create soft distance constraint: sos Object does not contain the sample1'</span>);
+0207             <span class="keyword">end</span>
+0208             
+0209             <span class="keyword">if</span>(p.Results.sosObj.containsSample(p.Results.sample2) == false)
+0210                 error(<span class="string">'Cannot create soft distance constraint: sos Object does not contain sample2'</span>);
+0211             <span class="keyword">end</span>
+0212             
+0213             
+0214             col1 = p.Results.sample1.colName2colNum(p.Results.s1ColName);           
+0215             <span class="keyword">if</span>(col1 == -1)
+0216                 error(<span class="string">'Specified column name not found in sample1'</span>);
+0217             <span class="keyword">end</span>
+0218             
+0219             <span class="keyword">if</span>(strcmp(p.Results.sample1.format{col1},<span class="string">'%f'</span>) == 0)
+0220                 error(<span class="string">'Specified column is not of numeric (%f) format, so cannot use as hard bound'</span>);
+0221             <span class="keyword">end</span>           
+0222                        
+0223             col2 = p.Results.sample2.colName2colNum(p.Results.s2ColName);            
+0224             <span class="keyword">if</span>(col2 == -1)
+0225                 error(<span class="string">'Specified column name not found in sample'</span>);
+0226             <span class="keyword">end</span>
+0227             
+0228             <span class="keyword">if</span>(strcmp(p.Results.sample2.format{col2},<span class="string">'%f'</span>) == 0)
+0229                 error(<span class="string">'Specified column is not of numeric (%f) format, so cannot use as hard bound; 2nd sample'</span>);
+0230             <span class="keyword">end</span>           
+0231             
+0232             <span class="comment">%if the lengths are not going to be identical, do not run the</span>
+0233             <span class="comment">%test if it is paired.  The init and swap methods will ensure</span>
+0234             <span class="comment">%that if practically the data are NaN, the optimization will</span>
+0235             <span class="comment">%stop.</span>
+0236             <span class="keyword">if</span>(p.Results.paired == true)
+0237                 <span class="keyword">if</span> length(p.Results.sample1.n) ~= length(p.Results.sample2.n)
+0238                     error(<span class="string">'Sample sizes must be equal if using paired matching'</span>);
+0239                 <span class="keyword">end</span>
+0240             <span class="keyword">end</span>
+0241             <span class="comment">% Assign the comparison function appropriate for the constraint</span>
+0242             
+0243             <span class="keyword">if</span>(p.Results.paired ~= true &amp; p.Results.paired ~= false)
+0244                 error(<span class="string">'&lt;paired&gt; parameter must be either true/false (1/0)'</span>);
+0245             <span class="keyword">end</span>
+0246             
+0247             
+0248             <span class="comment">%ASSIGN HANDLE TO STAT CALCULATION METHOD</span>
+0249             <span class="keyword">if</span>(strcmp(p.Results.stat,<span class="string">'mean'</span>) &amp;&amp; p.Results.paired == false)
+0250                 obj.initStats = @obj.initGroupMeans;
+0251                 obj.swStats = @obj.swGroupMeans;
+0252                 obj.acceptsw = @obj.acceptSwapMeans;
+0253                 obj.rejectsw = @obj.rejectSwapMeans;
+0254             <span class="keyword">elseif</span>(strcmp(p.Results.stat,<span class="string">'mean'</span>) &amp;&amp; p.Results.paired == true)
+0255                 obj.initStats = @obj.initPairedMeans;
+0256                 obj.swStats = @obj.swPairedMeans;    
+0257                 obj.acceptsw = @obj.acceptSwapMeans;
+0258                 obj.rejectsw = @obj.rejectSwapMeans;
+0259             <span class="keyword">elseif</span>(strcmp(p.Results.stat,<span class="string">'stdev'</span>)  &amp;&amp; p.Results.paired == false)
+0260                 obj.initStats = @obj.initGroupStdev;
+0261                 obj.swStats = @obj.swGroupStdev;
+0262                 obj.acceptsw = @obj.acceptSwapStdev;  
+0263                 obj.rejectsw = @obj.rejectSwapStdev;  
+0264             <span class="keyword">elseif</span>(strcmp(p.Results.stat,<span class="string">'stdev'</span>)  &amp;&amp; p.Results.paired == true)
+0265                 obj.initStats = @obj.initPairedStdev;
+0266                 obj.swStats = @obj.swPairedStdev;
+0267                 obj.acceptsw = @obj.acceptSwapStdev; 
+0268                 obj.rejectsw = @obj.rejectSwapStdev;  
+0269             <span class="keyword">else</span>
+0270                error(<span class="string">'function not yet supported'</span>);
+0271             <span class="keyword">end</span>
+0272             
+0273             <span class="comment">% ASSIGN HANDLE TO DIFFERENCE COMPARISON METHOD</span>
+0274             <span class="comment">% Group differences:</span>
+0275             <span class="keyword">if</span>(strcmp(p.Results.fnc,<span class="string">'min'</span>))
+0276                 obj.comparison = @obj.minDiff;
+0277             <span class="keyword">elseif</span>(strcmp(p.Results.fnc,<span class="string">'max'</span>))
+0278                 obj.comparison = @obj.maxDiff;                     
+0279             <span class="keyword">elseif</span>(strcmp(p.Results.fnc,<span class="string">'orderedMax'</span>))
+0280                 obj.comparison = @obj.orderedMaxDiff;   
+0281             <span class="keyword">else</span>
+0282                 error(<span class="string">'function not yet supported'</span>);
+0283             <span class="keyword">end</span>
+0284             
+0285             <span class="comment">% parent properties</span>
+0286             obj.sosObj = p.Results.sosObj;
+0287             obj.constraintType = p.Results.constraintType;
+0288             obj.fnc = p.Results.fnc;
+0289             
+0290             
+0291             obj.weight = p.Results.weight;
+0292             obj.exp = p.Results.exponent;         
+0293             
+0294             obj.stat = p.Results.stat;
+0295             obj.s1 = p.Results.sample1;
+0296             obj.s2 = p.Results.sample2;
+0297             obj.s1Col = col1;
+0298             obj.s2Col = col2;           
+0299             obj.s1ColName = p.Results.s1ColName;
+0300             obj.s2ColName = p.Results.s2ColName;           
+0301               
+0302             obj.paired = p.Results.paired;
+0303             
+0304             
+0305             <span class="comment">% add the name and the label</span>
+0306             obj.label = [obj.constraintType,<span class="string">'_'</span>,obj.fnc,<span class="string">'_'</span>,<span class="keyword">...</span>
+0307                     obj.stat,<span class="string">'_'</span>,<span class="keyword">...</span>
+0308                     obj.s1.name,<span class="string">'_'</span>,obj.s1ColName,<span class="string">'_'</span>,<span class="keyword">...</span>
+0309                     obj.s2.name,<span class="string">'_'</span>,obj.s2ColName,<span class="string">'_'</span>,<span class="keyword">...</span>
+0310                     <span class="string">'p'</span>,num2str(obj.paired)',<span class="string">'_w'</span>,<span class="keyword">...</span>
+0311                     num2str(obj.weight),<span class="string">'_e'</span>,num2str(obj.exp)];              
+0312             <span class="keyword">if</span> any(strcmp(p.UsingDefaults,<span class="string">'name'</span>))                 
+0313                 obj.name = obj.label;
+0314             <span class="keyword">else</span>
+0315                  obj.name = p.Results.name;  
+0316             <span class="keyword">end</span>               
+0317         <span class="keyword">end</span> <span class="comment">%construct2SampleSoftDistanceConstraint</span>
+0318         
+0319         <span class="comment">%% obj = construct1SampleSoftDistanceConstraint(varargin) METHOD</span>
+0320         <a name="_sub2" href="#_subfunctions" class="code">function obj = construct1SampleSoftDistanceConstraint(obj,varargin)</a>
+0321             <span class="comment">% creates a constraint object for cases where 1 sample is implicated.</span>
+0322             <span class="comment">% CONSTRUCTOR - Creates a softDistanceConstraint object</span>
+0323             <span class="comment">%</span>
+0324             <span class="comment">% CALL:</span>
+0325             <span class="comment">% softDistanceConstraint(varargin&lt;defined below&gt;)</span>
+0326             <span class="comment">%</span>
+0327             <span class="comment">% PARAMETERS:</span>
+0328             <span class="comment">% REQUIRED:</span>
+0329             <span class="comment">%   'sosObj'/sos object - the SOS object the constraint will be linked to, and which contains the samples the constraint operates on.</span>
+0330             <span class="comment">%   'constraintType'/'soft' - the type of contraint - must be 'soft'</span>
+0331             <span class="comment">%   'fnc'/'match1SampleVal' the distance function to create.  If orderedMax, s1 &lt; s2 on the specified dimension</span>
+0332             <span class="comment">%   'stat'/'mean'|'stdev' - the statistic to calculate the difference on</span>
+0333             <span class="comment">%   'sample1'/sample - the first sample</span>
+0334             <span class="comment">%   's1ColName'/string - name of column in 1st sample</span>
+0335             <span class="comment">% OPTIONAL:</span>
+0336             <span class="comment">%   'exponent'/numeric - defaults to 2 (quadratic difference)</span>
+0337             <span class="comment">%   'weight'/numeric - defaults to 1 (equal weighting of all soft costs)</span>
+0338             <span class="comment">%   'targVal'/numeric - value to match the stat to.</span>
+0339             <span class="comment">%</span>
+0340     
+0341             
+0342             p = softDistanceConstraint.parse1SampleConstructorArgs(varargin{:});
+0343             
+0344             <span class="keyword">if</span>(p.Results.sosObj.containsSample(p.Results.sample1) == false)
+0345                 error(<span class="string">'Cannot create soft distance constraint: sos Object does not contain the sample1'</span>);
+0346             <span class="keyword">end</span>
+0347             
+0348             
+0349             col1 = p.Results.sample1.colName2colNum(p.Results.s1ColName);           
+0350             <span class="keyword">if</span>(col1 == -1)
+0351                 error(<span class="string">'Specified column name not found in sample1'</span>);
+0352             <span class="keyword">end</span>
+0353             
+0354             <span class="keyword">if</span>(strcmp(p.Results.sample1.format{col1},<span class="string">'%f'</span>) == 0)
+0355                 error(<span class="string">'Specified column is not of numeric (%f) format, so cannot use as hard bound'</span>);
+0356             <span class="keyword">end</span>           
+0357                   
+0358             
+0359             <span class="comment">% Assign the comparison function appropriate for the constraint</span>
+0360             
+0361             <span class="comment">%ASSIGN HANDLE TO STAT CALCULATION METHOD</span>
+0362             <span class="keyword">if</span>(strcmp(p.Results.stat,<span class="string">'mean'</span>))
+0363                 obj.initStats = @obj.initSingleMeanandTarg;
+0364                 obj.swStats = @obj.swSingleMean;
+0365                 obj.acceptsw = @obj.acceptSwapMeans;
+0366                 obj.rejectsw = @obj.rejectSwapMeans;
+0367                 
+0368                 obj.comparison = @obj.minDiff;
+0369                 
+0370             <span class="keyword">elseif</span>(strcmp(p.Results.stat,<span class="string">'stdev'</span>))
+0371                 obj.initStats = @obj.initSingleStdevandTarg;
+0372                 obj.swStats = @obj.swSingleStdev;
+0373                 obj.acceptsw = @obj.acceptSwapStdev;  
+0374                 obj.rejectsw = @obj.rejectSwapStdev;
+0375                 
+0376                 obj.comparison = @obj.minDiff;
+0377             <span class="keyword">else</span>
+0378                error(<span class="string">'function not yet supported'</span>);
+0379             <span class="keyword">end</span>
+0380             
+0381             
+0382             <span class="comment">%Finally, need to convert the raw value supplied by the user</span>
+0383             <span class="comment">%into the standardized value used for comparison purposes.  We</span>
+0384             <span class="comment">%do this by conslulting the SOS object's normalization data.</span>
+0385             
+0386             <span class="comment">%find the normalization params for this data column:</span>
+0387             
+0388             obj.targVal = p.Results.targVal;
+0389             obj.zTargVal = NaN;
+0390             
+0391             <span class="comment">% parent properties</span>
+0392             obj.sosObj = p.Results.sosObj;
+0393             obj.constraintType = p.Results.constraintType;
+0394             obj.fnc = p.Results.fnc;
+0395             
+0396             
+0397             obj.weight = p.Results.weight;
+0398             
+0399             
+0400             obj.stat = p.Results.stat;
+0401             obj.s1 = p.Results.sample1;
+0402             obj.s1Col = col1;   
+0403             obj.s2 = NaN;
+0404             obj.s1ColName = p.Results.s1ColName;         
+0405             obj.exp = p.Results.exponent;           
+0406             
+0407             <span class="comment">% add the name and the label</span>
+0408             obj.label = [obj.constraintType,<span class="string">'_'</span>,obj.fnc,<span class="string">'_'</span>,<span class="keyword">...</span>
+0409                     obj.stat,<span class="string">'_'</span>,num2str(obj.targVal),<span class="string">'_'</span>,obj.s1.name,<span class="string">'_'</span>,<span class="keyword">...</span>
+0410                     obj.s1ColName,<span class="string">'_w'</span>,<span class="keyword">...</span>
+0411                     num2str(obj.weight),<span class="string">'_e'</span>,num2str(obj.exp)];              
+0412             <span class="keyword">if</span> any(strcmp(p.UsingDefaults,<span class="string">'name'</span>))                 
+0413                 obj.name = obj.label;
+0414             <span class="keyword">else</span>
+0415                  obj.name = p.Results.name;  
+0416             <span class="keyword">end</span>            
+0417             
+0418         <span class="keyword">end</span> <span class="comment">%construct1SampleSoftDistanceConstraint</span>
+0419         
+0420         
+0421         
+0422         <span class="comment">%% cost = initCost() METHOD</span>
+0423         <a name="_sub3" href="#_subfunctions" class="code">function cost = initCost(obj)</a>
+0424             <span class="comment">% Calculates, saves, and returns the cost value for the current items in the sample.</span>
+0425             <span class="comment">%</span>
+0426             <span class="comment">%CALL:</span>
+0427             <span class="comment">%   &lt;softDistanceConstraint&gt;.initCost();</span>
+0428             <span class="comment">%</span>
+0429             <span class="comment">%SYNOPSIS:</span>
+0430             <span class="comment">% Calculates the cost for the current items in the sample based</span>
+0431             <span class="comment">% on the specified constraint.  This calculation is done on the</span>
+0432             <span class="comment">% global dataset, rather than using the differential local</span>
+0433             <span class="comment">% computation used when calculating swap costs.</span>
+0434             <span class="comment">%</span>
+0435           
+0436             <span class="comment">%init the stats, then compare them.  Return the calculated cost</span>
+0437             obj = obj.initStats(); 
+0438             cost = obj.comparison(obj.stat1,obj.stat2);
+0439             
+0440             obj.swstat1 = NaN;
+0441             obj.swstat2 = NaN;
+0442             
+0443             obj.cost = cost;
+0444             obj.swCost = NaN;
+0445         <span class="keyword">end</span>
+0446 
+0447         <span class="comment">%%  swCost(targSample,targSampleIndex, feederdf,feederdfIndex) FUNCTION</span>
+0448         <a name="_sub4" href="#_subfunctions" class="code">function swCost = swapCost(obj,targSample,targSampleIndex, feederdf,feederdfIndex)</a>
+0449             <span class="comment">% Calculates the new cost if items from targSample and feederdf were swapped.</span>
+0450             <span class="comment">%</span>
+0451             <span class="comment">%By definition, if this method is called it means that at least</span>
+0452             <span class="comment">% one of the two swap objects is implicated in this function</span>
+0453             <span class="comment">%</span>
+0454             <span class="comment">%PARAMETERS:</span>
+0455             <span class="comment">%   targSample - the target sample (i.e., the object that will call it's swapSample() method if a swap later occurs).</span>
+0456             <span class="comment">%   targSampleIndex - row index of item to swap</span>
+0457             <span class="comment">%   feederdf - dataframe (sample/pop) containin the other item to swap</span>
+0458             <span class="comment">%   feederdfIndex - row index of item to swap.</span>
+0459                        
+0460            <span class="keyword">if</span> (obj.s1 ~= targSample &amp;&amp; obj.s2 ~= targSample <span class="keyword">...</span><span class="comment"> </span>
+0461                    &amp;&amp; obj.s1 ~= feederdf &amp;&amp; obj.s2  ~= feederdf)
+0462                error(<span class="string">'swCost called, but no sample part of this cost function'</span>);
+0463            <span class="keyword">end</span>
+0464 
+0465            <span class="comment">% update the stats, then calculate cost of new stats</span>
+0466            obj.swStats(targSample,targSampleIndex, feederdf,feederdfIndex);
+0467  
+0468             swCost = obj.comparison(obj.swstat1,obj.swstat2);
+0469             obj.swCost = swCost;
+0470               
+0471         <span class="keyword">end</span>
+0472         
+0473         
+0474         <span class="comment">%% initGroupMeans() METHOD</span>
+0475         <a name="_sub5" href="#_subfunctions" class="code">function obj = initGroupMeans(obj)</a>
+0476             <span class="comment">% calculates the means of the samples</span>
+0477             obj.stat1= mean(obj.s1.zdata{obj.s1Col});
+0478             obj.stat2= mean(obj.s2.zdata{obj.s2Col});
+0479             
+0480             
+0481             <span class="keyword">if</span> isnan(obj.stat1) || isnan(obj.stat2)
+0482                 error(<span class="string">'NaN obtained during initstat computation (perhaps there is missing data for an item?)'</span>);
+0483             <span class="keyword">end</span>
+0484         <span class="keyword">end</span>
+0485 
+0486         <span class="comment">%% initPairedMeans() METHOD</span>
+0487         <a name="_sub6" href="#_subfunctions" class="code">function obj = initPairedMeans(obj)</a>
+0488             <span class="comment">% prepares data for paired mean calculation</span>
+0489                       
+0490             <span class="comment">% make sure there are no nan's.</span>
+0491             <span class="keyword">if</span> (any(isnan(obj.s1.zdata{obj.s1Col})))
+0492                 error(<span class="string">'NaN obtained during initstat computation of sample 1 (perhaps there is missing data for an item?)'</span>);
+0493             <span class="keyword">elseif</span> (any(isnan(obj.s2.zdata{obj.s2Col})))
+0494                 error(<span class="string">'NaN obtained during initstat computation of sample 2 (perhaps there is missing data for an item?)'</span>);
+0495             <span class="keyword">end</span>
+0496             
+0497             <span class="comment">% calculate the statistic.  In contrast to the group mean</span>
+0498             <span class="comment">% statistic, here we'll calculate the difference in each pair</span>
+0499             <span class="comment">% of observations and sum that in stat2, and leave stat1  ==0</span>
+0500             
+0501             tmpstat2 = 0;
+0502             <span class="keyword">for</span> i=1:obj.s1.n
+0503                 x = obj.s2.zdata{obj.s2Col}(i) - obj.s1.zdata{obj.s1Col}(i);
+0504                 
+0505                 <span class="comment">% when trying to minimize, any difference, in either</span>
+0506                 <span class="comment">% direction, is bad.  When trying to maximize, then let the</span>
+0507                 <span class="comment">% sign enter into the equation.</span>
+0508                 <span class="keyword">if</span> strcmp(obj.fnc,<span class="string">'min'</span>)
+0509                     x = abs(x);
+0510                 <span class="keyword">end</span>
+0511 
+0512                  tmpstat2 = tmpstat2 + x;               
+0513             <span class="keyword">end</span>
+0514             
+0515             <span class="comment">% calculate the mean of x</span>
+0516             obj.stat2 = tmpstat2/obj.s1.n;
+0517             obj.stat1 = 0; <span class="comment">% always relative to no difference</span>
+0518             
+0519             
+0520         <span class="keyword">end</span>        
+0521         
+0522         <span class="comment">%% initStdev(obj) METHOD</span>
+0523         <a name="_sub7" href="#_subfunctions" class="code">function obj = initGroupStdev(obj)</a>
+0524             <span class="comment">%calculates the stdevs of the samples</span>
+0525             
+0526             obj.sumx1sq = sum((obj.s1.zdata{obj.s1Col}).^2);
+0527             obj.meanx1 = mean(obj.s1.zdata{obj.s1Col});
+0528             n1 = length(obj.s1.zdata{obj.s1Col});
+0529             
+0530             <span class="comment">%use the computational formula to efficiently calculate the sum</span>
+0531             stdevx1 = (1/(n1-1) * obj.sumx1sq <span class="keyword">...</span>
+0532                         - n1/(n1-1) * obj.meanx1^2)^0.5;
+0533                     
+0534             obj.sumx2sq = sum((obj.s2.zdata{obj.s2Col}).^2);
+0535             obj.meanx2 = mean(obj.s2.zdata{obj.s2Col});
+0536             n2 = length(obj.s2.zdata{obj.s2Col});
+0537             
+0538             <span class="comment">%use the computational formula to efficiently calculate the sum</span>
+0539             stdevx2 = (1/(n2-1) * obj.sumx2sq <span class="keyword">...</span>
+0540                         - n2/(n2-1) * obj.meanx2^2)^0.5;
+0541                     
+0542             obj.stat1 = stdevx1;
+0543             obj.stat2 = stdevx2;
+0544             
+0545             <span class="keyword">if</span> isnan(obj.stat1) || isnan(obj.stat2)
+0546                 error(<span class="string">'NaN obtained during initstat computation (perhaps there is missing data for an item?)'</span>);
+0547             <span class="keyword">end</span>     
+0548             
+0549         <span class="keyword">end</span>
+0550             
+0551         <span class="comment">%% initPairedMeans() METHOD</span>
+0552         <a name="_sub8" href="#_subfunctions" class="code">function obj = initPairedStdev(obj)</a>
+0553             <span class="comment">% prepares data for paired mean calculation</span>
+0554                       
+0555             <span class="comment">% make sure there are no nan's.</span>
+0556             <span class="keyword">if</span> (any(isnan(obj.s1.zdata{obj.s1Col})))
+0557                 error(<span class="string">'NaN obtained during initstat computation of sample 1 (perhaps there is missing data for an item?)'</span>);
+0558             <span class="keyword">elseif</span> (any(isnan(obj.s2.zdata{obj.s2Col})))
+0559                 error(<span class="string">'NaN obtained during initstat computation of sample 2 (perhaps there is missing data for an item?)'</span>);
+0560             <span class="keyword">end</span>
+0561             
+0562             <span class="comment">% calculate the statistic.  In contrast to the group mean</span>
+0563             <span class="comment">% statistic, here we'll calculate the difference in each pair</span>
+0564             <span class="comment">% of observations and sum that in stat2, and leave stat1  ==0</span>
+0565             
+0566             obj.sumx2sq = 0;
+0567             obj.meanx2 = 0;
+0568             n = length(obj.s2.zdata{obj.s2Col});
+0569             
+0570             <span class="keyword">for</span> i=1:n
+0571                 x = obj.s2.zdata{obj.s2Col}(i) - obj.s1.zdata{obj.s1Col}(i);
+0572                 obj.sumx2sq = obj.sumx2sq + x^2;
+0573                 obj.meanx2 = obj.meanx2 + x/n;
+0574                             
+0575             <span class="keyword">end</span>
+0576             
+0577             <span class="comment">%use the computational formula to efficiently calculate the sum</span>
+0578             stdevx2 = (1/(n-1) * obj.sumx2sq <span class="keyword">...</span>
+0579                         - n/(n-1) * obj.meanx2^2)^0.5;            
+0580             
+0581             
+0582             <span class="comment">% calculate the mean of x</span>
+0583             obj.stat2 = stdevx2;
+0584             obj.stat1 = 0; <span class="comment">% always relative to no difference</span>
+0585             
+0586             
+0587         <span class="keyword">end</span>    
+0588 
+0589         <span class="comment">%% initSingleMeanandTarg() METHOD</span>
+0590         <a name="_sub9" href="#_subfunctions" class="code">function obj = initSingleMeanandTarg(obj)</a>
+0591             <span class="comment">% calculates the mean of the sample1 and sets the target as the target stat</span>
+0592             
+0593             obj.stat2= mean(obj.s1.zdata{obj.s1Col});
+0594             
+0595              <span class="comment">%normalize the target value to match against</span>
+0596             targCol = obj.sosObj.allData.colName2colNum(obj.s1ColName);           
+0597             <span class="keyword">if</span>(targCol == -1)
+0598                 error(<span class="string">'Normalized data for this value may not yet exist (try normalizing first)'</span>);
+0599             <span class="keyword">end</span>    
+0600             
+0601             obj.zTargVal = (obj.targVal - obj.sosObj.allDataColMean(targCol)) <span class="keyword">...</span>
+0602                             / obj.sosObj.allDataColStd(targCol);
+0603                         
+0604            obj.stat1 = obj.zTargVal;
+0605                         
+0606             <span class="keyword">if</span> isnan(obj.stat1) || isnan(obj.stat2)
+0607                 error(<span class="string">'NaN obtained during initstat computation (perhaps there is missing data for an item?)'</span>);
+0608             <span class="keyword">end</span>
+0609         <span class="keyword">end</span>
+0610 
+0611         <span class="comment">%% initSingleStdevandtarg(obj) METHOD</span>
+0612         <a name="_sub10" href="#_subfunctions" class="code">function obj = initSingleStdevandTarg(obj)</a>
+0613             <span class="comment">%calculates the stdevs of the samples</span>
+0614                     
+0615             obj.sumx2sq = sum((obj.s1.zdata{obj.s1Col}).^2);
+0616             obj.meanx2 = mean(obj.s1.zdata{obj.s1Col});
+0617             n2 = length(obj.s1.zdata{obj.s1Col});
+0618             
+0619             <span class="comment">%use the computational formula to efficiently calculate the sum</span>
+0620             stdevx2 = (1/(n2-1) * obj.sumx2sq <span class="keyword">...</span>
+0621                         - n2/(n2-1) * obj.meanx2^2)^0.5;
+0622             
+0623             obj.stat2 = stdevx2;
+0624 
+0625              <span class="comment">%normalize the target value to match against</span>
+0626             targCol = obj.sosObj.allData.colName2colNum(obj.s1ColName);           
+0627             <span class="keyword">if</span>(targCol == -1)
+0628                 error(<span class="string">'Normalized data for this value may not yet exist (try normalizing first)'</span>);
+0629             <span class="keyword">end</span>    
+0630             
+0631             obj.zTargVal = (obj.targVal) <span class="keyword">...</span>
+0632                             / obj.sosObj.allDataColStd(targCol);
+0633                         
+0634             obj.stat1 = obj.zTargVal;            
+0635             
+0636             
+0637             <span class="keyword">if</span> isnan(obj.stat1) || isnan(obj.stat2)
+0638                 error(<span class="string">'NaN obtained during initstat computation (perhaps there is missing data for an item?)'</span>);
+0639             <span class="keyword">end</span>     
+0640             
+0641         <span class="keyword">end</span>
+0642         
+0643         <span class="comment">%% swGroupMeans(targSample,targSampleIndex,feederdf,feederdfIndex) FUNCTION</span>
+0644         <a name="_sub11" href="#_subfunctions" class="code">function swGroupMeans(obj,targSample,targSampleIndex, feederdf,feederdfIndex)</a>
+0645            <span class="comment">% Calculates the new (swap) means if items from targSample and feederd were swapped.</span>
+0646            <span class="comment">%</span>
+0647            <span class="comment">% Inputs are the same as for swapCost()</span>
+0648          
+0649            tempswm1 = obj.stat1;
+0650            tempswm2 = obj.stat2;
+0651        
+0652             <span class="comment">%do the adjustments of the means</span>
+0653             <span class="comment">%basic idea is to take out the old value from that mean and</span>
+0654             <span class="comment">%then put in the new one.  Do that seperately for each</span>
+0655             <span class="comment">%dataframe to cover all eventualities (i.e., if either</span>
+0656             <span class="comment">%targSample or feederdf, or both, are part of the current cost</span>
+0657             <span class="comment">%function.</span>
+0658             
+0659             <span class="keyword">if</span> targSample == obj.s1
+0660                 tempswm1 = tempswm1 - (targSample.zdata{obj.s1Col}(targSampleIndex)/length(targSample.zdata{obj.s1Col}));
+0661                 tempswm1 = tempswm1 + (feederdf.zdata{obj.s1Col}(feederdfIndex)/length(targSample.zdata{obj.s1Col}));
+0662             <span class="keyword">elseif</span> targSample == obj.s2
+0663                 tempswm2 = tempswm2 - (targSample.zdata{obj.s2Col}(targSampleIndex)/length(targSample.zdata{obj.s2Col}));
+0664                 tempswm2 = tempswm2 + (feederdf.zdata{obj.s2Col}(feederdfIndex)/length(targSample.zdata{obj.s2Col}));
+0665             <span class="keyword">end</span>
+0666                                
+0667             <span class="keyword">if</span> feederdf == obj.s1
+0668                 tempswm1 = tempswm1 - (feederdf.zdata{obj.s1Col}(feederdfIndex)/length(feederdf.zdata{obj.s1Col}));
+0669                 tempswm1 = tempswm1 + (targSample.zdata{obj.s1Col}(targSampleIndex)/length(feederdf.zdata{obj.s1Col}));
+0670             <span class="keyword">elseif</span> feederdf == obj.s2 
+0671                 tempswm2 = tempswm2 - (feederdf.zdata{obj.s2Col}(feederdfIndex)/length(feederdf.zdata{obj.s2Col}));
+0672                 tempswm2 = tempswm2 + (targSample.zdata{obj.s2Col}(targSampleIndex)/length(feederdf.zdata{obj.s2Col}));
+0673             <span class="keyword">end</span>           
+0674             
+0675             obj.swstat1 = tempswm1;
+0676             obj.swstat2 = tempswm2;
+0677                
+0678             <span class="keyword">if</span> isnan(obj.swstat1) || isnan(obj.swstat2)
+0679                 error(<span class="string">'NaN obtained during swstat computation (perhaps there is missing data for an item?)'</span>);
+0680             <span class="keyword">end</span>
+0681         <span class="keyword">end</span>
+0682         
+0683 
+0684         
+0685         
+0686         <span class="comment">%% swPairedMeans(targSample,targSampleIndex,feederdf,feederdfIndex) FUNCTION</span>
+0687         <a name="_sub12" href="#_subfunctions" class="code">function swPairedMeans(obj,targSample,targSampleIndex, feederdf,feederdfIndex)</a>
+0688            <span class="comment">% Calculates the new (swap) means if items from targSample and feederd were swapped.</span>
+0689            <span class="comment">%</span>
+0690            <span class="comment">% Inputs are the same as for swapCost()</span>
+0691          
+0692            tempswm2 = obj.stat2;
+0693            <span class="comment">%tempswm2 should remain 0 at all times</span>
+0694        
+0695             <span class="comment">%do the adjustments of the means</span>
+0696             <span class="comment">%basic idea is to take out the old value from that mean and</span>
+0697             <span class="comment">%then put in the new one.  Do that seperately for each</span>
+0698             <span class="comment">%dataframe to cover all eventualities (i.e., if either</span>
+0699             <span class="comment">%targSample or feederdf, or both, are part of the current cost</span>
+0700             <span class="comment">%function.</span>
+0701 
+0702                        
+0703             nobs = length(obj.s1.zdata{obj.s1Col});
+0704 
+0705             <span class="keyword">if</span> targSample == obj.s1
+0706                 <span class="comment">%take the existing contribution to the stat due to the data</span>
+0707                 <span class="comment">%out.</span>
+0708                 curx = (obj.s2.zdata{obj.s2Col}(targSampleIndex) - <span class="keyword">...</span>
+0709                         targSample.zdata{obj.s1Col}(targSampleIndex))/nobs;
+0710                 
+0711                 <span class="keyword">if</span> strcmp(obj.fnc,<span class="string">'min'</span>)
+0712                     curx = abs(curx);
+0713                 <span class="keyword">end</span>
+0714                 
+0715                 tempswm2 = tempswm2 - curx;
+0716                 
+0717                 <span class="comment">%add in the new value</span>
+0718                 newx = (obj.s2.zdata{obj.s2Col}(targSampleIndex) - <span class="keyword">...</span>
+0719                           feederdf.zdata{obj.s1Col}(feederdfIndex)) / nobs;
+0720                     
+0721                 <span class="keyword">if</span> strcmp(obj.fnc,<span class="string">'min'</span>)
+0722                     newx = abs(newx);
+0723                 <span class="keyword">end</span>     
+0724                 
+0725                 tempswm2 = tempswm2 + newx;     
+0726                 
+0727                 <span class="comment">% update is complete</span>
+0728             <span class="keyword">elseif</span> targSample == obj.s2
+0729                 
+0730                 curx  = (targSample.zdata{obj.s2Col}(targSampleIndex) - <span class="keyword">...</span>
+0731                             obj.s1.zdata{obj.s1Col}(targSampleIndex))/nobs;
+0732                         
+0733                 <span class="keyword">if</span> strcmp(obj.fnc,<span class="string">'min'</span>)
+0734                     curx = abs(curx);
+0735                 <span class="keyword">end</span>
+0736 
+0737                 tempswm2 = tempswm2 - curx;         
+0738                 
+0739                 newx = (feederdf.zdata{obj.s2Col}(feederdfIndex) - <span class="keyword">...</span>
+0740                         obj.s1.zdata{obj.s1Col}(targSampleIndex))/nobs;
+0741 
+0742                 <span class="keyword">if</span> strcmp(obj.fnc,<span class="string">'min'</span>)
+0743                     newx = abs(newx);
+0744                 <span class="keyword">end</span>     
+0745                 
+0746                 tempswm2 = tempswm2 + newx;    
+0747                 
+0748             <span class="keyword">end</span>
+0749             
+0750             
+0751             <span class="keyword">if</span> feederdf == obj.s1
+0752                 
+0753                 curx = (obj.s2.zdata{obj.s2Col}(feederdfIndex) - <span class="keyword">...</span>
+0754                           feederdf.zdata{obj.s1Col}(feederdfIndex)) / nobs;
+0755                 
+0756                 <span class="keyword">if</span> strcmp(obj.fnc,<span class="string">'min'</span>)
+0757                     curx = abs(curx);
+0758                 <span class="keyword">end</span>                
+0759         
+0760                 tempswm2 = tempswm2 - curx;       
+0761                 
+0762                 newx = (obj.s2.zdata{obj.s2Col}(feederdfIndex) - <span class="keyword">...</span>
+0763                         targSample.zdata{obj.s1Col}(targSampleIndex))/nobs;
+0764                 
+0765                  <span class="keyword">if</span> strcmp(obj.fnc,<span class="string">'min'</span>)
+0766                     newx = abs(newx);
+0767                 <span class="keyword">end</span>     
+0768                 
+0769                 tempswm2 = tempswm2 + newx;   
+0770                 
+0771                 
+0772             <span class="keyword">elseif</span> feederdf == obj.s2 
+0773                 curx = (feederdf.zdata{obj.s2Col}(feederdfIndex) - <span class="keyword">...</span>
+0774                         obj.s1.zdata{obj.s1Col}(feederdfIndex))/nobs;
+0775                     
+0776                  
+0777                 <span class="keyword">if</span> strcmp(obj.fnc,<span class="string">'min'</span>)
+0778                     curx = abs(curx);
+0779                 <span class="keyword">end</span>                
+0780         
+0781                 tempswm2 = tempswm2 - curx;       
+0782                 
+0783                 newx = (targSample.zdata{obj.s2Col}(targSampleIndex) - <span class="keyword">...</span>
+0784                             obj.s1.zdata{obj.s1Col}(feederdfIndex))/nobs;
+0785                 
+0786                 <span class="keyword">if</span> strcmp(obj.fnc,<span class="string">'min'</span>)
+0787                     newx = abs(newx);
+0788                 <span class="keyword">end</span>     
+0789                 
+0790                 tempswm2 = tempswm2 + newx;      
+0791                 
+0792             <span class="keyword">end</span>
+0793             
+0794             obj.swstat2 = tempswm2;
+0795             obj.swstat1 = obj.stat1; <span class="comment">% again, just copy the zero over</span>
+0796                
+0797             <span class="keyword">if</span> isnan(obj.swstat1)
+0798                 error(<span class="string">'NaN obtained during swstat computation (perhaps there is missing data for an item?)'</span>);
+0799             <span class="keyword">end</span>
+0800         <span class="keyword">end</span> <span class="comment">%swPairedMeans</span>
+0801 
+0802         <span class="comment">%% swGroupStdev(targSample,targSampleIndex, feederdf,feederdfIndex)</span>
+0803         <a name="_sub13" href="#_subfunctions" class="code">function swGroupStdev(obj,targSample,targSampleIndex, feederdf,feederdfIndex)</a>
+0804            <span class="comment">% Calculates the new (swap) stdevs if items from targSample and feederd were swapped.</span>
+0805            <span class="comment">%</span>
+0806            <span class="comment">% Inputs are the same as for swapCost()</span>
+0807             
+0808             n1 = length(obj.s1.zdata{obj.s1Col});
+0809             n2 = length(obj.s2.zdata{obj.s2Col});           
+0810                        
+0811             obj.swpsumx1sq = obj.sumx1sq;
+0812             obj.swpmeanx1 = obj.meanx1;
+0813             
+0814             obj.swpsumx2sq = obj.sumx2sq;
+0815             obj.swpmeanx2 = obj.meanx2;
+0816             
+0817             <span class="keyword">if</span> targSample == obj.s1
+0818                 <span class="comment">%must update 2 params %first, take out the old observation, then add in thew new</span>
+0819                 obj.swpsumx1sq = obj.swpsumx1sq - (targSample.zdata{obj.s1Col}(targSampleIndex))^2;
+0820                 obj.swpmeanx1 = obj.swpmeanx1 - (targSample.zdata{obj.s1Col}(targSampleIndex))/n1;                
+0821                 obj.swpsumx1sq = obj.swpsumx1sq + (feederdf.zdata{obj.s1Col}(feederdfIndex))^2;
+0822                 obj.swpmeanx1 = obj.swpmeanx1 + (feederdf.zdata{obj.s1Col}(feederdfIndex))/n1;
+0823             <span class="keyword">elseif</span> targSample == obj.s2
+0824                 obj.swpsumx2sq = obj.swpsumx2sq - (targSample.zdata{obj.s2Col}(targSampleIndex))^2;
+0825                 obj.swpmeanx2 = obj.swpmeanx2 - (targSample.zdata{obj.s2Col}(targSampleIndex))/n2;                
+0826                 obj.swpsumx2sq = obj.swpsumx2sq + (feederdf.zdata{obj.s2Col}(feederdfIndex))^2;
+0827                 obj.swpmeanx2 = obj.swpmeanx2 + (feederdf.zdata{obj.s2Col}(feederdfIndex))/n2;     
+0828             <span class="keyword">end</span>
+0829             
+0830             <span class="keyword">if</span> feederdf == obj.s1
+0831                 obj.swpsumx1sq = obj.swpsumx1sq -  (feederdf.zdata{obj.s1Col}(feederdfIndex))^2;
+0832                 obj.swpmeanx1 = obj.swpmeanx1 - (feederdf.zdata{obj.s1Col}(feederdfIndex))/n1;                
+0833                 obj.swpsumx1sq = obj.swpsumx1sq + (targSample.zdata{obj.s1Col}(targSampleIndex))^2;
+0834                 obj.swpmeanx1 = obj.swpmeanx1 + (targSample.zdata{obj.s1Col}(targSampleIndex))/n1;   
+0835             <span class="keyword">elseif</span> feederdf == obj.s2
+0836                 obj.swpsumx2sq = obj.swpsumx2sq -  (feederdf.zdata{obj.s2Col}(feederdfIndex))^2;
+0837                 obj.swpmeanx2 = obj.swpmeanx2 - (feederdf.zdata{obj.s2Col}(feederdfIndex))/n2;                
+0838                 obj.swpsumx2sq = obj.swpsumx2sq + (targSample.zdata{obj.s2Col}(targSampleIndex))^2;
+0839                 obj.swpmeanx2 = obj.swpmeanx2 + (targSample.zdata{obj.s2Col}(targSampleIndex))/n2;  
+0840             <span class="keyword">end</span>
+0841      
+0842             stdevx1 = (1/(n1-1) * obj.swpsumx1sq <span class="keyword">...</span>
+0843                         - n1/(n1-1) * obj.swpmeanx1^2)^0.5;
+0844                     
+0845             stdevx2 = (1/(n2-1) * obj.swpsumx2sq <span class="keyword">...</span>
+0846                         - n2/(n2-1) * obj.swpmeanx2^2)^0.5;
+0847                     
+0848             obj.swstat1 = stdevx1;
+0849             obj.swstat2 = stdevx2;
+0850             
+0851             <span class="keyword">if</span> isnan(obj.swstat1) || isnan(obj.swstat2)
+0852                 error(<span class="string">'NaN obtained during swstat computation (perhaps there is missing data for an item?)'</span>);
+0853             <span class="keyword">end</span>            
+0854           
+0855         <span class="keyword">end</span>
+0856         
+0857         <span class="comment">%% swPairedStdev(targSample,targSampleIndex,feederdf,feederdfIndex) FUNCTION</span>
+0858         <a name="_sub14" href="#_subfunctions" class="code">function swPairedStdev(obj,targSample,targSampleIndex, feederdf,feederdfIndex)</a>
+0859            <span class="comment">% Calculates the new (swap) stdev if items from targSample and feederd were swapped.</span>
+0860            <span class="comment">%</span>
+0861            <span class="comment">%NOTE: When repeated tens of thousands of times, this manner of</span>
+0862            <span class="comment">%updated std via local difference calculations tends to lead to</span>
+0863            <span class="comment">%some very small imprecisions relative to re-calculating the</span>
+0864            <span class="comment">%actual values from scratch.  These deviations appear to be</span>
+0865            <span class="comment">%trivially small in all cases examined to date though.  This</span>
+0866            <span class="comment">%fact is mentioned here presently only because the</span>
+0867            <span class="comment">%detail-oriented individual may find values like  0.00000001</span>
+0868            <span class="comment">%instead of 0, which nevertheless</span>
+0869            <span class="comment">%likely will have no practical consequence</span>
+0870            <span class="comment">%for the matching algorithm.</span>
+0871            <span class="comment">%</span>
+0872            <span class="comment">% Inputs are the same as for swapCost()</span>
+0873 
+0874            
+0875            
+0876             obj.swpsumx2sq = obj.sumx2sq;
+0877             obj.swpmeanx2 = obj.meanx2;     
+0878             n = length(obj.s1.zdata{obj.s1Col});
+0879                        
+0880             <span class="keyword">if</span> targSample == obj.s1
+0881                 <span class="comment">%take the existing contribution to the stat due to the data</span>
+0882                 <span class="comment">%out.</span>
+0883                 curx = (obj.s2.zdata{obj.s2Col}(targSampleIndex) - <span class="keyword">...</span>
+0884                         targSample.zdata{obj.s1Col}(targSampleIndex));
+0885                                
+0886                 obj.swpsumx2sq = obj.swpsumx2sq - curx^2;
+0887                 obj.swpmeanx2 = obj.swpmeanx2 - curx/n;
+0888                 
+0889                 <span class="comment">%add in the new value</span>
+0890                 newx = (obj.s2.zdata{obj.s2Col}(targSampleIndex) - <span class="keyword">...</span>
+0891                           feederdf.zdata{obj.s1Col}(feederdfIndex));
+0892                     
+0893                 obj.swpsumx2sq = obj.swpsumx2sq + newx^2;
+0894                 obj.swpmeanx2 = obj.swpmeanx2 + newx/n;                
+0895                                 
+0896                 <span class="comment">% update is complete</span>
+0897             <span class="keyword">elseif</span> targSample == obj.s2
+0898                 
+0899                 curx  = (targSample.zdata{obj.s2Col}(targSampleIndex) - <span class="keyword">...</span>
+0900                             obj.s1.zdata{obj.s1Col}(targSampleIndex));
+0901                                         
+0902                 obj.swpsumx2sq = obj.swpsumx2sq - curx^2;
+0903                 obj.swpmeanx2 = obj.swpmeanx2 - curx/n;
+0904                 
+0905                 newx = (feederdf.zdata{obj.s2Col}(feederdfIndex) - <span class="keyword">...</span>
+0906                         obj.s1.zdata{obj.s1Col}(targSampleIndex));
+0907                     
+0908                 obj.swpsumx2sq = obj.swpsumx2sq + newx^2;
+0909                 obj.swpmeanx2 = obj.swpmeanx2 + newx/n;       
+0910                 
+0911             <span class="keyword">end</span>
+0912             
+0913             
+0914             <span class="keyword">if</span> feederdf == obj.s1
+0915                 
+0916                 curx = (obj.s2.zdata{obj.s2Col}(feederdfIndex) - <span class="keyword">...</span>
+0917                           feederdf.zdata{obj.s1Col}(feederdfIndex));
+0918                       
+0919                 obj.swpsumx2sq = obj.swpsumx2sq - curx^2;
+0920                 obj.swpmeanx2 = obj.swpmeanx2 - curx/n;
+0921                 
+0922                 newx = (obj.s2.zdata{obj.s2Col}(feederdfIndex) - <span class="keyword">...</span>
+0923                         targSample.zdata{obj.s1Col}(targSampleIndex));
+0924                 
+0925                 obj.swpsumx2sq = obj.swpsumx2sq + newx^2;
+0926                 obj.swpmeanx2 = obj.swpmeanx2 + newx/n;       
+0927                 
+0928                 
+0929             <span class="keyword">elseif</span> feederdf == obj.s2 
+0930                 curx = (feederdf.zdata{obj.s2Col}(feederdfIndex) - <span class="keyword">...</span>
+0931                         obj.s1.zdata{obj.s1Col}(feederdfIndex));
+0932                     
+0933                 obj.swpsumx2sq = obj.swpsumx2sq - curx^2;
+0934                 obj.swpmeanx2 = obj.swpmeanx2 - curx/n;
+0935                 
+0936                 newx = (targSample.zdata{obj.s2Col}(targSampleIndex) - <span class="keyword">...</span>
+0937                             obj.s1.zdata{obj.s1Col}(feederdfIndex));
+0938                         
+0939                 obj.swpsumx2sq = obj.swpsumx2sq + newx^2;
+0940                 obj.swpmeanx2 = obj.swpmeanx2 + newx/n;       
+0941                 
+0942             <span class="keyword">end</span>
+0943             
+0944             <span class="comment">% Special override:</span>
+0945             <span class="comment">% if it happens that targSample and feederdf both correspond to</span>
+0946             <span class="comment">% the samples for which stdev is being calculated, and that</span>
+0947             <span class="comment">% the exact same item is being swapped out in both cases, the</span>
+0948             <span class="comment">% swpsumx2sq should not change because the two swaps should</span>
+0949             <span class="comment">% cancel each other out.  However, in the current</span>
+0950             <span class="comment">% implementation this doesn't happen and instead we get 2x the</span>
+0951             <span class="comment">% negative subtraction because the second calculation is not</span>
+0952             <span class="comment">% aware of the shifts completed in the first.  This can,</span>
+0953             <span class="comment">% however, be fixed in the present case quite simply by not</span>
+0954             <span class="comment">% changing swpsumx2sq in this specific instance.  This only</span>
+0955             <span class="comment">% happens in this case because the squaring of the terms leads</span>
+0956             <span class="comment">% to the sign of the calculation being ignored, and as such the</span>
+0957             <span class="comment">% calculation of swap means should not suffer in the same</span>
+0958             <span class="comment">% fashion.</span>
+0959             <span class="keyword">if</span>((targSample == obj.s1 || targSample == obj.s2) &amp;&amp; <span class="keyword">...</span>
+0960                     (feederdf == obj.s1 || feederdf == obj.s2) &amp;&amp; <span class="keyword">...</span>
+0961                 targSampleIndex == feederdfIndex)
+0962                 obj.swpsumx2sq = obj.sumx2sq;
+0963             <span class="keyword">end</span>
+0964             
+0965             <span class="comment">% calculate the updated stdev:</span>
+0966            <span class="comment">%use the computational formula to efficiently calculate the sum</span>
+0967             swpstdevx2 = (1/(n-1) * obj.swpsumx2sq <span class="keyword">...</span>
+0968                         - n/(n-1) * obj.swpmeanx2^2)^0.5;  
+0969                     
+0970             obj.swstat2 = swpstdevx2;
+0971             obj.swstat1 = obj.stat1; <span class="comment">% again, just copy the zero over</span>
+0972                
+0973             <span class="keyword">if</span> isnan(obj.swstat1)
+0974                 error(<span class="string">'NaN obtained during swstat computation (perhaps there is missing data for an item?)'</span>);
+0975             <span class="keyword">end</span>
+0976         <span class="keyword">end</span> <span class="comment">%swPairedStdev</span>
+0977        
+0978         
+0979         <span class="comment">%% swSingleMean(targSample,targSampleIndex,feederdf,feederdfIndex) METHOD</span>
+0980         <a name="_sub15" href="#_subfunctions" class="code">function swSingleMean(obj,targSample,targSampleIndex, feederdf,feederdfIndex)</a>
+0981            <span class="comment">% Calculates the new (swap) mean if items from targSample and feederd were swapped.</span>
+0982            <span class="comment">%</span>
+0983            <span class="comment">% Inputs are the same as for swapCost()</span>
+0984          
+0985            tempswm2 = obj.stat2;
+0986        
+0987             <span class="comment">%do the adjustments of the means</span>
+0988             <span class="comment">%basic idea is to take out the old value from that mean and</span>
+0989             <span class="comment">%then put in the new one.  Do that seperately for each</span>
+0990             <span class="comment">%dataframe to cover all eventualities (i.e., if either</span>
+0991             <span class="comment">%targSample or feederdf, or both, are part of the current cost</span>
+0992             <span class="comment">%function.</span>
+0993             
+0994             <span class="keyword">if</span> targSample == obj.s1
+0995                 tempswm2 = tempswm2 - (targSample.zdata{obj.s1Col}(targSampleIndex)/length(targSample.zdata{obj.s1Col}));
+0996                 tempswm2 = tempswm2 + (feederdf.zdata{obj.s1Col}(feederdfIndex)/length(targSample.zdata{obj.s1Col}));
+0997             <span class="keyword">end</span>
+0998             
+0999             
+1000             <span class="keyword">if</span> feederdf == obj.s1
+1001                 tempswm2 = tempswm2 - (feederdf.zdata{obj.s1Col}(feederdfIndex)/length(feederdf.zdata{obj.s1Col}));
+1002                 tempswm2 = tempswm2 + (targSample.zdata{obj.s1Col}(targSampleIndex)/length(feederdf.zdata{obj.s1Col}));
+1003             <span class="keyword">end</span>
+1004             
+1005             obj.swstat2 = tempswm2;
+1006             obj.swstat1 = obj.stat1;
+1007                
+1008             <span class="keyword">if</span> isnan(obj.swstat1) || isnan(obj.swstat2)
+1009                 error(<span class="string">'NaN obtained during swstat computation (perhaps there is missing data for an item?)'</span>);
+1010             <span class="keyword">end</span>
+1011         <span class="keyword">end</span>
+1012         
+1013         <span class="comment">%% swSingleStdev(targSample,targSampleIndex, feederdf,feederdfIndex)</span>
+1014         <a name="_sub16" href="#_subfunctions" class="code">function swSingleStdev(obj,targSample,targSampleIndex, feederdf,feederdfIndex)</a>
+1015            <span class="comment">% Calculates the new (swap) stdevs if items from targSample and feederd were swapped.</span>
+1016            <span class="comment">%</span>
+1017            <span class="comment">% Inputs are the same as for swapCost()</span>
+1018             
+1019             n2 = length(obj.s1.zdata{obj.s1Col});           
+1020                        
+1021             obj.swpsumx2sq = obj.sumx2sq;
+1022             obj.swpmeanx2 = obj.meanx2;
+1023             
+1024             <span class="keyword">if</span> targSample == obj.s1
+1025                 <span class="comment">%must update 2 params %first, take out the old observation, then add in thew new</span>
+1026                 obj.swpsumx2sq = obj.swpsumx2sq - (targSample.zdata{obj.s1Col}(targSampleIndex))^2;
+1027                 obj.swpmeanx2 = obj.swpmeanx2 - (targSample.zdata{obj.s1Col}(targSampleIndex))/n2;                
+1028                 obj.swpsumx2sq = obj.swpsumx2sq + (feederdf.zdata{obj.s1Col}(feederdfIndex))^2;
+1029                 obj.swpmeanx2 = obj.swpmeanx2 + (feederdf.zdata{obj.s1Col}(feederdfIndex))/n2;
+1030             <span class="keyword">end</span>
+1031             
+1032             <span class="keyword">if</span> feederdf == obj.s1
+1033                 obj.swpsumx2sq = obj.swpsumx2sq -  (feederdf.zdata{obj.s1Col}(feederdfIndex))^2;
+1034                 obj.swpmeanx2 = obj.swpmeanx2 - (feederdf.zdata{obj.s1Col}(feederdfIndex))/n2;                
+1035                 obj.swpsumx2sq = obj.swpsumx2sq + (targSample.zdata{obj.s1Col}(targSampleIndex))^2;
+1036                 obj.swpmeanx2 = obj.swpmeanx2 + (targSample.zdata{obj.s1Col}(targSampleIndex))/n2;   
+1037             <span class="keyword">end</span>
+1038                     
+1039             stdevx2 = (1/(n2-1) * obj.swpsumx2sq <span class="keyword">...</span>
+1040                         - n2/(n2-1) * obj.swpmeanx2^2)^0.5;
+1041                     
+1042             obj.swstat1 = obj.stat1; <span class="comment">%just copy over the target</span>
+1043             obj.swstat2 = stdevx2;
+1044             
+1045             <span class="keyword">if</span> isnan(obj.swstat1) || isnan(obj.swstat2)
+1046                 error(<span class="string">'NaN obtained during swstat computation (perhaps there is missing data for an item?)'</span>);
+1047             <span class="keyword">end</span>            
+1048           
+1049         <span class="keyword">end</span>
+1050         
+1051         
+1052         
+1053         <span class="comment">%% minDiff() FUNCTION</span>
+1054         <a name="_sub17" href="#_subfunctions" class="code">function cost = minDiff(obj,x1,x2)</a>
+1055             <span class="comment">% cost function minimized by reduced differences on the statistic</span>
+1056             cost = (abs((x2-x1))^obj.exp)*obj.weight;
+1057         <span class="keyword">end</span> <span class="comment">% minDiff</span>
+1058 
+1059         
+1060         <span class="comment">%% maxDiff() FUNCTION</span>
+1061         <a name="_sub18" href="#_subfunctions" class="code">function cost = maxDiff(obj,x1,x2)</a>
+1062             <span class="comment">% cost function minimized by maximizing differences on the stat.  Many uses may want to use orderedMaxDiff, instead.</span>
+1063             cost = (-(abs((x2-x1))^obj.exp))*obj.weight;
+1064         <span class="keyword">end</span>       
+1065         
+1066         <span class="comment">%% orderedMaxDiff() FUNCTION</span>
+1067         <a name="_sub19" href="#_subfunctions" class="code">function cost = orderedMaxDiff(obj,x1,x2)</a>
+1068             <span class="comment">% cost function minimized by maximizing a difference between the two groups that adheres to s1.stat &lt; s2.stat</span>
+1069             <span class="keyword">if</span> x1 &lt; x2; cost = (-(abs((x2-x1))^obj.exp))*obj.weight;
+1070             <span class="keyword">else</span> cost = ((abs((x2-x1))^obj.exp))*obj.weight; <span class="keyword">end</span>;
+1071         <span class="keyword">end</span>
+1072         
+1073         <span class="comment">%% cost = acceptSwap(obj)</span>
+1074         <a name="_sub20" href="#_subfunctions" class="code">function cost = acceptSwap(obj)</a>
+1075             <span class="comment">%generic acceptSwap function</span>
+1076             obj.acceptsw();
+1077             cost = <a href="#_sub21" class="code" title="subfunction cost = acceptSwap(obj)">acceptSwap</a>@<a href="genericConstraint.html" class="code" title="">genericConstraint</a>(obj);
+1078         <span class="keyword">end</span>
+1079 
+1080         <span class="comment">%% cost = rejectSwap(obj)</span>
+1081         <a name="_sub21" href="#_subfunctions" class="code">function cost = rejectSwap(obj)</a>
+1082             <span class="comment">%generic reject function</span>
+1083             obj.rejectsw();
+1084             cost = <a href="#_sub22" class="code" title="subfunction cost = rejectSwap(obj)">rejectSwap</a>@<a href="genericConstraint.html" class="code" title="">genericConstraint</a>(obj);
+1085         <span class="keyword">end</span>
+1086         
+1087         <span class="comment">%% acceptSwapMeans() METHOD</span>
+1088         <a name="_sub22" href="#_subfunctions" class="code">function acceptSwapMeans(obj)</a>
+1089             <span class="comment">% updates variables when the proposed swap is accepted for</span>
+1090             <span class="comment">% means</span>
+1091             
+1092             <span class="keyword">if</span>(isnan(obj.swstat1) &amp;&amp; isnan(obj.swstat2))
+1093                 <span class="comment">%do nothing, this method does not need to update</span>
+1094             <span class="keyword">elseif</span>(isnan(obj.swstat1) == false &amp;&amp; isnan(obj.swstat2) == false)
+1095               obj.stat1=obj.swstat1;
+1096               obj.stat2=obj.swstat2;
+1097          
+1098               obj.swstat1 = NaN;
+1099               obj.swstat2 = NaN;
+1100             <span class="keyword">else</span>
+1101                 error(<span class="string">'This should not have happened.  Maybe NaN in data?'</span>);
+1102             <span class="keyword">end</span>            
+1103         <span class="keyword">end</span>
+1104 
+1105         <span class="comment">%% rejectSwapMeans() METHOD</span>
+1106         <a name="_sub23" href="#_subfunctions" class="code">function rejectSwapMeans(obj)</a>
+1107             <span class="comment">% updates variables when swap is rejected</span>
+1108               obj.swstat1 = NaN;
+1109               obj.swstat2 = NaN;       
+1110         <span class="keyword">end</span>
+1111         
+1112          <span class="comment">%% acceptSwapStdev() METHOD</span>
+1113         <a name="_sub24" href="#_subfunctions" class="code">function acceptSwapStdev(obj)</a>
+1114             <span class="comment">% updates variables when the proposed swap is accepted for</span>
+1115             <span class="comment">% standard deviations</span>
+1116             
+1117             <span class="keyword">if</span>(isnan(obj.swstat1) &amp;&amp; isnan(obj.swstat2))
+1118                 <span class="comment">%do nothing, this method does not need to update</span>
+1119             <span class="keyword">elseif</span>(isnan(obj.swstat1) == false &amp;&amp; isnan(obj.swstat2) == false)
+1120                 
+1121 <span class="comment">%               disp('clearing swap memory');</span>
+1122               obj.stat1=obj.swstat1;
+1123               obj.stat2=obj.swstat2;
+1124          
+1125           
+1126               obj.sumx1sq = obj.swpsumx1sq;
+1127               obj.meanx1 = obj.swpmeanx1;
+1128               
+1129               obj.sumx2sq = obj.swpsumx2sq;
+1130               obj.meanx2 = obj.swpmeanx2;      
+1131               
+1132               obj.swpsumx1sq = NaN;
+1133               obj.swpmeanx1 = NaN;
+1134 
+1135               obj.swpsumx2sq = NaN;
+1136               obj.swpmeanx2 = NaN;   
+1137               
+1138               obj.swstat1 = NaN;
+1139               obj.swstat2 = NaN;
+1140             <span class="keyword">else</span>
+1141                 error(<span class="string">'This should not have happened'</span>);
+1142             <span class="keyword">end</span>            
+1143         <span class="keyword">end</span>       
+1144         
+1145         <span class="comment">%% rejectSwapStdev() METHOD</span>
+1146         <a name="_sub25" href="#_subfunctions" class="code">function rejectSwapStdev(obj)</a>
+1147             <span class="comment">% updates variables when the proposed swap is rejected</span>
+1148               
+1149               obj.swpsumx1sq = NaN;
+1150               obj.swpmeanx1 = NaN;
+1151 
+1152               obj.swpsumx2sq = NaN;
+1153               obj.swpmeanx2 = NaN;   
+1154               
+1155               obj.swstat1 = NaN;
+1156               obj.swstat2 = NaN;       
+1157         <span class="keyword">end</span>                 
+1158     <span class="keyword">end</span>
+1159         
+1160 
+1161     
+1162     
+1163     methods (Static)
+1164         <span class="comment">%% p = softDistanceConstraintInputParser2Sample() STATIC METHOD</span>
+1165         <a name="_sub26" href="#_subfunctions" class="code">function p = softDistanceConstraintInputParser2Sample()</a>
+1166             <span class="comment">% generates an input parser with parameter / value pairs and validators for the constructor args</span>
+1167             <span class="comment">%</span>
+1168             <span class="comment">% See constructor help/doc for more details</span>
+1169             
+1170             p = inputParser;
+1171 
+1172             <span class="comment">%NOTE: though these technically are 'optional' according to</span>
+1173             <span class="comment">%MATLAB's definition of what an input parser does, the fact</span>
+1174             <span class="comment">%that most of their default values will fail validation in all cases</span>
+1175             <span class="comment">%makes them de facto required parameters.</span>
+1176             
+1177             p.addParamValue(<span class="string">'sosObj'</span>,<span class="string">'null'</span>,@(sosObj)strcmp(class(sosObj),<span class="string">'sos'</span>));
+1178             p.addParamValue(<span class="string">'constraintType'</span>, <span class="string">'null'</span>, <span class="keyword">...</span>
+1179                 @(constraintType)any(strcmp({<span class="string">'soft'</span>},constraintType)));
+1180             p.addParamValue(<span class="string">'fnc'</span>,<span class="string">'null'</span>, <span class="keyword">...</span>
+1181                  @(fnc)any(strcmp({<span class="string">'min'</span> <span class="string">'max'</span>,<span class="string">'orderedMax'</span>},fnc)));
+1182             p.addParamValue(<span class="string">'stat'</span>,<span class="string">'null'</span>, <span class="keyword">...</span>
+1183                  @(stat)any(strcmp({<span class="string">'mean'</span> <span class="string">'stdev'</span>},stat)));
+1184             p.addParamValue(<span class="string">'sample1'</span>,<span class="string">'null'</span>,@(sample1)strcmp(class(sample1),<span class="string">'sample'</span>));
+1185             p.addParamValue(<span class="string">'sample2'</span>,<span class="string">'null'</span>,@(sample2)strcmp(class(sample2),<span class="string">'sample'</span>));
+1186             p.addParamValue(<span class="string">'s1ColName'</span>,<span class="string">''</span>,@(s1ColName)ischar(s1ColName));
+1187             p.addParamValue(<span class="string">'s2ColName'</span>,<span class="string">''</span>,@(s2ColName)ischar(s2ColName));
+1188             p.addParamValue(<span class="string">'paired'</span>,<span class="string">'null'</span>,@(paired)islogical(paired));
+1189             p.addParamValue(<span class="string">'exponent'</span>,2,@(exponent)isnumeric(exponent));
+1190             p.addParamValue(<span class="string">'weight'</span>,1,@(weight)isnumeric(weight));
+1191             p.addParamValue(<span class="string">'name'</span>,<span class="string">'noname'</span>,@(name)ischar(name));
+1192             
+1193         <span class="keyword">end</span> <span class="comment">% softDistanceConstraintInputParser()</span>
+1194         
+1195         
+1196         
+1197         <a name="_sub27" href="#_subfunctions" class="code">function p = softDistanceConstraintInputParser1Sample()</a>
+1198             <span class="comment">% generates an input parser with parameter / value pairs and validators for the constructor args</span>
+1199             <span class="comment">%</span>
+1200             <span class="comment">% See constructor help/doc for more details</span>
+1201             
+1202             p = inputParser;
+1203 
+1204             <span class="comment">%NOTE: though these technically are 'optional' according to</span>
+1205             <span class="comment">%MATLAB's definition of what an input parser does, the fact</span>
+1206             <span class="comment">%that most of their default values will fail validation in all cases</span>
+1207             <span class="comment">%makes them de facto required parameters.</span>
+1208             
+1209             p.addParamValue(<span class="string">'sosObj'</span>,<span class="string">'null'</span>,@(sosObj)strcmp(class(sosObj),<span class="string">'sos'</span>));
+1210             p.addParamValue(<span class="string">'constraintType'</span>, <span class="string">'null'</span>, <span class="keyword">...</span>
+1211                 @(constraintType)any(strcmp({<span class="string">'soft'</span>},constraintType)));
+1212             p.addParamValue(<span class="string">'fnc'</span>,<span class="string">'null'</span>, <span class="keyword">...</span>
+1213                  @(fnc)any(strcmp({<span class="string">'match1SampleVal'</span>},fnc)));
+1214             p.addParamValue(<span class="string">'stat'</span>,<span class="string">'null'</span>, <span class="keyword">...</span>
+1215                  @(stat)any(strcmp({<span class="string">'mean'</span> <span class="string">'stdev'</span>},stat)));
+1216             p.addParamValue(<span class="string">'sample1'</span>,<span class="string">'null'</span>,@(sample1)strcmp(class(sample1),<span class="string">'sample'</span>));
+1217             p.addParamValue(<span class="string">'s1ColName'</span>,<span class="string">''</span>,@(s1ColName)ischar(s1ColName));
+1218             p.addParamValue(<span class="string">'exponent'</span>,2,@(exponent)isnumeric(exponent));
+1219             p.addParamValue(<span class="string">'weight'</span>,1,@(weight)isnumeric(weight));
+1220             p.addParamValue(<span class="string">'targVal'</span>,<span class="string">'null'</span>,@(targVal)isnumeric(targVal));
+1221             p.addParamValue(<span class="string">'name'</span>,<span class="string">'noname'</span>,@(name)ischar(name));
+1222             
+1223         <span class="keyword">end</span> <span class="comment">% softDistanceConstraintInputParser()</span>
+1224             
+1225     <span class="keyword">end</span>
+1226         
+1227     
+1228     methods (Static, Access = private)
+1229         
+1230         <span class="comment">%% p = parse2SampleContructorArgs(varargin) STATIC PRIVATE FUNCTION</span>
+1231         <a name="_sub28" href="#_subfunctions" class="code">function p = parse2SampleConstructorArgs(varargin)</a>
+1232             <span class="comment">% parses the constructor args</span>
+1233             <span class="comment">%</span>
+1234             <span class="comment">% See constructor help/doc for more info</span>
+1235                         
+1236             varargin = varargin{1};
+1237             p = softDistanceConstraint.softDistanceConstraintInputParser2Sample();
+1238             p.parse(varargin{:});
+1239         <span class="keyword">end</span>
+1240         
+1241         <span class="comment">%% p = parse1SampleContructorArgs(varargin) STATIC PRIVATE FUNCTION</span>
+1242         <a name="_sub29" href="#_subfunctions" class="code">function p = parse1SampleConstructorArgs(varargin)</a>
+1243             <span class="comment">% parses the constructor args</span>
+1244             <span class="comment">%</span>
+1245             <span class="comment">% See constructor help/doc for more info</span>
+1246                         
+1247             varargin = varargin{1};
+1248             p = softDistanceConstraint.softDistanceConstraintInputParser1Sample();
+1249             p.parse(varargin{:});
+1250         <span class="keyword">end</span>
+1251     <span class="keyword">end</span>
+1252     
+1253 <span class="keyword">end</span> <span class="comment">% end class</span>
+1254</pre></div>
+<hr><address>Generated on Fri 27-Jan-2012 16:18:41 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

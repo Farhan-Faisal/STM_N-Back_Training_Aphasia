@@ -1,0 +1,267 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of softMetaConstraint</title>
+  <meta name="keywords" content="softMetaConstraint">
+  <meta name="description" content="- parent class for soft meta-constraints">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="#">src</a> &gt; softMetaConstraint.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for .\src&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>softMetaConstraint
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>- parent class for soft meta-constraints</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> - parent class for soft meta-constraints
+
+ copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut
+
+    This file is part of SOS
+
+    SOS is free software: you can redistribute it and/or modify
+    it for academic and non-commercial purposes
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.  For commercial or for-profit
+    uses, please contact the authors (sos@cnbc.cmu.edu).
+
+    SOS is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="genericConstraint.html" class="code" title="">genericConstraint</a>	- parent class for constraints</li><li><a href="softConstraint.html" class="code" title="">softConstraint</a>	- parent class for soft constraints</li><li><a href="softMetaConstraint.html" class="code" title="">softMetaConstraint</a>	- parent class for soft meta-constraints</li><li><a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>	- master print function that regulates cmd line output based on verbosity flags</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="genericConstraint.html" class="code" title="">genericConstraint</a>	- parent class for constraints</li><li><a href="softMetaConstraint.html" class="code" title="">softMetaConstraint</a>	- parent class for soft meta-constraints</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function obj = softMetaConstraint(varargin)</a></li><li><a href="#_sub2" class="code">function cost = initCost(obj)</a></li><li><a href="#_sub3" class="code">function swCost = swapCost(obj)</a></li><li><a href="#_sub4" class="code">function cost = minDiff(obj,x1,x2)</a></li><li><a href="#_sub5" class="code">function cost = minDiffCond(obj,x1,x2)</a></li><li><a href="#_sub6" class="code">function cost = acceptSwap(obj)</a></li><li><a href="#_sub7" class="code">function cost = rejectSwap(obj)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% - parent class for soft meta-constraints</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%    This file is part of SOS</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%    SOS is free software: you can redistribute it and/or modify</span>
+0008 <span class="comment">%    it for academic and non-commercial purposes</span>
+0009 <span class="comment">%    under the terms of the GNU General Public License as published by</span>
+0010 <span class="comment">%    the Free Software Foundation, either version 3 of the License, or</span>
+0011 <span class="comment">%    (at your option) any later version.  For commercial or for-profit</span>
+0012 <span class="comment">%    uses, please contact the authors (sos@cnbc.cmu.edu).</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%    SOS is distributed in the hope that it will be useful,</span>
+0015 <span class="comment">%    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+0016 <span class="comment">%    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+0017 <span class="comment">%    GNU General Public License for more details.</span>
+0018 
+0019 <span class="comment">%    You should have received a copy of the GNU General Public License</span>
+0020 <span class="comment">%    along with SOS (see COPYING.txt).</span>
+0021 <span class="comment">%    If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+0022 
+0023 
+0024 classdef <a href="softMetaConstraint.html" class="code" title="">softMetaConstraint</a> &lt; <a href="softConstraint.html" class="code" title="">softConstraint</a>
+0025     <span class="comment">%% creates and supports soft meta constraints.</span>
+0026     <span class="comment">%</span>
+0027     <span class="comment">% Meta constraints are a special type of soft constraint that operate</span>
+0028     <span class="comment">% on the actual cost values of other constraints rather than creating</span>
+0029     <span class="comment">% their own cost values from the actual data being matched.  These meta</span>
+0030     <span class="comment">% cosntraints can help balance (or intentionally imbalance) the degree</span>
+0031     <span class="comment">% to which different constraints are emphasized when optimizing sets.</span>
+0032     <span class="comment">%</span>
+0033     <span class="comment">% PROPERTIES</span>
+0034     <span class="comment">%     const1 % the first constraint</span>
+0035     <span class="comment">%     const2 % the second constraint</span>
+0036     <span class="comment">%     const2costScale % multiplier to apply to cost from the second constraint</span>
+0037     <span class="comment">%     comparison % how the two cost values should be compared.</span>
+0038     <span class="comment">%</span>
+0039     <span class="comment">% METHODS:</span>
+0040     <span class="comment">%   obj = softMetaConstraint(varargin) % CONSTRUCTOR</span>
+0041     <span class="comment">%   cost = initCost(obj)  % initializes cost</span>
+0042     <span class="comment">%   cost = minDiff(obj,x1,x2) % calculates cost when trying to minimize difference between the two cosntraint's costs.</span>
+0043     <span class="comment">%   cost = minDiff(obj,x1,x2) % calculates cost when trying to minimize difference between the two cosntraint's costs.</span>
+0044     <span class="comment">%   cost = acceptSwap(obj) % accept the swap</span>
+0045     <span class="comment">%   cost = rejectSwap(obj) % reject the swap</span>
+0046     <span class="comment">%</span>
+0047 
+0048     
+0049     <span class="comment">%% PROPERTIES</span>
+0050     properties
+0051         const1 <span class="comment">% the first constraint</span>
+0052         const2 <span class="comment">% the second constraint</span>
+0053         const2costScale <span class="comment">% multiplier to apply to cost from the second constraint</span>
+0054         comparison <span class="comment">% how the two cost values should be compared.</span>
+0055     <span class="keyword">end</span>
+0056     
+0057     <span class="comment">%% METHODS</span>
+0058     methods
+0059         
+0060         <a name="_sub0" href="#_subfunctions" class="code">function obj = softMetaConstraint(varargin)</a>
+0061             <span class="comment">%% Constructs a softMetaConstraint object</span>
+0062             <span class="comment">%</span>
+0063             <span class="comment">% PARAMETERS</span>
+0064             <span class="comment">%   sosObj - the sosObject this metacosntraint will be linked to</span>
+0065             <span class="comment">%   constraintType - must be 'meta'</span>
+0066             <span class="comment">%   fnc - match function to use ('matchCost' and matchCostNotMin are currently supported).</span>
+0067             <span class="comment">%</span>
+0068             <span class="comment">%   constraint1 - first constraint object</span>
+0069             <span class="comment">%   constraint2 - second constraint object</span>
+0070             <span class="comment">%   constraint2costScale - multiplier for constraint2 cost</span>
+0071             <span class="comment">%   exponent - exponent to use to scale the metaconstraint</span>
+0072             <span class="comment">%   weight - weight to be used to scale the metaconstraint</span>
+0073             <span class="comment">%   name - string label to assign to the object.</span>
+0074             
+0075             p = inputParser;
+0076             
+0077             p.addParamValue(<span class="string">'sosObj'</span>,<span class="string">'null'</span>, <span class="keyword">...</span>
+0078                                  @(sosObj)strcmp(class(sosObj),<span class="string">'sos'</span>));
+0079             p.addParamValue(<span class="string">'constraintType'</span>, <span class="string">'null'</span>, <span class="keyword">...</span>
+0080                 @(constraintType)strcmp(<span class="string">'meta'</span>,constraintType));
+0081             p.addParamValue(<span class="string">'fnc'</span>,<span class="string">'null'</span>, <span class="keyword">...</span>
+0082                  @(fnc)any(strcmp({<span class="string">'matchCost'</span>,<span class="string">'matchCostNotMin'</span>},fnc)));
+0083             p.addParamValue(<span class="string">'constraint1'</span>,<span class="string">'null'</span>, <span class="keyword">...</span>
+0084                 @(softCost1)any(strcmp(superclasses(softCost1),<span class="keyword">...</span>
+0085                                             <span class="string">'genericConstraint'</span>)));
+0086             p.addParamValue(<span class="string">'constraint2'</span>,<span class="string">'null'</span>, <span class="keyword">...</span>
+0087                 @(softCost2)any(strcmp(superclasses(softCost2),<span class="keyword">...</span>
+0088                                             <span class="string">'genericConstraint'</span>)));
+0089             p.addParamValue(<span class="string">'constraint2costScale'</span>, 1, <span class="keyword">...</span>
+0090                    @(constraint2costScale)isnumeric(constraint2costScale));
+0091             p.addParamValue(<span class="string">'exponent'</span>,2,@(exponent)isnumeric(exponent));
+0092             p.addParamValue(<span class="string">'weight'</span>,1,@(weight)isnumeric(weight));            
+0093             p.addParamValue(<span class="string">'name'</span>,<span class="string">'noname'</span>,@(name)ischar(name));
+0094             
+0095             p.parse(varargin{:});
+0096             
+0097             <span class="comment">% check additional constraints on values submitted to the</span>
+0098             <span class="comment">% constructor</span>
+0099             <span class="keyword">if</span>(p.Results.sosObj.containsConstraint(p.Results.constraint1) == 0)
+0100                 error(<span class="string">'Constraint2 is not part of the specified sosObj'</span>);
+0101             <span class="keyword">end</span>
+0102  
+0103             <span class="keyword">if</span>(p.Results.sosObj.containsConstraint(p.Results.constraint2) == 0)
+0104                 error(<span class="string">'Constraint2 is not part of the specified sosObj'</span>);
+0105             <span class="keyword">end</span>
+0106             
+0107             <span class="comment">% assign properties to the object</span>
+0108             
+0109             obj.sosObj = p.Results.sosObj;
+0110             obj.constraintType = p.Results.constraintType;
+0111             obj.fnc = p.Results.fnc;
+0112             
+0113             obj.weight = p.Results.weight;
+0114             obj.exp = p.Results.exponent;     
+0115             
+0116             obj.const1 = p.Results.constraint1;
+0117             obj.const2 = p.Results.constraint2;   
+0118             obj.const2costScale = p.Results.constraint2costScale;
+0119             
+0120             <span class="keyword">if</span> strcmp(obj.fnc,<span class="string">'matchCost'</span>)
+0121                 obj.comparison = @obj.minDiff;
+0122             <span class="keyword">elseif</span> strcmp(obj.fnc,<span class="string">'matchCostNotMin'</span>)
+0123                 obj.comparison = @obj.minDiffCond;
+0124             <span class="keyword">else</span>
+0125                 error([<span class="string">'fnc: &quot;'</span> obj.fnc, <span class="string">'&quot; not yet supported'</span>]);
+0126             <span class="keyword">end</span>
+0127            
+0128             obj.cost = NaN;
+0129             obj.swCost = NaN;
+0130 
+0131             <span class="comment">% add the name and the label</span>
+0132             obj.label = [obj.constraintType,<span class="string">'_'</span>,obj.fnc,<span class="string">'_['</span>,<span class="keyword">...</span>
+0133                     obj.const1.name,<span class="string">']_['</span>,<span class="keyword">...</span>
+0134                     obj.const2.name,<span class="string">']_'</span>,<span class="keyword">...</span>
+0135                     <span class="string">'x'</span>,num2str(obj.const2costScale),<span class="string">'_w'</span>,<span class="keyword">...</span>
+0136                     num2str(obj.weight),<span class="string">'_e'</span>,num2str(obj.exp)];              
+0137             <span class="keyword">if</span> any(strcmp(p.UsingDefaults,<span class="string">'name'</span>))                 
+0138                 obj.name = obj.label;
+0139             <span class="keyword">else</span>
+0140                  obj.name = p.Results.name;  
+0141             <span class="keyword">end</span>                
+0142             
+0143             <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>(<span class="string">'Soft META Constraint has been created'</span>, <span class="keyword">...</span>
+0144                     <span class="string">'softMetaConstraint_Constructor_endObjCreation'</span>);            
+0145             
+0146         <span class="keyword">end</span>
+0147             
+0148         <span class="comment">%% cost = initCost(obj) METHOD</span>
+0149         <a name="_sub1" href="#_subfunctions" class="code">function cost = initCost(obj)</a>
+0150             <span class="comment">% initializes cost</span>
+0151             cost = obj.comparison(obj.const1.cost,obj.const2.cost);
+0152             obj.cost = cost;
+0153         <span class="keyword">end</span>
+0154         
+0155         <a name="_sub2" href="#_subfunctions" class="code">function swCost = swapCost(obj)</a>
+0156             
+0157             <span class="keyword">if</span> isnan(obj.const1.swCost)
+0158                 cost1 = obj.const1.cost;
+0159             <span class="keyword">else</span>
+0160                 cost1 = obj.const1.swCost;
+0161             <span class="keyword">end</span>
+0162             
+0163             <span class="keyword">if</span> isnan(obj.const2.swCost)
+0164                 cost2 = obj.const2.cost;
+0165             <span class="keyword">else</span>
+0166                 cost2 = obj.const2.swCost;
+0167             <span class="keyword">end</span>           
+0168                         
+0169             swCost = obj.comparison(cost1,cost2);
+0170             obj.swCost = swCost;                    
+0171         <span class="keyword">end</span>           
+0172             
+0173         
+0174         <a name="_sub3" href="#_subfunctions" class="code">function cost = minDiff(obj,x1,x2)</a>
+0175             <span class="comment">%% calculates cost when trying to minimize difference between the two cosntraint's costs.</span>
+0176             cost = (abs((obj.const2costScale*x2) - x1)^obj.exp)*obj.weight*100;
+0177         <span class="keyword">end</span>
+0178 
+0179         
+0180         <a name="_sub4" href="#_subfunctions" class="code">function cost = minDiffCond(obj,x1,x2)</a>
+0181             <span class="comment">%% calculates cost when trying to minimize difference between the two cosntraint's costs.</span>
+0182             <span class="keyword">if</span> x2 &lt;= 0
+0183                 cost = ( ((abs(obj.const2costScale*x2 - x1)*x1)^0.5 )^obj.exp)*obj.weight*100;
+0184             <span class="keyword">else</span>
+0185                  cost = 0;
+0186             <span class="keyword">end</span>
+0187         <span class="keyword">end</span>
+0188         
+0189         <a name="_sub5" href="#_subfunctions" class="code">function cost = acceptSwap(obj)</a>
+0190             <span class="comment">%% accept the swap</span>
+0191             cost = <a href="#_sub6" class="code" title="subfunction cost = acceptSwap(obj)">acceptSwap</a>@<a href="genericConstraint.html" class="code" title="">genericConstraint</a>(obj);
+0192         <span class="keyword">end</span>
+0193         
+0194         <a name="_sub6" href="#_subfunctions" class="code">function cost = rejectSwap(obj)</a>
+0195             <span class="comment">%% reject the swap</span>
+0196             cost = <a href="#_sub7" class="code" title="subfunction cost = rejectSwap(obj)">rejectSwap</a>@<a href="genericConstraint.html" class="code" title="">genericConstraint</a>(obj);
+0197         <span class="keyword">end</span>
+0198         
+0199     <span class="keyword">end</span>
+0200     
+0201 <span class="keyword">end</span>
+0202</pre></div>
+<hr><address>Generated on Fri 27-Jan-2012 16:18:41 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

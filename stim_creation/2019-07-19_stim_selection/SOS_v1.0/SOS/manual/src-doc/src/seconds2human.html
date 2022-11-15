@@ -1,0 +1,228 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of seconds2human</title>
+  <meta name="keywords" content="seconds2human">
+  <meta name="description" content="- human readable time output">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="#">src</a> &gt; seconds2human.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for .\src&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>seconds2human
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>- human readable time output</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function out = seconds2human(secs, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> - human readable time output 
+
+ The original version of this code is covered on the BSD license and is 
+ copyright by Rody Olennhuis.  Minor updates to this code are covered
+ either this same BSD license, or, if applicable, but the umbrella GPL 
+ license used by the SOS software, as follows:</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="sos.html" class="code" title="">sos</a>	- SOS optimization object</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% - human readable time output</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% The original version of this code is covered on the BSD license and is</span>
+0004 <span class="comment">% copyright by Rody Olennhuis.  Minor updates to this code are covered</span>
+0005 <span class="comment">% either this same BSD license, or, if applicable, but the umbrella GPL</span>
+0006 <span class="comment">% license used by the SOS software, as follows:</span>
+0007 
+0008 <span class="comment">% copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%    This file is part of SOS</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%    SOS is free software: you can redistribute it and/or modify</span>
+0013 <span class="comment">%    it for academic and non-commercial purposes</span>
+0014 <span class="comment">%    under the terms of the GNU General Public License as published by</span>
+0015 <span class="comment">%    the Free Software Foundation, either version 3 of the License, or</span>
+0016 <span class="comment">%    (at your option) any later version.  For commercial or for-profit</span>
+0017 <span class="comment">%    uses, please contact the authors (sos@cnbc.cmu.edu).</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%    SOS is distributed in the hope that it will be useful,</span>
+0020 <span class="comment">%    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+0021 <span class="comment">%    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+0022 <span class="comment">%    GNU General Public License for more details.</span>
+0023 
+0024 <span class="comment">%    You should have received a copy of the GNU General Public License</span>
+0025 <span class="comment">%    along with SOS (see COPYING.txt).</span>
+0026 <span class="comment">%    If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+0027 
+0028 
+0029 <a name="_sub0" href="#_subfunctions" class="code">function out = seconds2human(secs, varargin)</a>
+0030 <span class="comment">%% outputs time in human readable format.  Slightly modified version of Rody P.S. Oldenhuis's version</span>
+0031 <span class="comment">%</span>
+0032 <span class="comment">%   str = SECONDS2HUMAN(seconds) returns a human-readable string from a</span>
+0033 <span class="comment">%   given (usually large) amount of seconds. For example,</span>
+0034 <span class="comment">%</span>
+0035 <span class="comment">%       str = seconds2human(1463456.3)</span>
+0036 <span class="comment">%</span>
+0037 <span class="comment">%       str =</span>
+0038 <span class="comment">%       'About 2 weeks and 2 days.'</span>
+0039 <span class="comment">%</span>
+0040 <span class="comment">%   You may also call the function with a second input argument; either</span>
+0041 <span class="comment">%   'short' (the default) or 'full'. This determines the level of detail</span>
+0042 <span class="comment">%   returned in the string:</span>
+0043 <span class="comment">%</span>
+0044 <span class="comment">%       str = seconds2human(1463456.3, 'full')</span>
+0045 <span class="comment">%</span>
+0046 <span class="comment">%       str =</span>
+0047 <span class="comment">%       '2 weeks, 2 days, 22 hours, 30 minutes, 56 seconds.'</span>
+0048 <span class="comment">%</span>
+0049 <span class="comment">%   The 'short' format returns only the two largest units of time.</span>
+0050 <span class="comment">%</span>
+0051 <span class="comment">%   [secs] may be an NxM-matrix, in which case the output is an NxM cell</span>
+0052 <span class="comment">%   array of the corresponding strings.</span>
+0053 <span class="comment">%</span>
+0054 <span class="comment">%   NOTE: SECONDS2HUMAN() defines one month as an &quot;average&quot; month, which</span>
+0055 <span class="comment">%   means that the string 'month' indicates 30.471 days.</span>
+0056 <span class="comment">%</span>
+0057 <span class="comment">%   See also datestr, datenum, etime.</span>
+0058 
+0059 
+0060 <span class="comment">%   Author: Rody P.S. Oldenhuis</span>
+0061 <span class="comment">%   Delft University of Technology</span>
+0062 <span class="comment">%   E-mail: oldnhuis@dds.nl</span>
+0063 <span class="comment">%   Last edited 11/Feb/2010.</span>
+0064 
+0065 <span class="comment">%  Modified by Blair Armstrong, July 11, 2010</span>
+0066 <span class="comment">%   Carnegie Mellon University</span>
+0067 
+0068 
+0069     <span class="comment">% default error</span>
+0070     error(nargchk(1,2,nargin));<span class="comment">%#ok</span>
+0071 
+0072     <span class="comment">% define some intuitive variables</span>
+0073     Seconds   = round(1                 );
+0074     Minutes   = round(60     * Seconds  ); 
+0075     Hours     = round(60     * Minutes  );
+0076     Days      = round(24     * Hours    ); 
+0077     Weeks     = round(7      * Days     ); 
+0078     Months    = round(30.471 * Days     );
+0079     Years     = round(365.26 * Days     );
+0080     Centuries = round(100    * Years    );
+0081     Millennia = round(10     * Centuries);
+0082 
+0083     <span class="comment">% put these into an array, and define associated strings</span>
+0084     units   = [Millennia, Centuries, Years, Months, Weeks, <span class="keyword">...</span>
+0085                Days, Hours, Minutes, Seconds];
+0086     singles = {<span class="string">'millennium'</span>; <span class="string">'century'</span>; <span class="string">'year'</span>; <span class="string">'month'</span>; <span class="keyword">...</span>
+0087                <span class="string">'w'</span>; <span class="string">'d'</span>; <span class="string">'h'</span>; <span class="string">'m'</span>; <span class="string">'s'</span>};
+0088     plurals = {<span class="string">'millennia'</span> ; <span class="string">'centuries'</span>; <span class="string">'years'</span>; <span class="string">'months'</span>; <span class="keyword">...</span>
+0089                <span class="string">'w'</span>; <span class="string">'d'</span>; <span class="string">'h'</span>; <span class="string">'m'</span>; <span class="string">'s'</span>};
+0090 
+0091     <span class="comment">% cut off all decimals from the given number of seconds</span>
+0092     assert(isnumeric(secs), <span class="string">'seconds2human:seconds_mustbe_numeric'</span>, <span class="keyword">...</span>
+0093         <span class="string">'The argument ''secs'' must be a scalar or matrix.'</span>);
+0094     secs = round(secs);   
+0095     
+0096     <span class="comment">% parse second argument</span>
+0097     short = true; 
+0098     <span class="keyword">if</span> (nargin &gt; 1)
+0099         <span class="comment">% extract argument</span>
+0100         short = varargin{1};
+0101         <span class="comment">% check its type</span>
+0102         assert(ischar(short), <span class="string">'seconds2human:argument_type_incorrect'</span>, <span class="keyword">...</span>
+0103             <span class="string">'The second argument must be either ''short'' or ''full''.'</span>);
+0104         <span class="comment">% check its contents</span>
+0105         <span class="keyword">switch</span> lower(short)
+0106             <span class="keyword">case</span> <span class="string">'full'</span> , short = false;
+0107             <span class="keyword">case</span> <span class="string">'short'</span>, short = true;
+0108             <span class="keyword">otherwise</span>
+0109                 error(<span class="string">'seconds2human:short_format_incorrect'</span>,<span class="keyword">...</span>
+0110                     <span class="string">'The second argument must be either ''short'' or ''full''.'</span>);
+0111         <span class="keyword">end</span>
+0112     <span class="keyword">end</span>
+0113     
+0114     <span class="comment">% pre-allocate appropriate output-type</span>
+0115     numstrings = numel(secs);    
+0116     <span class="keyword">if</span> (numstrings &gt; 1), out = cell(size(secs)); <span class="keyword">end</span>
+0117     
+0118     <span class="comment">% build (all) output string(s)</span>
+0119     <span class="keyword">for</span> j = 1:numstrings
+0120                 
+0121         <span class="comment">% initialize nested loop</span>
+0122         secsj   = secs(j);
+0123         counter = 0;       
+0124         <span class="keyword">if</span> short, string = <span class="string">''</span>;
+0125         <span class="keyword">else</span>      string = <span class="string">''</span>;
+0126         <span class="keyword">end</span>
+0127         
+0128         <span class="comment">% possibly quick exit</span>
+0129         <span class="keyword">if</span> (secsj &lt; 1), string = <span class="string">'1s'</span>; <span class="keyword">end</span>
+0130         
+0131         <span class="comment">% build string for j-th amount of seconds</span>
+0132         <span class="keyword">for</span> i = 1:length(units)
+0133             
+0134             <span class="comment">% amount of this unit</span>
+0135             amount = fix(secsj/units(i));
+0136             
+0137             <span class="comment">% include this unit in the output string</span>
+0138             <span class="keyword">if</span> amount &gt; 0
+0139                 
+0140                 <span class="comment">% increase counter</span>
+0141                 counter = counter + 1;
+0142                                 
+0143                 <span class="comment">% append (single or plural) unit of time to string</span>
+0144                 <span class="keyword">if</span> (amount &gt; 1)
+0145                     string = [string, num2str(amount), <span class="string">''</span>, plurals{i}];<span class="comment">%#ok</span>
+0146                 <span class="keyword">else</span>
+0147                     string = [string, num2str(amount), <span class="string">''</span>, singles{i}];<span class="comment">%#ok</span>
+0148                 <span class="keyword">end</span>
+0149                                 
+0150                 <span class="comment">% Finish the string after two units if short format is requested</span>
+0151                 <span class="keyword">if</span> (counter &gt; 1 &amp;&amp; short), string = [string, <span class="string">'.'</span>]; <span class="keyword">break</span>, <span class="keyword">end</span><span class="comment">%#ok</span>
+0152                 
+0153                 <span class="comment">% determine whether the ending should be a period (.) or a comma (,)</span>
+0154                 <span class="keyword">if</span> (rem(secsj, units(i)) &gt; 0)
+0155                     <span class="keyword">if</span> short, ending = <span class="string">' and '</span>;
+0156                     <span class="keyword">else</span> ending = <span class="string">' '</span>;
+0157                     <span class="keyword">end</span>
+0158                 <span class="keyword">else</span> ending = <span class="string">''</span>;
+0159                 <span class="keyword">end</span>
+0160                 string = [string, ending];<span class="comment">%#ok</span>
+0161                 
+0162             <span class="keyword">end</span>
+0163             
+0164             <span class="comment">% subtract this step from given amount of seconds</span>
+0165             secsj = secsj - amount*units(i);
+0166         <span class="keyword">end</span>
+0167         
+0168         <span class="comment">% insert in output cell, or set output string</span>
+0169         <span class="keyword">if</span> (numstrings &gt; 1)
+0170             out{j} = string;
+0171         <span class="keyword">else</span>
+0172             out = string;
+0173         <span class="keyword">end</span>        
+0174     <span class="keyword">end</span> <span class="comment">% for</span>
+0175     
+0176 <span class="keyword">end</span> <span class="comment">% seconds2human</span></pre></div>
+<hr><address>Generated on Fri 27-Jan-2012 16:18:41 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,332 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of createPop_Dialog</title>
+  <meta name="keywords" content="createPop_Dialog">
+  <meta name="description" content="- create population dialog">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="#">src</a> &gt; createPop_Dialog.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for .\src&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>createPop_Dialog
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>- create population dialog</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function varargout = createPop_Dialog(varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> - create population dialog
+
+ copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut
+
+    This file is part of SOS
+
+    SOS is free software: you can redistribute it and/or modify
+    it for academic and non-commercial purposes
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.  For commercial or for-profit
+    uses, please contact the authors (sos@cnbc.cmu.edu).
+
+    SOS is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>	- master print function that regulates cmd line output based on verbosity flags</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="sos_gui.html" class="code" title="function varargout = sos_gui(varargin)">sos_gui</a>	- sos main GUI</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function createPop_Dialog_OpeningFcn(hObject, eventdata, handles, varargin)</a></li><li><a href="#_sub2" class="code">function varargout = createPop_Dialog_OutputFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub3" class="code">function pushbutton_setPopSrc_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub4" class="code">function pushbutton_createPop_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub5" class="code">function edit_popName_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub6" class="code">function edit_popName_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub7" class="code">function edit1_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub8" class="code">function edit1_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub9" class="code">function pushbutton_setResPopOutfile_Callback(hObject, eventdata, handles)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% - create population dialog</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%    This file is part of SOS</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%    SOS is free software: you can redistribute it and/or modify</span>
+0008 <span class="comment">%    it for academic and non-commercial purposes</span>
+0009 <span class="comment">%    under the terms of the GNU General Public License as published by</span>
+0010 <span class="comment">%    the Free Software Foundation, either version 3 of the License, or</span>
+0011 <span class="comment">%    (at your option) any later version.  For commercial or for-profit</span>
+0012 <span class="comment">%    uses, please contact the authors (sos@cnbc.cmu.edu).</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%    SOS is distributed in the hope that it will be useful,</span>
+0015 <span class="comment">%    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+0016 <span class="comment">%    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+0017 <span class="comment">%    GNU General Public License for more details.</span>
+0018 
+0019 <span class="comment">%    You should have received a copy of the GNU General Public License</span>
+0020 <span class="comment">%    along with SOS (see COPYING.txt).</span>
+0021 <span class="comment">%    If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+0022 
+0023 
+0024 
+0025 <a name="_sub0" href="#_subfunctions" class="code">function varargout = createPop_Dialog(varargin)</a>
+0026 <span class="comment">% CREATEPOP_DIALOG M-file for createPop_Dialog.fig</span>
+0027 <span class="comment">%      CREATEPOP_DIALOG, by itself, creates a new CREATEPOP_DIALOG or raises the existing</span>
+0028 <span class="comment">%      singleton*.</span>
+0029 <span class="comment">%</span>
+0030 <span class="comment">%      H = CREATEPOP_DIALOG returns the handle to a new CREATEPOP_DIALOG or the handle to</span>
+0031 <span class="comment">%      the existing singleton*.</span>
+0032 <span class="comment">%</span>
+0033 <span class="comment">%      CREATEPOP_DIALOG('CALLBACK',hObject,eventData,handles,...) calls the local</span>
+0034 <span class="comment">%      function named CALLBACK in CREATEPOP_DIALOG.M with the given input arguments.</span>
+0035 <span class="comment">%</span>
+0036 <span class="comment">%      CREATEPOP_DIALOG('Property','Value',...) creates a new CREATEPOP_DIALOG or raises the</span>
+0037 <span class="comment">%      existing singleton*.  Starting from the left, property value pairs are</span>
+0038 <span class="comment">%      applied to the GUI before createPop_Dialog_OpeningFcn gets called.  An</span>
+0039 <span class="comment">%      unrecognized property name or invalid value makes property application</span>
+0040 <span class="comment">%      stop.  All inputs are passed to createPop_Dialog_OpeningFcn via varargin.</span>
+0041 <span class="comment">%</span>
+0042 <span class="comment">%      *See GUI Options on GUIDE's Tools menu.  Choose &quot;GUI allows only one</span>
+0043 <span class="comment">%      instance to run (singleton)&quot;.</span>
+0044 <span class="comment">%</span>
+0045 <span class="comment">% See also: GUIDE, GUIDATA, GUIHANDLES</span>
+0046 
+0047 <span class="comment">% Edit the above text to modify the response to help createPop_Dialog</span>
+0048 
+0049 <span class="comment">% Last Modified by GUIDE v2.5 07-Sep-2010 10:08:10</span>
+0050 
+0051 <span class="comment">% Begin initialization code - DO NOT EDIT</span>
+0052 gui_Singleton = 1;
+0053 gui_State = struct(<span class="string">'gui_Name'</span>,       mfilename, <span class="keyword">...</span>
+0054                    <span class="string">'gui_Singleton'</span>,  gui_Singleton, <span class="keyword">...</span>
+0055                    <span class="string">'gui_OpeningFcn'</span>, @<a href="#_sub1" class="code" title="subfunction createPop_Dialog_OpeningFcn(hObject, eventdata, handles, varargin)">createPop_Dialog_OpeningFcn</a>, <span class="keyword">...</span>
+0056                    <span class="string">'gui_OutputFcn'</span>,  @<a href="#_sub2" class="code" title="subfunction varargout = createPop_Dialog_OutputFcn(hObject, eventdata, handles)">createPop_Dialog_OutputFcn</a>, <span class="keyword">...</span>
+0057                    <span class="string">'gui_LayoutFcn'</span>,  [] , <span class="keyword">...</span>
+0058                    <span class="string">'gui_Callback'</span>,   []);
+0059 <span class="keyword">if</span> nargin &amp;&amp; ischar(varargin{1})
+0060     gui_State.gui_Callback = str2func(varargin{1});
+0061 <span class="keyword">end</span>
+0062 
+0063 <span class="keyword">if</span> nargout
+0064     [varargout{1:nargout}] = gui_mainfcn(gui_State, varargin{:});
+0065 <span class="keyword">else</span>
+0066     gui_mainfcn(gui_State, varargin{:});
+0067 <span class="keyword">end</span>
+0068 <span class="comment">% End initialization code - DO NOT EDIT</span>
+0069 
+0070 
+0071 <span class="comment">% --- Executes just before createPop_Dialog is made visible.</span>
+0072 <a name="_sub1" href="#_subfunctions" class="code">function createPop_Dialog_OpeningFcn(hObject, eventdata, handles, varargin)</a>
+0073 <span class="comment">% This function has no output args, see OutputFcn.</span>
+0074 <span class="comment">% hObject    handle to figure</span>
+0075 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0076 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0077 <span class="comment">% varargin   command line arguments to createPop_Dialog (see VARARGIN)</span>
+0078 
+0079 <span class="comment">% Choose default command line output for createPop_Dialog</span>
+0080 handles.output = hObject;
+0081 
+0082 <span class="comment">% Update handles structure</span>
+0083 guidata(hObject, handles);
+0084 
+0085 <span class="comment">% UIWAIT makes createPop_Dialog wait for user response (see UIRESUME)</span>
+0086 <span class="comment">% uiwait(handles.figure_createPop);</span>
+0087 
+0088 
+0089 <span class="comment">% --- Outputs from this function are returned to the command line.</span>
+0090 <a name="_sub2" href="#_subfunctions" class="code">function varargout = createPop_Dialog_OutputFcn(hObject, eventdata, handles) </a>
+0091 <span class="comment">% varargout  cell array for returning output args (see VARARGOUT);</span>
+0092 <span class="comment">% hObject    handle to figure</span>
+0093 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0094 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0095 
+0096 <span class="comment">% Get default command line output from handles structure</span>
+0097 varargout{1} = handles.output;
+0098 
+0099 
+0100 <span class="comment">% --- Executes on button press in pushbutton_setPopSrc.</span>
+0101 <a name="_sub3" href="#_subfunctions" class="code">function pushbutton_setPopSrc_Callback(hObject, eventdata, handles)</a>
+0102 <span class="comment">% hObject    handle to pushbutton_setPopSrc (see GCBO)</span>
+0103 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0104 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0105 
+0106     <span class="comment">% let user navigate to the script to run</span>
+0107     [fileName,pathName] = uigetfile(<span class="string">'*'</span>,<span class="string">'Run Script...'</span>);
+0108     
+0109     <span class="comment">% check to make sure user didn't cancel (which cases fileName == 0)</span>
+0110     <span class="keyword">if</span> fileName ~= 0
+0111         fullName = strcat(pathName,fileName);
+0112 
+0113         set(handles.text_PopSrc,<span class="string">'String'</span>,fullName);
+0114     <span class="keyword">end</span>
+0115     
+0116 
+0117 <span class="comment">% --- Executes on button press in pushbutton_createPop.</span>
+0118 <a name="_sub4" href="#_subfunctions" class="code">function pushbutton_createPop_Callback(hObject, eventdata, handles)</a>
+0119 <span class="comment">% hObject    handle to pushbutton_createPop (see GCBO)</span>
+0120 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0121 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0122     
+0123     makeObj = true;
+0124     <span class="comment">% do basic validation on each variable</span>
+0125     src = get(handles.text_PopSrc,<span class="string">'String'</span>);
+0126     
+0127     
+0128     <span class="keyword">if</span> isempty(src)
+0129         msgbox(<span class="string">'You must specify the source data for the population'</span>,<span class="keyword">...</span>
+0130                 <span class="string">'Missing source file!'</span>);        
+0131        makeObj = false;  
+0132     <span class="keyword">end</span>
+0133     
+0134     
+0135     varName = get(handles.edit_popName,<span class="string">'String'</span>);
+0136 
+0137     valid = regexp(varName,<span class="string">'^[a-zA-Z]+\w*$'</span>);
+0138     
+0139 
+0140     <span class="comment">% check if the pointer is valid, but only if the src is valid so as to</span>
+0141     <span class="comment">% not clutter the user with msgboxes</span>
+0142     <span class="keyword">if</span> isempty(valid) &amp;&amp; makeObj == true
+0143         <span class="comment">% name is not currently valid, tell the user.</span>
+0144         msgbox(<span class="string">'Only letters, numbers, and underscores are permitted in the name of the population object.  The first character must also be a letter.'</span>,<span class="keyword">...</span>
+0145                 <span class="string">'Invalid name!'</span>);
+0146         makeObj = false;
+0147             
+0148     <span class="keyword">end</span>
+0149     
+0150     
+0151     <span class="comment">% get header and formatting switches, in string form</span>
+0152     <span class="comment">% these data must always have reasonable values</span>
+0153     header = get(get(handles.uipanel_containsHeader,<span class="string">'SelectedObject'</span>),<span class="keyword">...</span>
+0154                 <span class="string">'String'</span>);
+0155     format = get(get(handles.uipanel_containsFormatting,<span class="string">'SelectedObject'</span>),<span class="keyword">...</span>
+0156                 <span class="string">'String'</span>);            
+0157     
+0158     <span class="comment">% the outfile will either have been set by the user to a reasonable</span>
+0159     <span class="comment">% state via the GUI, or will be empty and the default value will be</span>
+0160     <span class="comment">% substituted.</span>
+0161     outFile = get(handles.text_resPopOutfile,<span class="string">'String'</span>);
+0162     
+0163     <span class="comment">% fill in outFile if it was left blank.</span>
+0164     <span class="keyword">if</span> isempty(outFile)
+0165         outFile = strcat(varName,<span class="string">'.res.out.txt'</span>);
+0166     <span class="keyword">end</span>
+0167     
+0168     <span class="keyword">if</span> makeObj == true
+0169         <span class="comment">% the command to run to create a population</span>
+0170         command = strcat(varName,<span class="string">'='</span>,<span class="string">'population('''</span>,src,<span class="string">''',''isHeader'','</span>,<span class="keyword">...</span>
+0171                 header,<span class="string">',''isFormatting'','</span>,format,<span class="string">',''outFile'','''</span>,outFile,<span class="keyword">...</span>
+0172                 <span class="string">''',''name'','''</span>,varName,<span class="string">''');'</span>); <span class="comment">%'',''isHeader''',...</span>
+0173               <span class="comment">%  header);</span>
+0174 
+0175         <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">'Executing command: '</span>,<span class="string">''''</span>,command,<span class="string">''''</span>],<span class="string">'createPop_Dialog_Create'</span>);
+0176         evalin(<span class="string">'base'</span>,command);
+0177         
+0178         
+0179         
+0180         close(handles.figure_createPop);
+0181     <span class="keyword">end</span>
+0182     
+0183 
+0184 <a name="_sub5" href="#_subfunctions" class="code">function edit_popName_Callback(hObject, eventdata, handles)</a>
+0185 <span class="comment">% hObject    handle to edit_popName (see GCBO)</span>
+0186 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0187 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0188 
+0189 <span class="comment">% Hints: get(hObject,'String') returns contents of edit_popName as text</span>
+0190 <span class="comment">%        str2double(get(hObject,'String')) returns contents of edit_popName as a double</span>
+0191 
+0192     varName = get(hObject,<span class="string">'String'</span>);
+0193     
+0194     <span class="comment">%check to make sure that the name is a valid variable name:</span>
+0195     valid = regexp(varName,<span class="string">'^[a-zA-Z]+\w*$'</span>);
+0196     
+0197 
+0198     <span class="keyword">if</span> isempty(valid)
+0199         <span class="comment">% name is not currently valid, tell the user.</span>
+0200         msgbox(<span class="string">'Only letters, numbers, and underscores are permitted in the name of the population object.  The first character must also be a letter.'</span>,<span class="keyword">...</span>
+0201                 <span class="string">'Invalid name!'</span>);
+0202     <span class="keyword">else</span>
+0203         <span class="comment">% check to make sure that the new variable name doesn't already exist.</span>
+0204         command = strcat(<span class="string">'whos('''</span>,varName,<span class="string">''')'</span>);
+0205         varExists = evalin(<span class="string">'base'</span>,command);
+0206 
+0207 
+0208         <span class="comment">% if a variable with this name already exists, warns the user</span>
+0209         <span class="keyword">if</span> isempty(varExists) == 0
+0210             msgbox(<span class="string">'A population with this name already exists and will be overridden if you continue'</span>,<span class="keyword">...</span>
+0211                     <span class="string">'Population exists!'</span>);
+0212         <span class="keyword">end</span>
+0213     <span class="keyword">end</span>
+0214         
+0215         
+0216         
+0217     
+0218 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0219 <a name="_sub6" href="#_subfunctions" class="code">function edit_popName_CreateFcn(hObject, eventdata, handles)</a>
+0220 <span class="comment">% hObject    handle to edit_popName (see GCBO)</span>
+0221 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0222 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0223 
+0224 <span class="comment">% Hint: edit controls usually have a white background on Windows.</span>
+0225 <span class="comment">%       See ISPC and COMPUTER.</span>
+0226 <span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+0227     set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0228 <span class="keyword">end</span>
+0229 
+0230 
+0231 
+0232 <a name="_sub7" href="#_subfunctions" class="code">function edit1_Callback(hObject, eventdata, handles)</a>
+0233 <span class="comment">% hObject    handle to edit1 (see GCBO)</span>
+0234 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0235 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0236 
+0237 <span class="comment">% Hints: get(hObject,'String') returns contents of edit1 as text</span>
+0238 <span class="comment">%        str2double(get(hObject,'String')) returns contents of edit1 as a double</span>
+0239 
+0240 
+0241 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0242 <a name="_sub8" href="#_subfunctions" class="code">function edit1_CreateFcn(hObject, eventdata, handles)</a>
+0243 <span class="comment">% hObject    handle to edit1 (see GCBO)</span>
+0244 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0245 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0246 
+0247 <span class="comment">% Hint: edit controls usually have a white background on Windows.</span>
+0248 <span class="comment">%       See ISPC and COMPUTER.</span>
+0249 <span class="keyword">if</span> ispc &amp;&amp; isequal(get(hObject,<span class="string">'BackgroundColor'</span>), get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>))
+0250     set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0251 <span class="keyword">end</span>
+0252 
+0253 
+0254 <span class="comment">% --- Executes on button press in pushbutton_setResPopOutfile.</span>
+0255 <a name="_sub9" href="#_subfunctions" class="code">function pushbutton_setResPopOutfile_Callback(hObject, eventdata, handles)</a>
+0256 <span class="comment">% hObject    handle to pushbutton_setResPopOutfile (see GCBO)</span>
+0257 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0258 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0259 
+0260     [fileName,pathName] = uiputfile(<span class="string">'*'</span>,<span class="string">'Save residual population as...'</span>);
+0261     
+0262     <span class="comment">% check to make sure user didn't cancel (which cases fileName == 0)</span>
+0263     <span class="keyword">if</span> fileName ~= 0
+0264         fullName = strcat(pathName,fileName);
+0265     
+0266         set(handles.text_resPopOutfile,<span class="string">'String'</span>,fullName);  
+0267     <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Fri 27-Jan-2012 16:18:41 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

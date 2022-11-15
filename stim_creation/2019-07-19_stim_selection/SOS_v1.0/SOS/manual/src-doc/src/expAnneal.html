@@ -1,0 +1,600 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of expAnneal</title>
+  <meta name="keywords" content="expAnneal">
+  <meta name="description" content="- exponentially-decaying temperature annealing object">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="#">src</a> &gt; expAnneal.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for .\src&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>expAnneal
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>- exponentially-decaying temperature annealing object</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> - exponentially-decaying temperature annealing object
+
+ copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut
+
+    This file is part of SOS
+
+    SOS is free software: you can redistribute it and/or modify
+    it for academic and non-commercial purposes
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.  For commercial or for-profit
+    uses, please contact the authors (sos@cnbc.cmu.edu).
+
+    SOS is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="expAnneal.html" class="code" title="">expAnneal</a>	- exponentially-decaying temperature annealing object</li><li><a href="genericAnneal.html" class="code" title="">genericAnneal</a>	- abstract interface for annealing objects</li><li><a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>	- master print function that regulates cmd line output based on verbosity flags</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="expAnneal.html" class="code" title="">expAnneal</a>	- exponentially-decaying temperature annealing object</li><li><a href="sos.html" class="code" title="">sos</a>	- SOS optimization object</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function obj = expAnneal(varargin)</a></li><li><a href="#_sub2" class="code">function temp = getTemp(obj)</a></li><li><a href="#_sub3" class="code">function anneal(obj,curIt,cost,deltaCost)</a></li><li><a href="#_sub4" class="code">function p = expAnnealInputParser()</a></li><li><a href="#_sub5" class="code">function numSteps(initDeltaCost, finalDeltaCost, pDecrease)</a></li><li><a href="#_sub6" class="code">function maxpDecrease(initDeltaCost, finalDeltaCost,nStep)</a></li><li><a href="#_sub7" class="code">function p = parseConstructorArgs(varargin)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% - exponentially-decaying temperature annealing object</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%    This file is part of SOS</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%    SOS is free software: you can redistribute it and/or modify</span>
+0008 <span class="comment">%    it for academic and non-commercial purposes</span>
+0009 <span class="comment">%    under the terms of the GNU General Public License as published by</span>
+0010 <span class="comment">%    the Free Software Foundation, either version 3 of the License, or</span>
+0011 <span class="comment">%    (at your option) any later version.  For commercial or for-profit</span>
+0012 <span class="comment">%    uses, please contact the authors (sos@cnbc.cmu.edu).</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%    SOS is distributed in the hope that it will be useful,</span>
+0015 <span class="comment">%    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+0016 <span class="comment">%    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+0017 <span class="comment">%    GNU General Public License for more details.</span>
+0018 
+0019 <span class="comment">%    You should have received a copy of the GNU General Public License</span>
+0020 <span class="comment">%    along with SOS (see COPYING.txt).</span>
+0021 <span class="comment">%    If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+0022 
+0023 
+0024 
+0025 classdef <a href="expAnneal.html" class="code" title="">expAnneal</a> &lt; <a href="genericAnneal.html" class="code" title="">genericAnneal</a>
+0026     <span class="comment">%% Provides support for exponentially decaying temperature annealing</span>
+0027     <span class="comment">%</span>
+0028     <span class="comment">%  Provides support for an exponential anneal function governed by the</span>
+0029     <span class="comment">%  following equation:</span>
+0030     <span class="comment">%</span>
+0031     <span class="comment">%       temp = N*e^(-lambda*curStep);</span>
+0032     <span class="comment">%</span>
+0033     <span class="comment">% The Schedule operates as follows:</span>
+0034     <span class="comment">%   {blockSize} iterations are run with temperature set to Inf (the -1</span>
+0035     <span class="comment">%   value of curStep, which reflects the current temperature step).</span>
+0036     <span class="comment">%   provides an initial sample of the types of cost values encountered</span>
+0037     <span class="comment">%   when making purely random switches.  From this sample, the maximum</span>
+0038     <span class="comment">%   delta cost in the block is calculated by subtracting the biggest</span>
+0039     <span class="comment">%   cost from the smallest and multiplying this value by 10.  The x10</span>
+0040     <span class="comment">%   multiple is applied because in the context of the logicstic</span>
+0041     <span class="comment">%   function, a temperature 10x greater than deltaCost provides a good</span>
+0042     <span class="comment">%   approximation of random behavior.</span>
+0043     <span class="comment">%</span>
+0044     <span class="comment">%   Next, to fit the lambda term in the equation</span>
+0045     <span class="comment">%   the user must express how large of a decrease in this initial temp</span>
+0046     <span class="comment">%    is desired on the next step, as a probability.  For slower annealing, the</span>
+0047     <span class="comment">%   decrease in temperature should be small, and values should be close</span>
+0048     <span class="comment">%   to 1to 0.  For faster descent, values closer to 1 should be used.</span>
+0049     <span class="comment">%</span>
+0050     <span class="comment">%   Once the values for the variable in the formula have been derived,</span>
+0051     <span class="comment">%   the curStep is set to '0' and the initial temperature is calculated</span>
+0052     <span class="comment">%   using the formula (in this case = N).  Thus, the '0' step should</span>
+0053     <span class="comment">%   also basically yield random.</span>
+0054     <span class="comment">%</span>
+0055     <span class="comment">%   Subsequent changes in temperature occur when the state of the</span>
+0056     <span class="comment">%   optimizer is said to have reached thermal equilibrium and a new</span>
+0057     <span class="comment">%   temperature step begins.  This</span>
+0058     <span class="comment">%   approximated in the algorithm as when the previous two 'blocks' of</span>
+0059     <span class="comment">%   cost values are non-significantly different from one another</span>
+0060     <span class="comment">%   according to an independent samples t-test.  The value of this</span>
+0061     <span class="comment">%   t-test can be adjusted to make it easier or harder to reject the</span>
+0062     <span class="comment">%   null hypothesis.  In the present case, thermal equilibrium is</span>
+0063     <span class="comment">%   reached when we fail to reject the null hypothesis, and thus one</span>
+0064     <span class="comment">%   could also make a Type-II error and incorrectly fail to reject a</span>
+0065     <span class="comment">%   false null hypothesis.  This can be avoided by using p-values</span>
+0066     <span class="comment">%   closer to 1.  It doesn't take that much to cause a p-value to</span>
+0067     <span class="comment">%   exceed even the standard cutoff of 0.05 though if blockSizse</span>
+0068     <span class="comment">%   becomes large (e.g., 1000), so keep that in mind, otherwise thermal</span>
+0069     <span class="comment">%   equilibrium may never be reached</span>
+0070     <span class="comment">%</span>
+0071     <span class="comment">%   It is worth noting, however, that this measurement of</span>
+0072     <span class="comment">%   thermal equilibrium is merely intended to serve as a quick and</span>
+0073     <span class="comment">%   readily-interpretable approximation thereof.  A failure to reject</span>
+0074     <span class="comment">%   the null hypothesis does not stricly == confirmation of the null</span>
+0075     <span class="comment">%   hypothesis, and there are no explicit checks of the t-test</span>
+0076     <span class="comment">%   assumptions to have a strong basis for believing that the exact</span>
+0077     <span class="comment">%   p-value set is the true p-value for a given data set.  Again</span>
+0078     <span class="comment">%   though, for present purposes this approximation has proven to</span>
+0079     <span class="comment">%   adequately satisfy its intended purpose.</span>
+0080     <span class="comment">%</span>
+0081     <span class="comment">%</span>
+0082     <span class="comment">% PROPERTIES:</span>
+0083     <span class="comment">%     blockSize % size of the block of cost values used to determine initial max Delta cost and assess thermal equilibrium</span>
+0084     <span class="comment">%     pval % p-value for the test of equality of cost; p-values greater than this are indicative of thermal equilibrium.</span>
+0085     <span class="comment">%     N  %  N from exponential decay equation</span>
+0086     <span class="comment">%     lambda % lambda from exponental decay equation</span>
+0087     <span class="comment">%     curStep % current temperatuer step</span>
+0088     <span class="comment">%     pDecrease % proportion decrease in temperature on next step.</span>
+0089     <span class="comment">%     tempLog  % log of all temperature values produced by the algorithm, and the iteration they were set at</span>
+0090     <span class="comment">%     prevBlock % history of cost values from previous block</span>
+0091     <span class="comment">%     curBlock % history of cost values from current block</span>
+0092     <span class="comment">%     startDeltaCost % history of delta cost values from the first block for equation calibration.</span>
+0093     <span class="comment">%</span>
+0094     <span class="comment">%METHODS:</span>
+0095     <span class="comment">%   expAnneal(varargin) - CONSTRUCTOR</span>
+0096     <span class="comment">%   temp = getTemp(obj)  - Returns current temperature</span>
+0097     <span class="comment">%   anneal(obj,curIt,cost,deltaCost) - anneal current temperature using the exponentially decay annealing schedule.</span>
+0098     <span class="comment">%</span>
+0099     <span class="comment">%METHODS (Static)</span>
+0100     <span class="comment">%   numSteps(initDeltaCost, finalDeltaCost, pDecrease) % calculates the number of steps that would be necessary to go from initDeltaCost to finaldeltaCost</span>
+0101     <span class="comment">%   maxpDecrease(initDeltaCost, finalDeltaCost,nStep) % calculates the maxDecrease that would be necessary to go from initDeltaCost to finaldeltaCost using at least 3 drops in temperature.</span>
+0102     
+0103     <span class="comment">%% PROPERTIES</span>
+0104     properties
+0105         blockSize <span class="comment">% size of the block of cost values used to determine initial max Delta cost and assess thermal equilibrium</span>
+0106         pval <span class="comment">% p-value for the test of equality of cost; p-values greater than this are indicative of thermal equilibrium.</span>
+0107         N  <span class="comment">%  N from exponential decay equation</span>
+0108         lambda <span class="comment">% lambda from exponental decay equation</span>
+0109         curStep <span class="comment">% current temperature step</span>
+0110         pDecrease <span class="comment">% proportion decrease in temperature on next step.</span>
+0111         tempLog  <span class="comment">% log of all temperature values produced by the algorithm, and the iteration they were set at</span>
+0112         prevBlock <span class="comment">% history of cost values from previous block</span>
+0113         curBlock <span class="comment">% history of cost values from current block</span>
+0114         startDeltaCost <span class="comment">% history of delta cost values from the first block for equation calibration.</span>
+0115         overrideInitDeltaCost <span class="comment">% user-specified override for the calculated initDeltaCost value.</span>
+0116     <span class="keyword">end</span>
+0117     
+0118     
+0119     methods
+0120         <span class="comment">%% expAnneal CONSTRUCTOR</span>
+0121         <a name="_sub0" href="#_subfunctions" class="code">function obj = expAnneal(varargin)</a>
+0122             <span class="comment">% creates and initializes an expAnneal object</span>
+0123             <span class="comment">%</span>
+0124             <span class="comment">%PARAMETERS:</span>
+0125             <span class="comment">%Optional:</span>
+0126             <span class="comment">%   'blockSize'/integer - size of blocks to use when estimating the initial temperature and thermal equilibrium. Default: 1000</span>
+0127             <span class="comment">%   'pVal'/numeric - p-value to use when testing for thermal equilibrium. Default = 0.05</span>
+0128             <span class="comment">%   'pDecrease'/numeric - % decrease in previous temperature when temperature is decreased</span>
+0129             <span class="comment">%   'schedule'/'exp' - name of annealing schedule</span>
+0130                         
+0131             <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>(<span class="string">'Creating exponential decay temperature annealing function...'</span>,<span class="keyword">...</span>
+0132                 <span class="string">'expAnneal_constructor_startObjCreation'</span>);
+0133             
+0134             p = expAnneal.parseConstructorArgs(varargin);
+0135             
+0136             <span class="comment">% potentially altered by user input</span>
+0137             obj.blockSize = p.Results.blockSize; <span class="comment">% must be &gt;=2</span>
+0138             obj.pval = p.Results.pval;
+0139             obj.pDecrease = p.Results.pDecrease;
+0140             
+0141             
+0142             <span class="keyword">if</span>(any(strcmp(p.UsingDefaults,<span class="string">'overrideInitDeltaCost'</span>)))
+0143                 obj.overrideInitDeltaCost = NaN;
+0144             <span class="keyword">else</span>
+0145                 obj.overrideInitDeltaCost = p.Results.overrideInitDeltaCost;
+0146             <span class="keyword">end</span>
+0147             
+0148             
+0149             <span class="comment">% variables for expDecay equation</span>
+0150             obj.curStep = -1;                   
+0151             obj.N = NaN;
+0152             obj.lambda = NaN;
+0153                       
+0154             obj.tempLog = [];            
+0155             obj.temp = Inf;    
+0156             obj.tempLog = [obj.temp 0];
+0157             
+0158             obj.curBlock = nan(obj.blockSize,1);
+0159             obj.startDeltaCost = nan(obj.blockSize,1);
+0160         <span class="keyword">end</span>
+0161         
+0162         <span class="comment">%% temp = getTemp()  METHOD</span>
+0163         <a name="_sub1" href="#_subfunctions" class="code">function temp = getTemp(obj)</a>
+0164             <span class="comment">%Returns current temperature</span>
+0165             temp = obj.temp;
+0166         <span class="keyword">end</span>
+0167             
+0168         <span class="comment">%% anneal(obj,sosIt,cost) METHOD</span>
+0169         <a name="_sub2" href="#_subfunctions" class="code">function anneal(obj,curIt,cost,deltaCost)</a>
+0170             <span class="comment">%anneal current temperature using the exponentially decay annealing schedule.</span>
+0171             <span class="comment">%</span>
+0172             <span class="comment">% PARAMETERS:</span>
+0173             <span class="comment">%   curIt - current iteration in sosObj</span>
+0174             <span class="comment">%   cost - cost value produced during optimization</span>
+0175             <span class="comment">%   deltaCost - deltaCost value during optimization</span>
+0176 
+0177             <span class="keyword">if</span>(mod(curIt,obj.blockSize)) == 0
+0178                 curIndex = obj.blockSize;
+0179             <span class="keyword">else</span>
+0180                 curIndex = mod(curIt,obj.blockSize);
+0181             <span class="keyword">end</span>
+0182             
+0183             obj.curBlock(curIndex) = cost;
+0184             
+0185             
+0186             <span class="keyword">if</span>(curIt &lt;= obj.blockSize)
+0187                 obj.startDeltaCost(curIt) = deltaCost;
+0188             <span class="keyword">end</span>
+0189             
+0190             <span class="comment">% if &lt; 1 stepSize of iterations have been run, temp = inf to</span>
+0191             <span class="comment">% derive an initial estimation of typical cost values.  After</span>
+0192             <span class="comment">% this block, we can fit the decay equation</span>
+0193             <span class="keyword">if</span>(mod(curIt,obj.blockSize) == 0 &amp;&amp; (curIt)/obj.blockSize == 1 )
+0194                 
+0195                 <span class="comment">% The safest thing to do is to always use the largest</span>
+0196                 <span class="comment">% possible difference (maxCost - minCost in the set) as the</span>
+0197                 <span class="comment">% largest possible delta cost.  However, this  makes it</span>
+0198                 <span class="comment">% harder to reliably replicate a given run because the</span>
+0199                 <span class="comment">% initial calibration can be influenced by those two data</span>
+0200                 <span class="comment">% points alone.  So instead, use the 90th-10th percentile</span>
+0201                 <span class="comment">% as the basis for calibrating the annealing equation.</span>
+0202                 
+0203                 percentiles = [2.5 97.5];
+0204                 scores = prctile(obj.startDeltaCost, percentiles);
+0205                 
+0206                 DeltaCost95 = scores(2) - scores(1);
+0207                 
+0208               <span class="comment">%apply override if it has been specified;</span>
+0209               
+0210                <span class="keyword">if</span> isnan(obj.overrideInitDeltaCost) == 0
+0211                    DeltaCost95 = obj.overrideInitDeltaCost;
+0212                    
+0213                    <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>(<span class="string">'Applying user-specified override to initDeltaCost'</span>, <span class="keyword">...</span>
+0214                     <span class="string">'expAnneal_anneal_calibration'</span>);
+0215                <span class="keyword">end</span>
+0216               
+0217                 <span class="comment">% fit the decay function.</span>
+0218                 <span class="comment">% for the logistic funciton, if temp is 10x greater than</span>
+0219                 <span class="comment">% the largest cost, even the  minCost</span>
+0220                 <span class="comment">% would only have a 0.0525 chance of eliciting a swap.</span>
+0221                 
+0222                 
+0223                 
+0224                 obj.N = DeltaCost95; 
+0225                 
+0226                 step1Cost = (1-obj.pDecrease)*obj.N;
+0227                 obj.lambda = -1*log((step1Cost/obj.N))/1;
+0228                 
+0229                 obj.curStep = 0;
+0230                 
+0231                 obj.temp = obj.N*exp(-obj.lambda*obj.curStep); 
+0232                 obj.tempLog = [obj.tempLog ; obj.temp curIt];
+0233                 
+0234                 obj.prevBlock = obj.curBlock;
+0235                 obj.curBlock = nan(obj.blockSize,1);
+0236                 
+0237 
+0238                 <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([sprintf(<span class="string">'%i) '</span>, curIt), <span class="keyword">...</span>
+0239                     <span class="string">'Annealing Equation calibrated, changing temperature from '</span>, <span class="keyword">...</span>
+0240                     num2str(obj.tempLog(length(obj.tempLog)-1),1), <span class="keyword">...</span>
+0241                     <span class="string">' to '</span>, num2str(obj.temp)], <span class="keyword">...</span>
+0242                     <span class="string">'expAnneal_anneal_calibration'</span>);
+0243                     
+0244             <span class="comment">% otherwise, if a new block has been completed, see if thermal</span>
+0245             <span class="comment">% thermal equilibrium has been reached, i.e., cost is no longer</span>
+0246             <span class="comment">% descending</span>
+0247             <span class="keyword">elseif</span> (mod(curIt,obj.blockSize) == 0 &amp;&amp; (curIt)/obj.blockSize &gt; 1 )
+0248                 
+0249                 [H,p] = ttest2(obj.prevBlock,obj.curBlock,obj.pval,<span class="string">'both'</span>,<span class="keyword">...</span>
+0250                             <span class="string">'unequal'</span>); 
+0251                 
+0252                 <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([sprintf(<span class="string">'%i) '</span>, curIt), <span class="keyword">...</span>
+0253                     <span class="string">'p(thermEquil): '</span>, num2str(p), <span class="keyword">...</span>
+0254                     <span class="string">'  prevBlock m = '</span>, num2str(mean(obj.prevBlock)), <span class="keyword">...</span>
+0255                     <span class="string">' (se = '</span>, num2str(std(obj.prevBlock)/length(obj.prevBlock)), <span class="keyword">...</span>
+0256                     <span class="string">') curBlock m = '</span>, num2str(mean(obj.curBlock)), <span class="keyword">...</span>
+0257                     <span class="string">' (se = '</span>, num2str(std(obj.curBlock)/length(obj.curBlock)), <span class="keyword">...</span>
+0258                     <span class="string">')'</span>], <span class="keyword">...</span>
+0259                                 <span class="string">'expAnneal_anneal_pthermalEquil'</span>);
+0260                 
+0261                 <span class="comment">%we've reached our operational definition of thermal</span>
+0262                 <span class="comment">%equilibrium if H == 0</span>
+0263                 <span class="keyword">if</span> H == 0 
+0264                     obj.curStep = obj.curStep + 1;                                  
+0265                     obj.temp = obj.N*exp(-obj.lambda*obj.curStep);
+0266                     obj.tempLog = [obj.tempLog ; obj.temp curIt];
+0267            
+0268                     <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([sprintf(<span class="string">'%i) '</span>, curIt), <span class="keyword">...</span><span class="comment">'</span>
+0269                         <span class="string">'Thermal Equilibrium Reached - Dropping temperature from '</span>, <span class="keyword">...</span>
+0270                         num2str(obj.tempLog(length(obj.tempLog)-1,1)), <span class="keyword">...</span>
+0271                         <span class="string">' to '</span>, num2str(obj.temp)], <span class="keyword">...</span>
+0272                         <span class="string">'expAnneal_anneal_dropTemp'</span>);                   
+0273                 <span class="keyword">end</span>
+0274                 
+0275                 obj.prevBlock = obj.curBlock;
+0276                 obj.curBlock = nan(obj.blockSize,1);
+0277                 
+0278             <span class="keyword">end</span>
+0279         <span class="keyword">end</span> <span class="comment">% anneal</span>
+0280     <span class="keyword">end</span>
+0281     
+0282     
+0283     methods (Static) 
+0284         
+0285         <span class="comment">%% p = expAnnealInputParser()</span>
+0286         <a name="_sub3" href="#_subfunctions" class="code">function p = expAnnealInputParser()</a>
+0287             <span class="comment">% creates an input parser for the constructor args</span>
+0288             <span class="comment">%</span>
+0289             <span class="comment">%PARAMETERS:</span>
+0290             <span class="comment">%   see constructor args</span>
+0291             
+0292             p = inputParser;
+0293             
+0294             p.addParamValue(<span class="string">'blockSize'</span>,1000, <span class="keyword">...</span>
+0295                 @(blockSize)validateattributes(blockSize, {<span class="string">'numeric'</span>}, <span class="keyword">...</span>
+0296                 {<span class="string">'scalar'</span>, <span class="string">'integer'</span>, <span class="string">'positive'</span>, <span class="string">'&gt;'</span>, 1}));
+0297             p.addParamValue(<span class="string">'pval'</span>,0.05, <span class="keyword">...</span>
+0298                 @(pval)validateattributes(pval, {<span class="string">'numeric'</span>}, <span class="keyword">...</span>
+0299                 {<span class="string">'scalar'</span>, <span class="string">'positive'</span>, <span class="string">'&gt;'</span>, 0, <span class="string">'&lt;'</span>,1}));
+0300             p.addParamValue(<span class="string">'pDecrease'</span>,0.5,<span class="keyword">...</span>
+0301             @(pDecrease)validateattributes(pDecrease, {<span class="string">'numeric'</span>}, <span class="keyword">...</span>
+0302                 {<span class="string">'scalar'</span>, <span class="string">'positive'</span>, <span class="string">'&gt;'</span>, 0, <span class="string">'&lt;'</span>,1}));
+0303             p.addParamValue(<span class="string">'schedule'</span>,<span class="string">'exp'</span>, <span class="keyword">...</span>
+0304                 @(schedule)strcmp(schedule,<span class="string">'exp'</span>));  
+0305             <span class="comment">%override value should be overriden later to set it to Nan</span>
+0306             p.addParamValue(<span class="string">'overrideInitDeltaCost'</span>,0,<span class="keyword">...</span>
+0307                         @(overrideInitDeltaCost)validateattributes(overrideInitDeltaCost, {<span class="string">'numeric'</span>}, <span class="keyword">...</span>
+0308                 {<span class="string">'scalar'</span>})); 
+0309             
+0310         <span class="keyword">end</span>
+0311         
+0312         
+0313         <span class="comment">%% numSteps(initDeltaCost, finalDeltaCost, pDecrease) STATIC FUNCTION</span>
+0314         <a name="_sub4" href="#_subfunctions" class="code">function numSteps(initDeltaCost, finalDeltaCost, pDecrease)</a>
+0315             <span class="comment">% calculates the number of steps that would be necessary to go</span>
+0316             <span class="comment">% from initDeltaCost to finaldeltaCost, given a particular</span>
+0317             <span class="comment">% pDecrease.</span>
+0318             <span class="comment">%</span>
+0319             <span class="comment">% The intended use of this function is to help determine the</span>
+0320             <span class="comment">% value of pDecrease.  To do so, a couple of steps are</span>
+0321             <span class="comment">% invovled.  First, run sos with an exponential anneal function</span>
+0322             <span class="comment">% for expAnneal.blockSize iterations.  During this first block,</span>
+0323             <span class="comment">% temperature is set to infinitie, so cost values are changed</span>
+0324             <span class="comment">% randomly. Once blockSize iteractions have been completed,</span>
+0325             <span class="comment">% run &lt;sosObj&gt;.deltaCostPercentiles to see the  deltaCost value</span>
+0326             <span class="comment">% for the 97.5th - 2.5th percentile, which is the deltaCost</span>
+0327             <span class="comment">% value used by the exponential anneal object during it's</span>
+0328             <span class="comment">% calibration of the initial temperature value.  The next step</span>
+0329             <span class="comment">% is determining the finalDeltaCost value.  To determine that</span>
+0330             <span class="comment">% value, run SOS again, this time in greedy mode, and examine</span>
+0331             <span class="comment">% the distribution of deltaCosts once the algorithm reaches a</span>
+0332             <span class="comment">% frozen state.  For the stochastic annealing to find a better</span>
+0333             <span class="comment">% solution than what was found by the exponential annealer, it</span>
+0334             <span class="comment">% must approach that frozen state slowly.  For the frozen state</span>
+0335             <span class="comment">% to have been reached, by definition no swaps occured and</span>
+0336             <span class="comment">% therefore all delta costs should have an upper bound of zero.</span>
+0337             <span class="comment">%  For a very slow anneal, you could try to reach the point at</span>
+0338             <span class="comment">%  which a large number of swaps would have occured quite slowly,</span>
+0339             <span class="comment">% which corresponds to the delta cost from a high decile like 90%).</span>
+0340             <span class="comment">% This could take a while though. Alternatively, you could try</span>
+0341             <span class="comment">% to reach a lower decile instead (e.g., 10%).  A good</span>
+0342             <span class="comment">% compromise might be to aim for the 50th percentile so that</span>
+0343             <span class="comment">% you approach that point more slowly.  So to sum up to this</span>
+0344             <span class="comment">% point, input the initdeltaCost for the 97.5th to the 2.5th</span>
+0345             <span class="comment">% percentile from the first block in an</span>
+0346             <span class="comment">% exponential anneal optimization and the finalDeltaCost from</span>
+0347             <span class="comment">% a perceintile of your choice as the from the percentiles</span>
+0348             <span class="comment">% listed when a greedy anneal was run to a frozen state.</span>
+0349             <span class="comment">%</span>
+0350             <span class="comment">% Now, you have to decide what the pDecrease value will be.  It</span>
+0351             <span class="comment">% must be bounded between 0-1, and it should lead to at least 3</span>
+0352             <span class="comment">% steps for the exponential anneal to really be effective at</span>
+0353             <span class="comment">% gradually lowering temperature.  of course, more steps than 3</span>
+0354             <span class="comment">% will result in even slower and potentially better annealing.</span>
+0355             <span class="comment">% (1 step at inf, 1 intermediate step, and 1 step at a</span>
+0356             <span class="comment">% temperature low enough to cause freezing in a greedy anneal).</span>
+0357             <span class="comment">% Try a few different values to see how they would correspond</span>
+0358             <span class="comment">% to this constraint and the amount of time you're willing to</span>
+0359             <span class="comment">% wait while the algorithm runs.  Lowever values should lead to</span>
+0360             <span class="comment">% more steps, whereas higher value will lead to fewer steps.</span>
+0361             <span class="comment">%</span>
+0362             <span class="comment">%</span>
+0363             <span class="comment">% PARAMETERS</span>
+0364             <span class="comment">%   -initDeltaCost - the initial delta cost for the first</span>
+0365             <span class="comment">%      block of optimizatoin</span>
+0366             <span class="comment">%   -finalDeltaCost - the approximate delta cost value that you</span>
+0367             <span class="comment">%   wish to approach slowly to avoid premature freezing</span>
+0368             <span class="comment">%   -pDecrease - the reduction in the previous temperature to be</span>
+0369             <span class="comment">%       applied to generate the new temperature</span>
+0370             <span class="comment">%</span>
+0371             <span class="comment">%</span>
+0372             
+0373            
+0374       
+0375             validateattributes(initDeltaCost, {<span class="string">'numeric'</span>}, <span class="keyword">...</span>
+0376                 {<span class="string">'scalar'</span>, <span class="string">'positive'</span>, <span class="string">'&gt;'</span>, 0});
+0377             validateattributes(finalDeltaCost, {<span class="string">'numeric'</span>}, <span class="keyword">...</span>
+0378                 {<span class="string">'scalar'</span>, <span class="string">'positive'</span>, <span class="string">'&gt;'</span>, 0});     
+0379             validateattributes(pDecrease, {<span class="string">'numeric'</span>}, <span class="keyword">...</span>
+0380                 {<span class="string">'scalar'</span>, <span class="string">'positive'</span>, <span class="string">'&gt;'</span>, 0, <span class="string">'&lt;'</span>,1});
+0381             
+0382             <span class="keyword">if</span>(finalDeltaCost &gt;= initDeltaCost)
+0383                 error(<span class="string">'final delta cost must be &lt; init delta cost.  Consult the manual if this is not the case for your data.'</span>);
+0384             <span class="keyword">end</span>
+0385             
+0386             
+0387             
+0388             <span class="comment">% calibrate the expAnneal equation</span>
+0389             N = initDeltaCost*1;      <span class="comment">%#ok&lt;PROP&gt;</span>
+0390             step1Cost = (1-pDecrease)*N; <span class="comment">%#ok&lt;PROP&gt;</span>
+0391             lambda = -1*log((step1Cost/N))/1; <span class="comment">%#ok&lt;PROP&gt;</span>
+0392             
+0393             <span class="comment">%calculate initial temperature;</span>
+0394             initTemp = N*exp(-lambda*0);   <span class="comment">%#ok&lt;PROP&gt;</span>
+0395             
+0396             <span class="comment">%calculate the ifnal temperature.</span>
+0397             finalTemp = (initTemp * (finalDeltaCost/(initDeltaCost*10)))*10;
+0398                         
+0399             <span class="comment">%calculate the number of steps.</span>
+0400             nStep = -1*log(finalTemp/N)/lambda; <span class="comment">%#ok&lt;PROP&gt;</span>
+0401             nStep = upper(nStep);
+0402             
+0403             msg = sprintf(<span class="string">'\n%g steps needed to reach a temp low enough to freeze given finalDeltaCost\n'</span>, <span class="keyword">...</span>
+0404                         nStep);
+0405                     
+0406             <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>(msg, <span class="keyword">...</span>
+0407                         <span class="string">'expAnneal_numSteps_nStep'</span>);    
+0408                     
+0409             <span class="keyword">if</span>(nStep &lt; 3)
+0410                 <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">'Warning: pDecrease should be lowered until nStep &gt;= 3 '</span>,<span class="keyword">...</span>
+0411                              char(10),<span class="string">'         at least if exponentially decaying annealing '</span>,<span class="keyword">...</span>
+0412                              char(10),<span class="string">'         is to have an appreciable effect on annealing'</span>],<span class="keyword">...</span>
+0413                              <span class="string">'expAnneal_numSteps_Warn'</span>);
+0414             <span class="keyword">end</span>
+0415            
+0416         <span class="keyword">end</span>
+0417 
+0418         <span class="comment">%% maxpDecrease(initDeltaCost, finalDeltaCost) STATIC FUNCTION</span>
+0419         <a name="_sub5" href="#_subfunctions" class="code">function maxpDecrease(initDeltaCost, finalDeltaCost,nStep)</a>
+0420             <span class="comment">% calculates the maxDecrease that would be necessary to go</span>
+0421             <span class="comment">% from initDeltaCost to finaldeltaCost using at least 3 drops</span>
+0422             <span class="comment">% in temperature.</span>
+0423             <span class="comment">%</span>
+0424             <span class="comment">% The intended use of this function is to help determine the</span>
+0425             <span class="comment">% value of pDecrease.  To do so, a couple of steps are</span>
+0426             <span class="comment">% invovled.  First, run sos with an exponential anneal function</span>
+0427             <span class="comment">% for expAnneal.blockSize iterations.  During this first block,</span>
+0428             <span class="comment">% temperature is set to infinitie, so cost values are changed</span>
+0429             <span class="comment">% randomly. Once blockSize iteractions have been completed,</span>
+0430             <span class="comment">% run &lt;sosObj&gt;.deltaCostPercentiles to see the  deltaCost value</span>
+0431             <span class="comment">% for the 97.5th - 2.5th percentile, which is the deltaCost</span>
+0432             <span class="comment">% value used by the exponential anneal object during it's</span>
+0433             <span class="comment">% calibration of the initial temperature value.  The next step</span>
+0434             <span class="comment">% is determining the finalDeltaCost value.  To determine that</span>
+0435             <span class="comment">% value, run SOS again, this time in greedy mode, and examine</span>
+0436             <span class="comment">% the distribution of deltaCosts once the algorithm reaches a</span>
+0437             <span class="comment">% frozen state.  For the stochastic annealing to find a better</span>
+0438             <span class="comment">% solution than what was found by the exponential annealer, it</span>
+0439             <span class="comment">% must approach that frozen state slowly.  For the frozen state</span>
+0440             <span class="comment">% to have been reached, by definition no swaps occured and</span>
+0441             <span class="comment">% therefore all delta costs should have an upper bound of zero.</span>
+0442             <span class="comment">%  For a very slow anneal, you could try to reach the point at</span>
+0443             <span class="comment">%  which a large number of swaps would have occured quite slowly,</span>
+0444             <span class="comment">% which corresponds to the delta cost from a high decile like 90%).</span>
+0445             <span class="comment">% This could take a while though. Alternatively, you could try</span>
+0446             <span class="comment">% to reach a lower decile instead (e.g., 10%).  A good</span>
+0447             <span class="comment">% compromise might be to aim for the 50th percentile so that</span>
+0448             <span class="comment">% you approach that point more slowly.  So to sum up to this</span>
+0449             <span class="comment">% point, input the initdeltaCost for the 97.5th to the 2.5th</span>
+0450             <span class="comment">% percentile from the first block in an</span>
+0451             <span class="comment">% exponential anneal optimization and the finalDeltaCost from</span>
+0452             <span class="comment">% a perceintile of your choice as the from the percentiles</span>
+0453             <span class="comment">% listed when a greedy anneal was run to a frozen state.</span>
+0454             <span class="comment">%</span>
+0455             <span class="comment">% From this point, the algorithm will determine what the value</span>
+0456             <span class="comment">% of pDecrease would be if you were to have 3 steps in</span>
+0457             <span class="comment">% temperature during the annealing.  This is probably the</span>
+0458             <span class="comment">% minimum number that youèd wnat oth ave to be useful</span>
+0459             <span class="comment">% (otherwise you simply go from a first step of near-random</span>
+0460             <span class="comment">% behavior to a next step of basically stochastic behavior).</span>
+0461             <span class="comment">% If desired, you can then experiment with how many steps you</span>
+0462             <span class="comment">%</span>
+0463             <span class="comment">%</span>
+0464             <span class="comment">% PARAMETERS</span>
+0465             <span class="comment">%   -initDeltaCost - the initial delta cost for the first</span>
+0466             <span class="comment">%      block of optimizatoin</span>
+0467             <span class="comment">%   -finalDeltaCost - the approximate delta cost value that you</span>
+0468             <span class="comment">%   wish to approach slowly to avoid premature freezing</span>
+0469             <span class="comment">%   -pDecrease - the reduction in the previous temperature to be</span>
+0470             <span class="comment">%       applied to generate the new temperature</span>
+0471             <span class="comment">%</span>
+0472             <span class="comment">%</span>
+0473             
+0474            
+0475       
+0476             validateattributes(initDeltaCost, {<span class="string">'numeric'</span>}, <span class="keyword">...</span>
+0477                 {<span class="string">'scalar'</span>, <span class="string">'positive'</span>, <span class="string">'&gt;'</span>, 0});
+0478             validateattributes(finalDeltaCost, {<span class="string">'numeric'</span>}, <span class="keyword">...</span>
+0479                 {<span class="string">'scalar'</span>, <span class="string">'positive'</span>, <span class="string">'&gt;'</span>, 0});     
+0480             validateattributes(nStep, {<span class="string">'numeric'</span>}, <span class="keyword">...</span>
+0481                 {<span class="string">'integer'</span>, <span class="string">'scalar'</span>, <span class="string">'positive'</span>, <span class="string">'&gt;'</span>, 0});    
+0482             
+0483             <span class="keyword">if</span>(finalDeltaCost &gt;= initDeltaCost)
+0484                 error(<span class="string">'final delta cost must be &lt; init delta cost.  See the manual for what to do if this is the case'</span>);
+0485             <span class="keyword">end</span>
+0486 
+0487             <span class="keyword">if</span>(nStep &lt; 3)
+0488                 error(<span class="string">'nStep should be &gt;=3 for exponentially-decaying annealing to have an appreciable effect'</span>);
+0489             <span class="keyword">end</span>
+0490             
+0491             <span class="comment">% calibrate the expAnneal equation</span>
+0492             N = initDeltaCost*1;      <span class="comment">%#ok&lt;PROP&gt;</span>
+0493 
+0494             <span class="comment">%calculate initial temperature;</span>
+0495             initTemp = N*exp(0);   <span class="comment">%#ok&lt;PROP&gt;</span>
+0496             
+0497             <span class="comment">%calculate the ifnal temperature</span>
+0498             finalTemp = (initTemp * (finalDeltaCost/(initDeltaCost*10)))*10;
+0499             
+0500                     
+0501             lambda= -1*log(finalTemp/N)/(nStep); <span class="comment">%#ok&lt;PROP&gt;</span>
+0502             
+0503             step1Cost = N*exp(-lambda*1);  <span class="comment">%#ok&lt;PROP&gt;</span>
+0504             
+0505             pDecrease = -1*(step1Cost/N -1); <span class="comment">%#ok&lt;PROP&gt;</span>
+0506             
+0507             
+0508             msg = sprintf(<span class="string">'\n%f is max pDecrease to ensure %d steps during exp anneal'</span>, <span class="keyword">...</span>
+0509                         pDecrease,nStep); <span class="comment">%#ok&lt;PROP&gt;</span>
+0510             
+0511             <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>(msg, <span class="keyword">...</span>
+0512                         <span class="string">'expAnneal_maxpDecrease_maxpDecrease'</span>);
+0513             
+0514                 
+0515         <span class="keyword">end</span>
+0516         
+0517         
+0518     <span class="keyword">end</span>
+0519     
+0520     methods (Static, Access = private)
+0521         
+0522         <span class="comment">%% parseConstructorArgs(varargin)</span>
+0523         <a name="_sub6" href="#_subfunctions" class="code">function p = parseConstructorArgs(varargin)</a>
+0524             <span class="comment">% parsers the constructor arguments</span>
+0525             <span class="comment">%</span>
+0526             <span class="comment">%PARAMETERS:</span>
+0527             <span class="comment">%   see constructor args</span>
+0528             
+0529             varargin = varargin{1};
+0530             p = expAnneal.expAnnealInputParser();
+0531             p.parse(varargin{:});         
+0532         <span class="keyword">end</span>       
+0533     <span class="keyword">end</span>
+0534 <span class="keyword">end</span>
+0535</pre></div>
+<hr><address>Generated on Fri 27-Jan-2012 16:18:41 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

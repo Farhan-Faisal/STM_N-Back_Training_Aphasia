@@ -1,0 +1,291 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of initVerbosePrint</title>
+  <meta name="keywords" content="initVerbosePrint">
+  <meta name="description" content="- initializes the flags which control the verbosity of output">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="#">src</a> &gt; initVerbosePrint.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for .\src&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>initVerbosePrint
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>- initializes the flags which control the verbosity of output</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function  initVerbosePrint() </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> - initializes the flags which control the verbosity of output
+
+ copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut
+
+    This file is part of SOS
+
+    SOS is free software: you can redistribute it and/or modify
+    it for academic and non-commercial purposes
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.  For commercial or for-profit
+    uses, please contact the authors (sos@cnbc.cmu.edu).
+
+    SOS is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="setVerbosePrintVerbosity.html" class="code" title="function setVerbosePrintVerbosity(fieldName,val)">setVerbosePrintVerbosity</a>	- function for setting the verbosity of the SOS software cmd line output</li><li><a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>	- master print function that regulates cmd line output based on verbosity flags</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% - initializes the flags which control the verbosity of output</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%    This file is part of SOS</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%    SOS is free software: you can redistribute it and/or modify</span>
+0008 <span class="comment">%    it for academic and non-commercial purposes</span>
+0009 <span class="comment">%    under the terms of the GNU General Public License as published by</span>
+0010 <span class="comment">%    the Free Software Foundation, either version 3 of the License, or</span>
+0011 <span class="comment">%    (at your option) any later version.  For commercial or for-profit</span>
+0012 <span class="comment">%    uses, please contact the authors (sos@cnbc.cmu.edu).</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%    SOS is distributed in the hope that it will be useful,</span>
+0015 <span class="comment">%    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+0016 <span class="comment">%    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+0017 <span class="comment">%    GNU General Public License for more details.</span>
+0018 
+0019 <span class="comment">%    You should have received a copy of the GNU General Public License</span>
+0020 <span class="comment">%    along with SOS (see COPYING.txt).</span>
+0021 <span class="comment">%    If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+0022 
+0023 
+0024 
+0025 <a name="_sub0" href="#_subfunctions" class="code">function  initVerbosePrint()</a>
+0026     <span class="comment">%% initializes the verbose printing parameters</span>
+0027     <span class="comment">% the idea is that different verbosity flags could allow for different</span>
+0028     <span class="comment">% styles of output, though currently flags are always ==1 and this</span>
+0029     <span class="comment">% outputs to stdout</span>
+0030     <span class="comment">%</span>
+0031     <span class="comment">% each parameter indicates a specific print function, so it is possible</span>
+0032     <span class="comment">% to suppress or activate individual messages to create a custom level</span>
+0033     <span class="comment">% of verbosity.</span>
+0034     
+0035     <span class="keyword">global</span> verbosityFlags;
+0036     
+0037     <span class="keyword">if</span>(isempty(verbosityFlags))
+0038         verbosityFlags = struct( <span class="keyword">...</span>
+0039             <span class="string">'setSeed_set'</span>,1,<span class="keyword">...</span>
+0040             <span class="string">'population_constructor_startObjCreation'</span>,1, <span class="keyword">...</span>
+0041             <span class="string">'population_constructor_fileExists'</span>,1,<span class="keyword">...</span>
+0042             <span class="string">'population_constructor_endObjCreation'</span>,1, <span class="keyword">...</span>
+0043         <span class="keyword">...</span>
+0044             <span class="string">'sample_constructor_startObjCreation'</span>,1, <span class="keyword">...</span>
+0045             <span class="string">'sample_constructor_fileExists'</span>,1,<span class="keyword">...</span>
+0046             <span class="string">'sample_constructor_endObjCreation'</span>, 1, <span class="keyword">...</span>
+0047             <span class="string">'sample_setPop_end'</span>,1,<span class="keyword">...</span>
+0048             <span class="string">'sample_lockAll_end'</span>,1,<span class="keyword">...</span>
+0049             <span class="string">'sample_unlockAll_end'</span>,1,<span class="keyword">...</span>
+0050         <span class="keyword">...</span>
+0051             <span class="string">'dataFrame_readDataFrameData_reading'</span>,1, <span class="keyword">...</span>
+0052             <span class="string">'dataFrame_readDataFrameData_HeaderPresent'</span>,1, <span class="keyword">...</span>
+0053             <span class="string">'dataFrame_readDataFrameData_FormattingPresent'</span>,1, <span class="keyword">...</span>
+0054             <span class="string">'dataFrame_readDataFrameData_DoneReadingData'</span>,1, <span class="keyword">...</span>
+0055             <span class="string">'dataFrame_readDataFrameData_HeaderAbsent'</span>,1, <span class="keyword">...</span>
+0056             <span class="string">'dataFrame_readDataFrameData_FormattingAbsent'</span>,1, <span class="keyword">...</span>
+0057             <span class="string">'dataFrame_writeData_done'</span>,1,<span class="keyword">...</span>
+0058             <span class="string">'dataFrame_overlap_percent'</span>,1,<span class="keyword">...</span>
+0059         <span class="keyword">...</span>
+0060             <span class="string">'sos_constructor_startObjCreation'</span>,1, <span class="keyword">...</span>
+0061             <span class="string">'sos_constructor_endObjCreation'</span>, 1, <span class="keyword">...</span>
+0062             <span class="string">'sos_parseConstructor_defaultMaxIt'</span>,1, <span class="keyword">...</span>
+0063             <span class="string">'sos_parseConstructor_pSwapFunction'</span>,1,<span class="keyword">...</span>
+0064             <span class="string">'sos_parseConstructor_targSampleCandSelectMethod'</span>,1,<span class="keyword">...</span>
+0065             <span class="string">'sos_parseConstructor_feederdfCandSelectMethod'</span>,1,<span class="keyword">...</span>
+0066             <span class="string">'sos_parseConstructor_reportInterval'</span>,1,<span class="keyword">...</span>
+0067             <span class="string">'sos_parseConstructor_stopFreezeIt'</span>,1,<span class="keyword">...</span>
+0068             <span class="string">'sos_parseConstructor_statReports'</span>,1,<span class="keyword">...</span>
+0069             <span class="string">'sos_addSample_NoPopForSampleWarn'</span>,1, <span class="keyword">...</span>
+0070             <span class="string">'sos_addSample_SampleAlreadyAddedWarn'</span>,1, <span class="keyword">...</span>
+0071             <span class="string">'sos_addSample_sampleAdded'</span>,1, <span class="keyword">...</span>
+0072             <span class="string">'sos_initFillSamples_start'</span>,1,<span class="keyword">...</span>
+0073             <span class="string">'sos_normalizeData_start'</span>,1, <span class="keyword">...</span>
+0074             <span class="string">'sos_normalizeData_noVarWarn'</span>,1,<span class="keyword">...</span>
+0075             <span class="string">'sos_initCost_startInit'</span>,1,<span class="keyword">...</span>
+0076             <span class="string">'sos_initCost_indivHardCost'</span>,1,<span class="keyword">...</span>
+0077             <span class="string">'sos_initCost_totalHardCost'</span>,1,<span class="keyword">...</span>
+0078             <span class="string">'sos_initCost_indivSoftCost'</span>,1,<span class="keyword">...</span>
+0079             <span class="string">'sos_initCost_totalSoftCost'</span>,1,<span class="keyword">...</span>
+0080             <span class="string">'sos_initCost_indivMetaCost'</span>,1,<span class="keyword">...</span>
+0081             <span class="string">'sos_initCost_totalMetaCost'</span>,1,<span class="keyword">...</span>
+0082             <span class="string">'sos_initCost_totalSoftMetaCost'</span>,1,<span class="keyword">...</span><span class="comment"> </span>
+0083             <span class="string">'sos_dispCost_start'</span>,1,<span class="keyword">...</span>
+0084             <span class="string">'sos_dispCost_indivHardCost'</span>,1,<span class="keyword">...</span>
+0085             <span class="string">'sos_dispCost_totalHardCost'</span>,1,<span class="keyword">...</span>
+0086             <span class="string">'sos_dispCost_indivSoftCost'</span>,1,<span class="keyword">...</span>
+0087             <span class="string">'sos_dispCost_totalSoftCost'</span>,1,<span class="keyword">...</span>
+0088             <span class="string">'sos_dispCost_indivMetaCost'</span>,1,<span class="keyword">...</span>
+0089             <span class="string">'sos_dispCost_totalMetaCost'</span>,1,<span class="keyword">...</span>
+0090             <span class="string">'sos_dispCost_totalSoftMetaCost'</span>,1,<span class="keyword">...</span>
+0091             <span class="string">'sos_dispCost_warnCostNaN'</span>,1,<span class="keyword">...</span>
+0092             <span class="string">'sos_optimize_begin'</span>,1,<span class="keyword">...</span>
+0093             <span class="string">'sos_optimize_startOptimization'</span>,1,<span class="keyword">...</span>
+0094             <span class="string">'sos_optimize_resetFreezeIt'</span>,1,<span class="keyword">...</span>
+0095             <span class="string">'sos_optimize_reportHeader'</span>,1,<span class="keyword">...</span>
+0096             <span class="string">'sos_optimize_report'</span>,1,<span class="keyword">...</span>
+0097             <span class="string">'sos_optimize_endMaxIt'</span>,1,<span class="keyword">...</span>
+0098             <span class="string">'sos_optimize_endstopFreezeIt'</span>,1,<span class="keyword">...</span>
+0099             <span class="string">'sos_optimize_endallStatsPass'</span>,1,<span class="keyword">...</span>
+0100             <span class="string">'sos_optimize_endUserGuiInterrupt'</span>,1,<span class="keyword">...</span>
+0101             <span class="string">'sos_setAnnealSchedule_defaultAnneal'</span>,1,<span class="keyword">...</span>
+0102             <span class="string">'sos_writeSamples_begin'</span>,1, <span class="keyword">...</span>
+0103             <span class="string">'sos_writePopulations_begin'</span>,1,<span class="keyword">...</span>
+0104             <span class="string">'sos_addttest_end'</span>,1,<span class="keyword">...</span>
+0105             <span class="string">'sos_addztest_end'</span>,1,<span class="keyword">...</span>
+0106             <span class="string">'sos_addkstest_end'</span>,1,<span class="keyword">...</span>
+0107             <span class="string">'sos_doStatTests_begin'</span>,1,<span class="keyword">...</span>
+0108             <span class="string">'sos_deltaCostPercentiles_Header'</span>,1,<span class="keyword">...</span>
+0109             <span class="string">'sos_deltaCostPercentiles_Scores'</span>,1,<span class="keyword">...</span>
+0110             <span class="string">'sos_deltaCostPercentiles_deltaCost95'</span>,1,<span class="keyword">...</span>
+0111             <span class="string">'sos_createHistory_alreadyCreated'</span>,1,<span class="keyword">...</span>
+0112             <span class="string">'sos_createPlots_alreadyCreated'</span>,1,<span class="keyword">...</span>
+0113         <span class="keyword">...</span>
+0114             <span class="string">'hardBoundConstraint_Constructor_endObjCreation'</span>,1, <span class="keyword">...</span>
+0115             <span class="string">'hardBoundConstraint_initCost'</span>,1, <span class="keyword">...</span>
+0116         <span class="keyword">...</span>
+0117             <span class="string">'softDistanceConstraint_Constructor_endObjCreation'</span>,1,<span class="keyword">...</span>
+0118         <span class="keyword">...</span>
+0119             <span class="string">'softEntropyConstraint_Constructor_endObjCreation'</span>,1,<span class="keyword">...</span>
+0120         <span class="keyword">...</span>
+0121             <span class="string">'softMatchCorrelConstraint_Constructor_endObjCreation'</span>,1,<span class="keyword">...</span>
+0122         <span class="keyword">...</span>
+0123             <span class="string">'softMetaConstraint_Constructor_endObjCreation'</span>,1,<span class="keyword">...</span>
+0124         <span class="keyword">...</span>
+0125             <span class="string">'randSampleCandidateSelection_const'</span>,1, <span class="keyword">...</span>
+0126         <span class="keyword">...</span>
+0127             <span class="string">'randPopulationCandidateSelection_const'</span>,1, <span class="keyword">...</span>
+0128         <span class="keyword">...</span>
+0129             <span class="string">'randPopulationAndSampleCandidateSelection_const'</span>,1, <span class="keyword">...</span>
+0130         <span class="keyword">...</span>
+0131             <span class="string">'greedyAnneal_constructor_startObjCreation'</span>,1,<span class="keyword">...</span>
+0132         <span class="keyword">...</span>
+0133             <span class="string">'expAnneal_constructor_startObjCreation'</span>,1, <span class="keyword">...</span>
+0134             <span class="string">'expAnneal_anneal_calibration'</span>,1, <span class="keyword">...</span>
+0135             <span class="string">'expAnneal_anneal_dropTemp'</span>,1,<span class="keyword">...</span><span class="comment"> </span>
+0136             <span class="string">'expAnneal_anneal_pthermalEquil'</span>,1, <span class="keyword">...</span>
+0137             <span class="string">'expAnneal_numSteps_nStep'</span>,1,<span class="keyword">...</span>
+0138             <span class="string">'expAnneal_numSteps_Warn'</span>,1,<span class="keyword">...</span>
+0139             <span class="string">'expAnneal_maxpDecrease_maxpDecrease'</span>,1,<span class="keyword">...</span>
+0140         <span class="keyword">...</span>
+0141             <span class="string">'sosttest_ruIndependentSamplettest'</span>,1, <span class="keyword">...</span><span class="comment"> </span>
+0142             <span class="string">'sosttest_runPairedSamplettest'</span>,1, <span class="keyword">...</span>
+0143             <span class="string">'sosttest_runSingleSamplettest'</span>,1, <span class="keyword">...</span>
+0144         <span class="keyword">...</span>
+0145              <span class="string">'sosCorrelTest_runMatchCorrelztest'</span>,1,<span class="keyword">...</span>
+0146         <span class="keyword">...</span>
+0147              <span class="string">'soskstest_runMatchUniformkstest'</span>,1,<span class="keyword">...</span>
+0148         <span class="keyword">...</span>
+0149             <span class="string">'sosHistory_constructor_end'</span>,1,<span class="keyword">...</span>
+0150             <span class="string">'sosHistory_bufferedHistoryWrite_end'</span>,1, <span class="keyword">...</span>
+0151             <span class="string">'sosHistory_enableBufferedHistoryWrite_end'</span>,1,<span class="keyword">...</span>
+0152             <span class="string">'sosHistory_disableBufferedHistoryWrite_end'</span>,1, <span class="keyword">...</span>
+0153             <span class="string">'sosHistory_writeHistory_begin'</span>,1, <span class="keyword">...</span>
+0154         <span class="keyword">...</span><span class="comment"> </span>
+0155             <span class="string">'sosPlots_constructor_end'</span>,1, <span class="keyword">...</span>
+0156         <span class="keyword">...</span><span class="comment">    </span>
+0157         <span class="keyword">...</span>
+0158         <span class="keyword">...</span><span class="comment"> % GUI COMMAND OUTPUTS</span>
+0159             <span class="string">'sos_gui_runScript_CallBack_runScript'</span>,1, <span class="keyword">...</span>
+0160             <span class="string">'sos_gui_cmdWindow_CallBack_runcmd'</span>,1, <span class="keyword">...</span>
+0161             <span class="string">'sosGui_writeDF'</span>,1, <span class="keyword">...</span>
+0162             <span class="string">'sosGui_links2p'</span>,1, <span class="keyword">...</span>
+0163             <span class="string">'sosGui_simpleCmd'</span>,1,<span class="keyword">...</span>
+0164             <span class="string">'sosGui_addSample'</span>,1, <span class="keyword">...</span>
+0165             <span class="string">'sosGui_setFeederdfCandMethod'</span>,1, <span class="keyword">...</span>
+0166             <span class="string">'sosGui_initFillSamples'</span>,1, <span class="keyword">...</span>
+0167             <span class="string">'sosGui_normalizeData'</span>,1,<span class="keyword">...</span>
+0168             <span class="string">'sosGui_setgreedyAnneal'</span>,1,<span class="keyword">...</span>
+0169             <span class="string">'sosGui_greedyAnneal'</span>,1,<span class="keyword">...</span>
+0170             <span class="string">'sosGui_initCost'</span>,1,<span class="keyword">...</span>
+0171             <span class="string">'sosGui_doStats'</span>,1,<span class="keyword">...</span>
+0172             <span class="string">'sosGui_createHistory'</span>,1,<span class="keyword">...</span>
+0173             <span class="string">'sosGui_enableBufferedHistory'</span>,1,<span class="keyword">...</span>
+0174             <span class="string">'sosGui_disableBufferedHistory'</span>,1,<span class="keyword">...</span>
+0175             <span class="string">'sosGui_dispCost'</span>,1,<span class="keyword">...</span>
+0176             <span class="string">'sosGui_deltaCostDeciles'</span>,1,<span class="keyword">...</span>
+0177             <span class="string">'sosGui_writeSamples'</span>,1,<span class="keyword">...</span>
+0178             <span class="string">'sosGui_writePopulations'</span>,1,<span class="keyword">...</span>
+0179             <span class="string">'sosGui_writeAll'</span>,1,<span class="keyword">...</span>
+0180             <span class="string">'sosGui_optimize'</span>,1,<span class="keyword">...</span>
+0181         <span class="keyword">...</span>
+0182             <span class="string">'setSeed_Dialog_Set'</span>,1, <span class="keyword">...</span>
+0183         <span class="keyword">...</span><span class="comment"> </span>
+0184             <span class="string">'createPop_Dialog_Create'</span>,1, <span class="keyword">...</span>
+0185         <span class="keyword">...</span>
+0186             <span class="string">'createSample_Dialog_Create'</span>,1, <span class="keyword">...</span>
+0187         <span class="keyword">...</span>
+0188             <span class="string">'calculateOverlapDialog_calculateOverlap'</span>,1, <span class="keyword">...</span>
+0189         <span class="keyword">...</span>
+0190             <span class="string">'createSOSDialog_createSOS'</span>, 1, <span class="keyword">...</span>
+0191         <span class="keyword">...</span>
+0192             <span class="string">'expAnneal_Dialog_createExpAnneal'</span>,1, <span class="keyword">...</span>
+0193         <span class="keyword">...</span>
+0194             <span class="string">'numSteps_Dialog_calculate'</span>,1, <span class="keyword">...</span>
+0195         <span class="keyword">...</span>
+0196             <span class="string">'maxpDecrease_Dialog_calculate'</span>,1, <span class="keyword">...</span>
+0197         <span class="keyword">...</span>
+0198             <span class="string">'createHardBoundConstraint_Dialog_create'</span>,1, <span class="keyword">...</span>
+0199         <span class="keyword">...</span>
+0200             <span class="string">'createSingleSampleSoftDistanceConstraint_Dialog_create'</span>,1, <span class="keyword">...</span>
+0201         <span class="keyword">...</span>
+0202             <span class="string">'createTwoSampleSoftDistanceConstraint_Dialog_create'</span>,1, <span class="keyword">...</span>
+0203         <span class="keyword">...</span><span class="comment"> </span>
+0204             <span class="string">'createSoftMatchCorrelConstraint_Dialog_create'</span>,1,<span class="keyword">...</span>
+0205         <span class="keyword">...</span>
+0206             <span class="string">'createSoftEntropyConstraint_Dialog_create'</span>,1, <span class="keyword">...</span>
+0207         <span class="keyword">...</span>
+0208             <span class="string">'createSoftMetaConstraint_Dialog_create'</span>,1, <span class="keyword">...</span>
+0209         <span class="keyword">...</span>
+0210             <span class="string">'createsinglesamplettest_Dialog_create'</span>,1, <span class="keyword">...</span>
+0211         <span class="keyword">...</span>
+0212             <span class="string">'create2samplettest_Dialog_create'</span>,1, <span class="keyword">...</span>
+0213         <span class="keyword">...</span>
+0214             <span class="string">'createMatchCorrelztest_Dialog_create'</span>,1,<span class="keyword">...</span>
+0215         <span class="keyword">...</span>
+0216             <span class="string">'createMatchUniformkstest_Dialog_create'</span>,1,<span class="keyword">...</span>
+0217         <span class="keyword">...</span>
+0218             <span class="string">'setBufferedHistoryOutfile_Dialog_create'</span>,1, <span class="keyword">...</span>
+0219         <span class="keyword">...</span>
+0220             <span class="string">'saveHistory_Dialog_save'</span>,1, <span class="keyword">...</span>
+0221         <span class="keyword">...</span>
+0222             <span class="string">'createPlots_Dialog_create'</span>,1 <span class="keyword">...</span>
+0223             );
+0224     <span class="keyword">end</span>;
+0225 
+0226 
+0227 <span class="keyword">end</span>
+0228</pre></div>
+<hr><address>Generated on Fri 27-Jan-2012 16:18:41 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,12 @@
+Detailed versioning information is available online.
+
+
+The current version is 1.0
+-improved linux binary support
+-updated all documentation
+
+
+Older versions: 
+
+Version is 0.9b
+-beta release

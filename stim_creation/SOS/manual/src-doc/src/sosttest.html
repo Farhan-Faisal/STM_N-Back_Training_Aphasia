@@ -1,0 +1,941 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of sosttest</title>
+  <meta name="keywords" content="sosttest">
+  <meta name="description" content="- object for creating t-tests">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="#">src</a> &gt; sosttest.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for .\src&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>sosttest
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>- object for creating t-tests</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> - object for creating t-tests
+
+ copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut
+
+    This file is part of SOS
+
+    SOS is free software: you can redistribute it and/or modify
+    it for academic and non-commercial purposes
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.  For commercial or for-profit
+    uses, please contact the authors (sos@cnbc.cmu.edu).
+
+    SOS is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="genericStatTest.html" class="code" title="">genericStatTest</a>	- parent class for statistical test objects</li><li><a href="sosttest.html" class="code" title="">sosttest</a>	- object for creating t-tests</li><li><a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>	- master print function that regulates cmd line output based on verbosity flags</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="genericStatTest.html" class="code" title="">genericStatTest</a>	- parent class for statistical test objects</li><li><a href="sosttest.html" class="code" title="">sosttest</a>	- object for creating t-tests</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function obj = sosttest(varargin)</a></li><li><a href="#_sub2" class="code">function [userHypothesis, prob, label] = runTest(obj,varargin)</a></li><li><a href="#_sub3" class="code">function [userHypothesis, prob, label] =</a></li><li><a href="#_sub4" class="code">function [userHypothesis, prob, label] =</a></li><li><a href="#_sub5" class="code">function [userHypothesis, prob, label] =</a></li><li><a href="#_sub6" class="code">function constructIndependentSamplettest(obj,sosObj,varargin)</a></li><li><a href="#_sub7" class="code">function constructPairedSamplettest(obj,sosObj,varargin)</a></li><li><a href="#_sub8" class="code">function constructSingleSamplettest(obj,sosObj,varargin)</a></li><li><a href="#_sub9" class="code">function userHypothesis = returnNaN(~,~)</a></li><li><a href="#_sub10" class="code">function flag = validTestType(str)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% - object for creating t-tests</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%    This file is part of SOS</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%    SOS is free software: you can redistribute it and/or modify</span>
+0008 <span class="comment">%    it for academic and non-commercial purposes</span>
+0009 <span class="comment">%    under the terms of the GNU General Public License as published by</span>
+0010 <span class="comment">%    the Free Software Foundation, either version 3 of the License, or</span>
+0011 <span class="comment">%    (at your option) any later version.  For commercial or for-profit</span>
+0012 <span class="comment">%    uses, please contact the authors (sos@cnbc.cmu.edu).</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%    SOS is distributed in the hope that it will be useful,</span>
+0015 <span class="comment">%    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+0016 <span class="comment">%    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+0017 <span class="comment">%    GNU General Public License for more details.</span>
+0018 
+0019 <span class="comment">%    You should have received a copy of the GNU General Public License</span>
+0020 <span class="comment">%    along with SOS (see COPYING.txt).</span>
+0021 <span class="comment">%    If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+0022 
+0023 classdef <a href="sosttest.html" class="code" title="">sosttest</a> &lt; <a href="genericStatTest.html" class="code" title="">genericStatTest</a>
+0024     <span class="comment">% runs user-specified t-tests and tests user hypotheses on their outcomes</span>
+0025     <span class="comment">%</span>
+0026     <span class="comment">%PROPERTIES</span>
+0027     <span class="comment">%     sosObj % sos object the test is associated with</span>
+0028     <span class="comment">%     name % string label to associate with the test</span>
+0029     <span class="comment">%     s1 % sample1</span>
+0030     <span class="comment">%     s2 % sample2</span>
+0031     <span class="comment">%     s1ColName % column name of data in sample1</span>
+0032     <span class="comment">%     s2ColName % column name of data in sample2</span>
+0033     <span class="comment">%     s1Col   % column index in sample1</span>
+0034     <span class="comment">%     s2Col   % column index in sample2</span>
+0035     <span class="comment">%     type    % type of ttest (paired,independent,</span>
+0036     <span class="comment">%     runSpecificTest % handle to specific test method</span>
+0037     <span class="comment">%     desiredpvalCondition % indicates the desired outcome of the test, either NaN, &lt;= or &gt;=</span>
+0038     <span class="comment">%     desiredpvalConditionHandle  % handle to the function that will evaluate whether the desiredpValCondition was met</span>
+0039     <span class="comment">%     desiredpval % desired p-val to test against</span>
+0040     <span class="comment">%     targValue % target value for single-sample ttest</span>
+0041     <span class="comment">%     tail % tail of test.  left -&gt; t-vals &lt; 0, right = t-vals &gt; 0; both = pos. and neg. t will reject the null</span>
+0042     <span class="comment">%     lastp % last p-value that was calcualted</span>
+0043     <span class="comment">%     thresh % threshold between two means being compared that, if below, causes the test to pass regardless of the p-value</span>
+0044     <span class="comment">%</span>
+0045     <span class="comment">%METHODS:</span>
+0046     <span class="comment">%   sosttest(sosObj,varargin)  %constructs an sosttest object of the specified type.</span>
+0047     <span class="comment">%   constructIndependentSamplettest(obj,sosObj,varargin)  %initialize an independent samples t-test object.</span>
+0048     <span class="comment">%   constructPairedSamplettest(obj,sosObj,varargin)  %initialize a paired samples t-test object</span>
+0049     <span class="comment">%   constructSingleSamplettest(obj,sosObj,varargin) %initialize a single sample t-test object</span>
+0050     <span class="comment">%   [userHypothesis, prob, label] = runTest(obj,varargin) %runs the ttest</span>
+0051     <span class="comment">%   [userHypothesis, prob, label] =  runIndependentSamplettest(obj,varargin) %runs an independent sample ttest.  Assumes equal variance</span>
+0052     <span class="comment">%   [userHypothesis, prob, label] = runPairedSamplettest(obj,varargin)  %runs a paired sample ttest</span>
+0053     <span class="comment">%   [userHypothesis, prob, label] =  runSingleSamplettest(obj,varargin)  %runs a single sample ttest</span>
+0054     <span class="comment">%</span>
+0055     <span class="comment">%METHODS (Static)</span>
+0056     <span class="comment">%    userHypothesis = returnNaN(~,~)  % returns NaN</span>
+0057     <span class="comment">%   flag = validTestType(str) % returns 1 if the name of type of test is 'single', 'paired',  or 'independent'; error otherwise.</span>
+0058 
+0059     
+0060     <span class="comment">%% PROPERTIES</span>
+0061     properties
+0062         sosObj <span class="comment">% sos object the test is associated with</span>
+0063         name <span class="comment">% string label to associate with the test</span>
+0064         s1 <span class="comment">% sample1</span>
+0065         s2 <span class="comment">% sample2</span>
+0066         s1ColName <span class="comment">% column name of data in sample1</span>
+0067         s2ColName <span class="comment">% column name of data in sample2</span>
+0068         s1Col   <span class="comment">% column index in sample1</span>
+0069         s2Col   <span class="comment">% column index in sample2</span>
+0070         type    <span class="comment">% type of ttest (paired,independent,</span>
+0071         runSpecificTest <span class="comment">% handle to specific test method</span>
+0072         desiredpvalCondition <span class="comment">% indicates the desired outcome of the test, either NaN, &lt;= or &gt;=</span>
+0073         desiredpvalConditionHandle  <span class="comment">% handle to the function that will evaluate whether the desiredpValCondition was met</span>
+0074         desiredpval <span class="comment">% desired p-val to test against</span>
+0075         targValue <span class="comment">% target value for single-sample ttest</span>
+0076         tail <span class="comment">% tail of test.  left -&gt; t-vals &lt; 0, right = t-vals &gt; 0; both = pos. and neg. t will reject the null</span>
+0077         lastp <span class="comment">% last p-value that was calcualted</span>
+0078         label <span class="comment">% label denoting what is being tested</span>
+0079         thresh <span class="comment">% threshold between two means being compared that, if below, causes the test to pass regardless of the p-value</span>
+0080     <span class="keyword">end</span> <span class="comment">% properties</span>
+0081     
+0082     methods
+0083         
+0084         <span class="comment">%% sosttest CONSTRUCTOR</span>
+0085         <a name="_sub0" href="#_subfunctions" class="code">function obj = sosttest(varargin)</a>
+0086             <span class="comment">%constructs an sosttest object of the specified type.</span>
+0087             <span class="comment">%</span>
+0088             <span class="comment">%PARAMETERS:</span>
+0089             <span class="comment">% sosObj - sosObject test will be associated with</span>
+0090             <span class="comment">% 'type'/string, type of ttest - either 'paired', 'independent', or 'single'</span>
+0091             <span class="comment">% 'sample1'/sample - a sample associated with sosObj.</span>
+0092             <span class="comment">% 'thresh'/numeric - % threshold between two means being</span>
+0093             <span class="comment">% compared that, if below, causes the test to pass regardless of the p-value</span>
+0094             <span class="comment">%</span>
+0095             <span class="comment">% ... Other parameters as required by the constructor for the</span>
+0096             <span class="comment">% specific type of t-test requested.  See those constructors</span>
+0097             <span class="comment">% for additional info.</span>
+0098             <span class="comment">%</span>
+0099             <span class="comment">% Returns an sosttest object.</span>
+0100             
+0101           <span class="comment">%  varargin = varargin{1};</span>
+0102 
+0103             <span class="comment">% perform basic checks for universally required components of</span>
+0104             <span class="comment">% the t-test</span>
+0105             p = inputParser;
+0106             p.addParamValue(<span class="string">'sosObj'</span>, <span class="string">'null'</span>,<span class="keyword">...</span>
+0107                 @(sosObj)strcmp(class(sosObj),<span class="string">'sos'</span>));
+0108             p.addParamValue(<span class="string">'type'</span>,<span class="string">'null'</span>, <span class="keyword">...</span>
+0109                 @(type)sosttest.validTestType(type));
+0110             p.addParamValue(<span class="string">'sample1'</span>,<span class="string">'null'</span>, <span class="keyword">...</span>
+0111                             @(sample1)strcmp(class(sample1),<span class="string">'sample'</span>));            
+0112             p.addParamValue(<span class="string">'name'</span>,<span class="string">'noname'</span>,@(name)ischar(name));
+0113 
+0114             
+0115             <span class="comment">%keep all of the parameters for specific t-tests</span>
+0116             p.KeepUnmatched = true;
+0117             p.parse(varargin{:});
+0118 
+0119             
+0120             
+0121             <span class="comment">%basic checks are passed, construct the specific type of t-test</span>
+0122             <span class="comment">%that has been requested</span>
+0123 
+0124             sosObj = p.Results.sosObj; <span class="comment">%#ok&lt;PROP&gt;</span>
+0125             
+0126             <span class="keyword">if</span>(strcmp(p.Results.type,<span class="string">'independent'</span>))
+0127                 obj.constructIndependentSamplettest(sosObj,varargin{:}) <span class="comment">%#ok&lt;PROP&gt;</span>
+0128             <span class="keyword">elseif</span>(strcmp(p.Results.type,<span class="string">'paired'</span>))
+0129                 obj.constructPairedSamplettest(sosObj,varargin{:}); <span class="comment">%#ok&lt;PROP&gt;</span>
+0130             <span class="keyword">elseif</span> strcmp(p.Results.type,<span class="string">'single'</span>)
+0131                 obj.constructSingleSamplettest(sosObj,varargin{:}); <span class="comment">%#ok&lt;PROP&gt;</span>
+0132             <span class="keyword">else</span> 
+0133                error([<span class="string">'Specified &lt;type&gt;: '</span>,p.Results.type, <span class="keyword">...</span>
+0134                         <span class="string">' is not supported'</span>]);  
+0135             <span class="keyword">end</span>
+0136 
+0137             obj.lastp = NaN;
+0138             obj.sosObj = p.Results.sosObj;
+0139            
+0140             
+0141             <span class="comment">% add the test's name.</span>
+0142             <span class="keyword">if</span> any(strcmp(p.UsingDefaults,<span class="string">'name'</span>))
+0143                  
+0144                  numTests = length(obj.sosObj.sosstattests);
+0145 
+0146                  
+0147              obj.name = [<span class="string">'ttest_'</span>,num2str(numTests+1)];  
+0148              <span class="keyword">else</span>
+0149                  obj.name = p.Results.name;  
+0150              <span class="keyword">end</span>
+0151             
+0152         <span class="keyword">end</span> <span class="comment">% Constructor</span>
+0153         
+0154 
+0155         <span class="comment">%% [userHypothesis, prob, label] = runTest(obj,varargin) METHOD</span>
+0156         <a name="_sub1" href="#_subfunctions" class="code">function [userHypothesis, prob, label] = runTest(obj,varargin)</a>
+0157             <span class="comment">%runs the ttest</span>
+0158             <span class="comment">%</span>
+0159             <span class="comment">% PARAMETERS:</span>
+0160             <span class="comment">% 'reportStyle'/'short'|'full'/'none' - style of report to be</span>
+0161             <span class="comment">%           printed.  Either none, short or full</span>
+0162             <span class="comment">%</span>
+0163             <span class="comment">% RETURNS:</span>
+0164             <span class="comment">%   userHypothesis - whether the user's hypothesis has been met or not. NaN if no user hypothesis for the test.</span>
+0165             <span class="comment">%   prob - p-value from the ttest</span>
+0166             <span class="comment">%   label - string label denoting what was tested.</span>
+0167             
+0168             [userHypothesis, prob, label] = obj.runSpecificTest(varargin);
+0169             
+0170             obj.lastp = prob;
+0171         <span class="keyword">end</span>
+0172         
+0173         <span class="comment">%% [userHypothesis, prob, label] =  runIndependentSamplettest(varargin) METHOD</span>
+0174         <a name="_sub2" href="#_subfunctions" class="code">function [userHypothesis, prob, label] = </a><span class="keyword">...</span>
+0175                 runIndependentSamplettest(obj,varargin)
+0176             <span class="comment">%runs an independent sample ttest.  Assumes equal variance</span>
+0177             <span class="comment">%</span>
+0178             <span class="comment">% PARAMETERS:</span>
+0179             <span class="comment">% 'reportStyle'/'short'|'full' - style of report to be printed.  Either short or long</span>
+0180             <span class="comment">%</span>
+0181             <span class="comment">% RETURNS:</span>
+0182             <span class="comment">%   userHypothesis - whether the user's hypothesis has been met or not. NaN if no user hypothesis for the test.</span>
+0183             <span class="comment">%   prob - p-value from the ttest</span>
+0184             <span class="comment">%   label - string label denoting what was tested.</span>
+0185                      
+0186             
+0187             varargin = varargin{1};
+0188                       
+0189             p = inputParser;
+0190             
+0191             p.addParamValue(<span class="string">'reportStyle'</span>,<span class="string">'short'</span>, <span class="keyword">...</span>
+0192                     @(reportStyle)any([strcmp(reportStyle,<span class="string">'short'</span>) <span class="keyword">...</span>
+0193                                     strcmp(reportStyle,<span class="string">'full'</span>) <span class="keyword">...</span>
+0194                                     strcmp(reportStyle,<span class="string">'none'</span>)]));
+0195             p.parse(varargin{:});
+0196 
+0197             
+0198             reportStyle = p.Results.reportStyle;
+0199              
+0200             
+0201             <span class="comment">% Make sure that the samples have been filled before running</span>
+0202             <span class="comment">% the actual test, otherwise generate an error</span>
+0203             <span class="keyword">if</span> isempty(obj.s1.data) || length(obj.s1.data{obj.s1Col}) ~= obj.s1.n
+0204                 error(<span class="string">'sample 1 has not been filled.  Aborting stat test.'</span>);
+0205             <span class="keyword">end</span>
+0206             <span class="keyword">if</span> isempty(obj.s2.data) || length(obj.s2.data{obj.s1Col}) ~= obj.s2.n
+0207                 error(<span class="string">'sample 2 has not been filled.  Aborting stat test.'</span>);
+0208             <span class="keyword">end</span>            
+0209             
+0210             [h,prob,ci,stats] = ttest2(obj.s1.data{obj.s1Col},<span class="keyword">...</span>
+0211                                    obj.s2.data{obj.s2Col},<span class="keyword">...</span>
+0212                                 0.05,obj.tail,<span class="string">'equal'</span>);       <span class="comment">%#ok&lt;ASGLU&gt;</span>
+0213 
+0214             <span class="comment">% if prob was NaN, it's because the denominator in the t-test</span>
+0215             <span class="comment">% was 0.  So just check the means manually to determine</span>
+0216             <span class="comment">% prob</span>
+0217             <span class="keyword">if</span> isnan(prob)
+0218              m1 = mean(obj.s1.data{obj.s1Col});
+0219              m2 = mean(obj.s2.data{obj.s2Col});
+0220              
+0221              <span class="keyword">if</span> m1==m2
+0222                  prob = 1;
+0223              <span class="keyword">else</span>
+0224                  prob = 0;
+0225              <span class="keyword">end</span>
+0226              
+0227             <span class="keyword">end</span>
+0228              
+0229             userHypothesis = obj.desiredpvalConditionHandle(<span class="keyword">...</span>
+0230                                   prob,obj.desiredpval);
+0231 
+0232                                              
+0233              m1 = mean(obj.s1.data{obj.s1Col});
+0234              m2 = mean(obj.s2.data{obj.s2Col});
+0235        
+0236              stderr1 = std(obj.s1.data{obj.s1Col})/ <span class="keyword">...</span>
+0237                         sqrt(length(obj.s1.data{obj.s1Col}));
+0238              stderr2 = std(obj.s2.data{obj.s2Col})/ <span class="keyword">...</span>
+0239                         sqrt(length(obj.s2.data{obj.s2Col}));
+0240              
+0241              label = [obj.s1.name, <span class="string">'{'</span>,obj.s1ColName, <span class="string">'}-'</span>, <span class="keyword">...</span>
+0242                     obj.s2.name, <span class="string">'{'</span>,obj.s2ColName, <span class="string">'}'</span>];
+0243              
+0244              <span class="keyword">if</span> (isnan(userHypothesis))
+0245                  printHyp = <span class="string">'N/A'</span>;
+0246              <span class="keyword">elseif</span> userHypothesis == 1
+0247                  printHyp = <span class="string">'PASS'</span>;
+0248              <span class="keyword">elseif</span> userHypothesis == 0
+0249                  printHyp = <span class="string">'FAIL'</span>;
+0250                  
+0251                  <span class="keyword">if</span> abs(m2 - m1) &lt; obj.thresh &amp;&amp; isnan(obj.thresh) == 0
+0252                     userHypothesis = 1;
+0253                     printHyp =<span class="string">'PTHR'</span>;
+0254 
+0255                  <span class="keyword">end</span>
+0256                  
+0257              <span class="keyword">end</span>
+0258                  
+0259              
+0260              <span class="keyword">if</span> (strcmp(reportStyle,<span class="string">'short'</span>))
+0261                 <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">' UserHyp: '</span>, printHyp, <span class="string">'; '</span>, label, <span class="string">': '</span>, <span class="keyword">...</span>
+0262                      <span class="string">'t['</span>,obj.type,<span class="string">']('</span>,num2str(stats.df,3),<span class="string">') = '</span>, <span class="keyword">...</span>
+0263                      num2str(stats.tstat), <span class="string">', p = '</span>, num2str(prob), <span class="keyword">...</span>
+0264                      <span class="string">' p-des: '</span>,num2str(obj.desiredpval)], <span class="keyword">...</span>
+0265                      <span class="string">'sosttest_ruIndependentSamplettest'</span>);
+0266              <span class="keyword">elseif</span> (strcmp(reportStyle,<span class="string">'full'</span>))
+0267                  <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">' UserHyp: '</span>, printHyp , <span class="keyword">...</span>
+0268                      <span class="string">'; '</span>, label, <span class="string">': '</span>, <span class="keyword">...</span>
+0269                      <span class="string">'t['</span>,obj.type,<span class="string">']('</span>,num2str(stats.df,3),<span class="string">') = '</span>, <span class="keyword">...</span>
+0270                      num2str(stats.tstat), <span class="string">', p = '</span>, num2str(prob), <span class="keyword">...</span><span class="comment">  </span>
+0271                      <span class="string">' p-des: '</span>,num2str(obj.desiredpval), <span class="keyword">...</span>
+0272                      <span class="string">' m(1) = '</span>, num2str(m1),<span class="string">' (se='</span>,num2str(stderr1,4), <span class="keyword">...</span>
+0273                      <span class="string">'); m(2) = '</span>, num2str(m2),<span class="string">' (se='</span>,num2str(stderr2,4), <span class="keyword">...</span>
+0274                      <span class="string">')'</span>, <span class="keyword">...</span>
+0275                      <span class="string">' thresh = '</span>, num2str(obj.thresh), <span class="keyword">...</span>
+0276                      ], <span class="string">'sosttest_ruIndependentSamplettest'</span>);
+0277              <span class="keyword">end</span>                            
+0278         <span class="keyword">end</span> <span class="comment">%independentSamplesTtest</span>
+0279 
+0280         
+0281         <span class="comment">%% [userHypothesis, prob, label] =  runPairedSamplettest(varargin) METHOD</span>
+0282         <a name="_sub3" href="#_subfunctions" class="code">function [userHypothesis, prob, label] = </a><span class="keyword">...</span>
+0283                 runPairedSamplettest(obj,varargin)
+0284             <span class="comment">%runs a paired sample ttest</span>
+0285             <span class="comment">%</span>
+0286             <span class="comment">% PARAMETERS:</span>
+0287             <span class="comment">% 'reportStyle'/'short'|'full' - style of report to be printed.  Either short or long</span>
+0288             <span class="comment">%</span>
+0289             <span class="comment">% RETURNS:</span>
+0290             <span class="comment">%   userHypothesis - whether the user's hypothesis has been met or not. NaN if no user hypothesis for the test.</span>
+0291             <span class="comment">%   prob - p-value from the ttest</span>
+0292             <span class="comment">%   label - string label denoting what was tested.</span>
+0293             
+0294             varargin = varargin{1};
+0295                       
+0296             p = inputParser;            
+0297             p.addParamValue(<span class="string">'reportStyle'</span>,<span class="string">'short'</span>, <span class="keyword">...</span>
+0298                     @(reportStyle)any([strcmp(reportStyle,<span class="string">'short'</span>) <span class="keyword">...</span>
+0299                                     strcmp(reportStyle,<span class="string">'full'</span>) <span class="keyword">...</span>
+0300                                     strcmp(reportStyle,<span class="string">'none'</span>)]));
+0301             p.parse(varargin{:});
+0302             
+0303             reportStyle = p.Results.reportStyle;
+0304               
+0305             [h,prob,ci,stats] = ttest(obj.s1.data{obj.s1Col},<span class="keyword">...</span>
+0306                                    obj.s2.data{obj.s2Col},<span class="keyword">...</span>
+0307                                 0.05,obj.tail);       <span class="comment">%#ok&lt;ASGLU&gt;</span>
+0308 
+0309             <span class="keyword">if</span> isnan(prob)
+0310                  m = mean(obj.s1.data{obj.s1Col}-obj.s2.data{obj.s2Col});
+0311 
+0312                  <span class="keyword">if</span> m == 0
+0313                      prob = 1;
+0314                  <span class="keyword">else</span>
+0315                      prob = 0;
+0316                  <span class="keyword">end</span>
+0317              <span class="keyword">end</span>
+0318             
+0319              userHypothesis = obj.desiredpvalConditionHandle(<span class="keyword">...</span>
+0320                                                     prob,obj.desiredpval);
+0321 
+0322                                                 
+0323              m1 = mean(obj.s1.data{obj.s1Col});
+0324              m2 = mean(obj.s2.data{obj.s2Col});
+0325              
+0326             dat1 =  obj.s1.data{obj.s1Col};
+0327             dat2 = obj.s2.data{obj.s2Col};
+0328             
+0329             meanDiff = mean(dat2-dat1);
+0330             
+0331              
+0332           
+0333              
+0334              stderr = stats.sd/length(obj.s1.data{obj.s1Col});
+0335              
+0336              label = [obj.s1.name, <span class="string">'{'</span>,obj.s1ColName, <span class="string">'}-'</span>, <span class="keyword">...</span>
+0337                     obj.s2.name, <span class="string">'{'</span>,obj.s2ColName, <span class="string">'}'</span>];
+0338                     
+0339              <span class="keyword">if</span> (isnan(userHypothesis))
+0340                  printHyp = <span class="string">'N/A'</span>;
+0341              <span class="keyword">elseif</span> userHypothesis == 1
+0342                  printHyp = <span class="string">'PASS'</span>;
+0343              <span class="keyword">elseif</span> userHypothesis == 0
+0344                  printHyp = <span class="string">'FAIL'</span>;
+0345                  
+0346                 <span class="keyword">if</span> abs(meanDiff) &lt; obj.thresh &amp;&amp; isnan(obj.thresh) == 0
+0347                     userHypothesis = 1;
+0348                     printHyp = <span class="string">'PTHR'</span>;
+0349                 <span class="keyword">end</span>   
+0350             
+0351              <span class="keyword">end</span>
+0352              
+0353              <span class="keyword">if</span> (strcmp(reportStyle,<span class="string">'short'</span>))
+0354                 <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">' UserHyp: '</span>, printHyp, <span class="keyword">...</span>
+0355                      <span class="string">'; '</span>, label, <span class="string">': '</span>, <span class="keyword">...</span>
+0356                      <span class="string">'t['</span>,obj.type,<span class="string">']('</span>,num2str(stats.df,3),<span class="string">') = '</span>, <span class="keyword">...</span>
+0357                      num2str(stats.tstat), <span class="string">', p = '</span>, num2str(prob), <span class="keyword">...</span>
+0358                      <span class="string">' p-des: '</span>,num2str(obj.desiredpval)], <span class="keyword">...</span>
+0359                      <span class="string">'sosttest_runPairedSamplettest'</span>);
+0360             <span class="keyword">elseif</span> (strcmp(reportStyle,<span class="string">'full'</span>))
+0361                  <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">' UserHyp: '</span>, printHyp, <span class="keyword">...</span>
+0362                      <span class="string">'; '</span>, label, <span class="string">': '</span>, <span class="keyword">...</span>
+0363                      <span class="string">'t['</span>,obj.type,<span class="string">']('</span>,num2str(stats.df,3),<span class="string">') = '</span>, <span class="keyword">...</span>
+0364                      num2str(stats.tstat), <span class="string">', p = '</span>, num2str(prob), <span class="keyword">...</span>
+0365                      <span class="string">' p-des: '</span>,num2str(obj.desiredpval), <span class="keyword">...</span>
+0366                      <span class="string">' m(1) = '</span>, num2str(m1), <span class="string">'; m(2) = '</span>, num2str(m2), <span class="keyword">...</span>
+0367                      <span class="string">' (se='</span>,num2str(stderr), <span class="string">')'</span> <span class="keyword">...</span>
+0368                      <span class="string">' thresh = '</span>, num2str(obj.thresh), <span class="keyword">...</span>
+0369                      ], <span class="string">'sosttest_runPairedSamplettest'</span>);
+0370              <span class="keyword">end</span>                            
+0371         <span class="keyword">end</span> <span class="comment">%pairedSamplettest</span>
+0372         
+0373         
+0374         <span class="comment">%% [userHypothesis, prob, label] = runSingleSamplettest(varargin) METHOD</span>
+0375         <a name="_sub4" href="#_subfunctions" class="code">function [userHypothesis, prob, label] = </a><span class="keyword">...</span>
+0376                 runSingleSamplettest(obj,varargin)
+0377             <span class="comment">%runs a single sample ttest</span>
+0378             <span class="comment">%</span>
+0379             <span class="comment">% PARAMETERS:</span>
+0380             <span class="comment">% 'reportStyle'/'short'|'full' - style of report to be printed.  Either short or long</span>
+0381             <span class="comment">%</span>
+0382             <span class="comment">% RETURNS:</span>
+0383             <span class="comment">%   userHypothesis - whether the user's hypothesis has been met or not. NaN if no user hypothesis for the test.</span>
+0384             <span class="comment">%   prob - p-value from the ttest</span>
+0385             <span class="comment">%   label - string label denoting what was tested.</span>
+0386             
+0387             varargin = varargin{1};
+0388                       
+0389             p = inputParser;            
+0390             p.addParamValue(<span class="string">'reportStyle'</span>,<span class="string">'short'</span>, <span class="keyword">...</span>
+0391                     @(reportStyle)any([strcmp(reportStyle,<span class="string">'short'</span>) <span class="keyword">...</span>
+0392                                     strcmp(reportStyle,<span class="string">'full'</span>) <span class="keyword">...</span>
+0393                                     strcmp(reportStyle,<span class="string">'none'</span>)]));
+0394             p.parse(varargin{:});
+0395             
+0396             reportStyle = p.Results.reportStyle;
+0397               
+0398             [h,prob,ci,stats] = ttest(obj.s1.data{obj.s1Col},<span class="keyword">...</span>
+0399                                    obj.targValue,<span class="keyword">...</span>
+0400                                     0.05,obj.tail);       <span class="comment">%#ok&lt;ASGLU&gt;</span>
+0401 
+0402             <span class="keyword">if</span> isnan(prob)
+0403                  m = mean(obj.s1.data{obj.s1Col});
+0404 
+0405                  <span class="keyword">if</span> m == 0
+0406                      prob = 1;
+0407                  <span class="keyword">else</span>
+0408                      prob = 0;
+0409                  <span class="keyword">end</span>
+0410             <span class="keyword">end</span>
+0411              
+0412              userHypothesis = obj.desiredpvalConditionHandle(<span class="keyword">...</span>
+0413                                                     prob,obj.desiredpval);
+0414 
+0415 
+0416                                                 
+0417              m1 = mean(obj.s1.data{obj.s1Col});
+0418              stderr = stats.sd/length(obj.s1.data{obj.s1Col});
+0419              
+0420 
+0421             
+0422              
+0423              label = [obj.s1.name, <span class="string">'{'</span>,obj.s1ColName, <span class="string">'}-'</span>, <span class="keyword">...</span>
+0424                     num2str(obj.targValue)'];
+0425                     
+0426              <span class="keyword">if</span> (isnan(userHypothesis))
+0427                  printHyp = <span class="string">'N/A'</span>;
+0428              <span class="keyword">elseif</span> userHypothesis == 1
+0429                  printHyp = <span class="string">'PASS'</span>;
+0430              <span class="keyword">elseif</span> userHypothesis == 0
+0431                  printHyp = <span class="string">'FAIL'</span>;
+0432                  
+0433                  <span class="keyword">if</span> abs(m1-obj.targValue) &lt; obj.thresh &amp;&amp; isnan(obj.thresh) == 0
+0434                     userHypothesis = 1;
+0435                     printHyp = <span class="string">'PTHR'</span>;
+0436                  <span class="keyword">end</span>                 
+0437              <span class="keyword">end</span>
+0438              
+0439              <span class="keyword">if</span> (strcmp(reportStyle,<span class="string">'short'</span>))
+0440                 <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">' UserHyp: '</span>, printHyp, <span class="keyword">...</span>
+0441                     <span class="string">'; '</span>, label, <span class="string">': '</span>, <span class="keyword">...</span>
+0442                      <span class="string">'t['</span>,obj.type,<span class="string">']('</span>,num2str(stats.df,3),<span class="string">') = '</span>, <span class="keyword">...</span>
+0443                      num2str(stats.tstat), <span class="string">', p = '</span>, num2str(prob), <span class="keyword">...</span>
+0444                      <span class="string">' p-des: '</span>,num2str(obj.desiredpval)], <span class="keyword">...</span>
+0445                      <span class="string">'sosttest_runSingleSamplettest'</span>);
+0446              <span class="keyword">elseif</span> (strcmp(reportStyle,<span class="string">'full'</span>))
+0447                  <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">' UserHyp: '</span>, printHyp, <span class="keyword">...</span>
+0448                      <span class="string">'; '</span>, label, <span class="string">': '</span>, <span class="keyword">...</span>
+0449                      <span class="string">'t['</span>,obj.type,<span class="string">']('</span>,num2str(stats.df,3),<span class="string">') = '</span>, <span class="keyword">...</span>
+0450                      num2str(stats.tstat), <span class="string">', p = '</span>, num2str(prob), <span class="keyword">...</span>
+0451                      <span class="string">' p-des: '</span>,num2str(obj.desiredpval), <span class="keyword">...</span>
+0452                      <span class="string">' m = '</span>, num2str(m1), <span class="keyword">...</span>
+0453                      <span class="string">' (se='</span>,num2str(stderr), <span class="keyword">...</span>
+0454                      <span class="string">')'</span>, <span class="keyword">...</span>
+0455                     <span class="string">' thresh = '</span>, num2str(obj.thresh), <span class="keyword">...</span>
+0456                     ], <span class="string">'sosttest_runSingleSamplettest'</span>);
+0457              <span class="keyword">end</span>                        
+0458         <span class="keyword">end</span> <span class="comment">%singleSamplettest</span>
+0459  
+0460         
+0461         <span class="comment">%% constructIndependentSamplettest(sosObj,varargin) METHOD</span>
+0462         <a name="_sub5" href="#_subfunctions" class="code">function constructIndependentSamplettest(obj,sosObj,varargin)</a>
+0463             <span class="comment">%initialize an independent samples t-test object.</span>
+0464             <span class="comment">% Assumes equal variance.</span>
+0465             <span class="comment">%</span>
+0466             <span class="comment">% PARAMETERS:</span>
+0467             <span class="comment">% Required:</span>
+0468             <span class="comment">%   sosObj - sos Object test is to be associated with</span>
+0469             <span class="comment">%   sample1 - a sample object</span>
+0470             <span class="comment">%   sample2 - a sample object</span>
+0471             <span class="comment">%   s1ColName - name of data column in sample1</span>
+0472             <span class="comment">%   s2ColName - name of data column in sample2</span>
+0473             <span class="comment">%</span>
+0474             <span class="comment">% Optional:</span>
+0475             <span class="comment">%   desiredpvalCondition/string - desired condition for the ttest</span>
+0476             <span class="comment">%       pval. Either it should exceed (=&gt;) some value, be less</span>
+0477             <span class="comment">%       than '&lt;=' some condition, or be 'N/A' if there is no</span>
+0478             <span class="comment">%       desired condition.  Default is N/A.  Note that the</span>
+0479             <span class="comment">%       ordering of '=' and '&lt;' is important, so though '&lt;=' is</span>
+0480             <span class="comment">%       valid, '=&lt;' is not.</span>
+0481             <span class="comment">%   desiredpval - desired p-value to evaluate the condition</span>
+0482             <span class="comment">%       against.  Defaults to 0.05</span>
+0483             <span class="comment">%   tail - tail of test - left/right/both</span>
+0484             <span class="comment">%</span>
+0485             <span class="comment">% RETURNS:</span>
+0486             <span class="comment">%   Configured sosttest object.</span>
+0487             
+0488 
+0489             p = inputParser;
+0490 
+0491             p.addRequired(<span class="string">'sosObj'</span>, <span class="keyword">...</span>
+0492                 @(sosObj)strcmp(class(sosObj),<span class="string">'sos'</span>));
+0493             p.addParamValue(<span class="string">'type'</span>,<span class="string">'null'</span>, <span class="keyword">...</span>
+0494                 @(type)sosttest.validTestType(type));
+0495             p.addParamValue(<span class="string">'sample1'</span>,<span class="string">'null'</span>, <span class="keyword">...</span>
+0496                         @(sample1)strcmp(class(sample1),<span class="string">'sample'</span>));
+0497             p.addParamValue(<span class="string">'sample2'</span>,<span class="string">'null'</span>, <span class="keyword">...</span>
+0498                         @(sample2)strcmp(class(sample2),<span class="string">'sample'</span>));
+0499             <span class="comment">%NaN will fail by default</span>
+0500             p.addParamValue(<span class="string">'s1ColName'</span>,NaN, <span class="keyword">...</span>
+0501                 @(s1ColName)ischar(s1ColName));
+0502             p.addParamValue(<span class="string">'s2ColName'</span>,NaN, <span class="keyword">...</span>
+0503                 @(s2ColName)ischar(s2ColName));
+0504             p.addParamValue(<span class="string">'desiredpvalCondition'</span>,<span class="string">'N/A'</span>, <span class="keyword">...</span>
+0505                 @(desiredpvalCondition)any([strcmp(desiredpvalCondition,<span class="string">'&lt;='</span>), <span class="keyword">...</span>
+0506                             strcmp(desiredpvalCondition,<span class="string">'=&gt;'</span>), <span class="keyword">...</span>
+0507                             strcmp(desiredpvalCondition,<span class="string">'N/A'</span>)]));
+0508             p.addParamValue(<span class="string">'desiredpval'</span>, 0.05, <span class="keyword">...</span>
+0509                 @(desiredpval)validateattributes(desiredpval, <span class="keyword">...</span>
+0510                     {<span class="string">'numeric'</span>}, <span class="keyword">...</span>
+0511                     {<span class="string">'scalar'</span>, <span class="string">'positive'</span>, <span class="string">'&gt;='</span>, 0, <span class="string">'&lt;='</span>, 1}));
+0512             p.addParamValue(<span class="string">'tail'</span>,<span class="string">'both'</span>, <span class="keyword">...</span>
+0513                 @(tail)any([strcmp(tail,<span class="string">'both'</span>), strcmp(tail,<span class="string">'left'</span>),strcmp(tail,<span class="string">'right'</span>)]));
+0514             p.addParamValue(<span class="string">'name'</span>,<span class="string">'noname'</span>,@(name)ischar(name)); <span class="comment">% dealt with in the main constructor</span>
+0515             p.addParamValue(<span class="string">'thresh'</span>,NaN,@(thres)validateattributes(thres, <span class="keyword">...</span>
+0516                     {<span class="string">'numeric'</span>}, {<span class="string">'scalar'</span>}));            
+0517        
+0518             p.parse(sosObj,varargin{:});
+0519 
+0520 
+0521             sample1 = p.Results.sample1;
+0522             sample2 = p.Results.sample2;
+0523             s1ColName = p.Results.s1ColName; <span class="comment">%#ok&lt;PROP&gt;</span>
+0524             s2ColName = p.Results.s2ColName; <span class="comment">%#ok&lt;PROP&gt;</span>
+0525             obj.desiredpvalCondition = p.Results.desiredpvalCondition;
+0526             obj.thresh = p.Results.thresh;                
+0527 
+0528             <span class="keyword">if</span> strcmp(obj.desiredpvalCondition,<span class="string">'N/A'</span>)
+0529                 obj.desiredpvalConditionHandle = @sosttest.returnNaN;
+0530             <span class="keyword">elseif</span> strcmp(obj.desiredpvalCondition,<span class="string">'&lt;='</span>)
+0531                 obj.desiredpvalConditionHandle = @le;
+0532             <span class="keyword">elseif</span> strcmp(obj.desiredpvalCondition,<span class="string">'=&gt;'</span>)
+0533                 obj.desiredpvalConditionHandle = @ge;
+0534             <span class="keyword">end</span>
+0535 
+0536             <span class="comment">% can't have a desiredpval without a desiredpvalcondition</span>
+0537             <span class="keyword">if</span> strcmp(obj.desiredpvalCondition,<span class="string">'N/A'</span>)
+0538                 obj.desiredpval = NaN;
+0539             <span class="keyword">else</span>
+0540                 obj.desiredpval = p.Results.desiredpval;
+0541             <span class="keyword">end</span>
+0542 
+0543 
+0544             <span class="comment">% perform additional checks on the objects</span>
+0545             
+0546             present1 = sosObj.containsSample(sample1);
+0547             <span class="keyword">if</span> (present1 == 0 )
+0548                 error(<span class="string">'sos sosObject does not contain sample1'</span>);
+0549             <span class="keyword">end</span>
+0550 
+0551             present2 = sosObj.containsSample(sample2);
+0552             <span class="keyword">if</span> (present2 == 0 )
+0553                 error(<span class="string">'sos sosObject does not contain sample2'</span>);
+0554             <span class="keyword">end</span>               
+0555 
+0556             col1 = sample1.colName2colNum(s1ColName); <span class="comment">%#ok&lt;PROP&gt;</span>
+0557             <span class="keyword">if</span>(col1 == -1)
+0558                 error(<span class="string">'&lt;s1ColName&gt; not a column of data in &lt;sample1&gt;'</span>);
+0559             <span class="keyword">end</span>
+0560 
+0561             col2 = sample1.colName2colNum(s2ColName); <span class="comment">%#ok&lt;PROP&gt;</span>
+0562             <span class="keyword">if</span>(col2 == -1)
+0563                 error(<span class="string">'&lt;s2ColName&gt; not a column of data in &lt;sample2&gt;'</span>);
+0564             <span class="keyword">end</span>
+0565             
+0566             <span class="keyword">if</span> isempty(sample1.data)
+0567                 error(<span class="string">'sample 1 does not contain items - did you fill it yet?'</span>);
+0568             <span class="keyword">end</span>
+0569             
+0570             <span class="keyword">if</span> isempty(sample2.data)
+0571                 error(<span class="string">'sample 2 does not contain items - did you fill it yet?'</span>);
+0572             <span class="keyword">end</span>   
+0573             <span class="comment">%all variables check out, create the stats test</span>
+0574 
+0575             obj.s1 = sample1;
+0576             obj.s2 = sample2;
+0577             obj.s1ColName = s1ColName; <span class="comment">%#ok&lt;PROP&gt;</span>
+0578             obj.s2ColName = s2ColName; <span class="comment">%#ok&lt;PROP&gt;</span>
+0579             obj.s1Col = col1;
+0580             obj.s2Col = col2;
+0581             obj.type = p.Results.type;
+0582             obj.tail = p.Results.tail;
+0583 
+0584             obj.runSpecificTest = @obj.runIndependentSamplettest;
+0585             
+0586             obj.label = [obj.s1.name, <span class="string">'{'</span>,obj.s1ColName, <span class="string">'}-'</span>, <span class="keyword">...</span>
+0587                     obj.s2.name, <span class="string">'{'</span>,obj.s2ColName, <span class="string">'}'</span>, <span class="keyword">...</span>
+0588                     <span class="string">':t['</span>,obj.type,<span class="string">']'</span>];            
+0589           
+0590                 
+0591         <span class="keyword">end</span>
+0592 
+0593         <span class="comment">%% constructPairedSamplettest(sosObj,varargin) METHOD</span>
+0594         <a name="_sub6" href="#_subfunctions" class="code">function constructPairedSamplettest(obj,sosObj,varargin)</a>
+0595             <span class="comment">%initialize a paired samples t-test object</span>
+0596             <span class="comment">%</span>
+0597             <span class="comment">% PARAMETERS:</span>
+0598             <span class="comment">% Required:</span>
+0599             <span class="comment">%   sosObj - sos Object test is to be associated with</span>
+0600             <span class="comment">%   sample1 - a sample object</span>
+0601             <span class="comment">%   sample2 - a sample object</span>
+0602             <span class="comment">%   s1ColName - name of data column in sample1</span>
+0603             <span class="comment">%   s2ColName - name of data column in sample2</span>
+0604             <span class="comment">%</span>
+0605             <span class="comment">% Optional:</span>
+0606             <span class="comment">%   desiredpvalCondition/string - desired condition for the ttest</span>
+0607             <span class="comment">%       pval. Either it should exceed (=&gt;) some value, be less</span>
+0608             <span class="comment">%       than '&lt;=' some condition, or be 'N/A' if there is no</span>
+0609             <span class="comment">%       desired condition.  Default is N/A.  Note that the</span>
+0610             <span class="comment">%       ordering of '=' and '&lt;' is important, so though '&lt;=' is</span>
+0611             <span class="comment">%       valid, '=&lt;' is not.</span>
+0612             <span class="comment">%   desiredpval - desired p-value to evaluate the condition</span>
+0613             <span class="comment">%       against.  Defaults to 0.05</span>
+0614             <span class="comment">%   tail - tail of test - left/right/both</span>
+0615             <span class="comment">%</span>
+0616             <span class="comment">% RETURNS:</span>
+0617             <span class="comment">%   Configured sosttest object.</span>
+0618 
+0619             p = inputParser;
+0620 
+0621             p.addRequired(<span class="string">'sosObj'</span>, <span class="keyword">...</span>
+0622                 @(sosObj)strcmp(class(sosObj),<span class="string">'sos'</span>));
+0623             p.addParamValue(<span class="string">'type'</span>,<span class="string">'null'</span>, <span class="keyword">...</span>
+0624                 @(type)sosttest.validTestType(type));
+0625             p.addParamValue(<span class="string">'sample1'</span>,<span class="string">'null'</span>, <span class="keyword">...</span>
+0626                         @(sample1)strcmp(class(sample1),<span class="string">'sample'</span>));
+0627             p.addParamValue(<span class="string">'sample2'</span>,<span class="string">'null'</span>, <span class="keyword">...</span>
+0628                         @(sample2)strcmp(class(sample2),<span class="string">'sample'</span>));
+0629             <span class="comment">%NaN will fail by default</span>
+0630             p.addParamValue(<span class="string">'s1ColName'</span>,NaN, <span class="keyword">...</span>
+0631                 @(s1ColName)ischar(s1ColName));
+0632             p.addParamValue(<span class="string">'s2ColName'</span>,NaN, <span class="keyword">...</span>
+0633                 @(s2ColName)ischar(s2ColName));
+0634             p.addParamValue(<span class="string">'desiredpvalCondition'</span>,<span class="string">'N/A'</span>, <span class="keyword">...</span>
+0635                 @(desiredpvalCondition)any([strcmp(desiredpvalCondition,<span class="string">'&lt;='</span>), <span class="keyword">...</span>
+0636                             strcmp(desiredpvalCondition,<span class="string">'=&gt;'</span>), <span class="keyword">...</span>
+0637                             strcmp(desiredpvalCondition,<span class="string">'N/A'</span>)]));
+0638             p.addParamValue(<span class="string">'desiredpval'</span>, 0.05, <span class="keyword">...</span>
+0639                 @(desiredpval)validateattributes(desiredpval, <span class="keyword">...</span>
+0640                     {<span class="string">'numeric'</span>}, <span class="keyword">...</span>
+0641                     {<span class="string">'scalar'</span>, <span class="string">'positive'</span>, <span class="string">'&gt;='</span>, 0, <span class="string">'&lt;='</span>, 1}));
+0642             p.addParamValue(<span class="string">'tail'</span>,<span class="string">'both'</span>, <span class="keyword">...</span>
+0643                 @(tail)any([strcmp(tail,<span class="string">'both'</span>), strcmp(tail,<span class="string">'left'</span>),strcmp(tail,<span class="string">'right'</span>)]));
+0644             p.addParamValue(<span class="string">'name'</span>,<span class="string">'noname'</span>,@(name)ischar(name)); <span class="comment">% dealt with in the main constructor</span>
+0645             p.addParamValue(<span class="string">'thresh'</span>,NaN,@(thres)validateattributes(thres, <span class="keyword">...</span>
+0646                     {<span class="string">'numeric'</span>}, {<span class="string">'scalar'</span>}));               
+0647             
+0648             
+0649             p.parse(sosObj,varargin{:});
+0650 
+0651     
+0652             sample1 = p.Results.sample1;
+0653             sample2 = p.Results.sample2;
+0654             s1ColName = p.Results.s1ColName; <span class="comment">%#ok&lt;PROP&gt;</span>
+0655             s2ColName = p.Results.s2ColName; <span class="comment">%#ok&lt;PROP&gt;</span>
+0656             obj.desiredpvalCondition = p.Results.desiredpvalCondition;
+0657             obj.thresh = p.Results.thresh;
+0658 
+0659             <span class="keyword">if</span> strcmp(obj.desiredpvalCondition,<span class="string">'N/A'</span>)
+0660                 obj.desiredpvalConditionHandle = @sosttest.returnNaN;
+0661             <span class="keyword">elseif</span> strcmp(obj.desiredpvalCondition,<span class="string">'&lt;='</span>)
+0662                 obj.desiredpvalConditionHandle = @le;
+0663             <span class="keyword">elseif</span> strcmp(obj.desiredpvalCondition,<span class="string">'=&gt;'</span>)
+0664                 obj.desiredpvalConditionHandle = @ge;
+0665             <span class="keyword">end</span>
+0666 
+0667             <span class="comment">% can't have a desiredpval without a desiredpvalcondition</span>
+0668             <span class="keyword">if</span> strcmp(obj.desiredpvalCondition,<span class="string">'N/A'</span>)
+0669                 obj.desiredpval = NaN;
+0670             <span class="keyword">else</span>
+0671                 obj.desiredpval = p.Results.desiredpval;
+0672             <span class="keyword">end</span>
+0673 
+0674 
+0675             <span class="comment">% perform additional checks on the objects</span>
+0676             
+0677             present1 = sosObj.containsSample(sample1);
+0678             <span class="keyword">if</span> (present1 == 0 )
+0679                 error(<span class="string">'sos sosObject does not contain sample1'</span>);
+0680             <span class="keyword">end</span>
+0681 
+0682             present2 = sosObj.containsSample(sample2);
+0683             <span class="keyword">if</span> (present2 == 0 )
+0684                 error(<span class="string">'sos sosObject does not contain sample2'</span>);
+0685             <span class="keyword">end</span>               
+0686 
+0687             col1 = sample1.colName2colNum(s1ColName); <span class="comment">%#ok&lt;PROP&gt;</span>
+0688             <span class="keyword">if</span>(col1 == -1)
+0689                 error(<span class="string">'&lt;s1ColName&gt; not a column of data in &lt;sample1&gt;'</span>);
+0690             <span class="keyword">end</span>
+0691 
+0692             col2 = sample1.colName2colNum(s2ColName); <span class="comment">%#ok&lt;PROP&gt;</span>
+0693             <span class="keyword">if</span>(col2 == -1)
+0694                 error(<span class="string">'&lt;s2ColName&gt; not a column of data in &lt;sample2&gt;'</span>);
+0695             <span class="keyword">end</span>
+0696 
+0697             <span class="comment">%check that both columns of data have the same number of</span>
+0698             <span class="comment">%observations</span>
+0699             
+0700             <span class="keyword">if</span> isempty(sample1.data)
+0701                 error(<span class="string">'sample 1 does not contain items - did you fill it yet?'</span>);
+0702             <span class="keyword">end</span>
+0703             
+0704             <span class="keyword">if</span> isempty(sample2.data)
+0705                 error(<span class="string">'sample 2 does not contain items - did you fill it yet?'</span>);
+0706             <span class="keyword">end</span>            
+0707             
+0708             <span class="keyword">if</span> (length(sample1.data{col1}) ~= length(sample2.data{col2}))
+0709                 error(<span class="string">'Sample 1 and Sample 2 must have the same number of observations for a paired comparison'</span>);
+0710             <span class="keyword">end</span>
+0711             
+0712             <span class="comment">%all variables check out, create the stats test</span>
+0713 
+0714             obj.s1 = sample1;
+0715             obj.s2 = sample2;
+0716             obj.s1ColName = s1ColName; <span class="comment">%#ok&lt;PROP&gt;</span>
+0717             obj.s2ColName = s2ColName; <span class="comment">%#ok&lt;PROP&gt;</span>
+0718             obj.s1Col = col1;
+0719             obj.s2Col = col2;
+0720             obj.type = p.Results.type;
+0721             obj.tail = p.Results.tail;
+0722 
+0723             obj.runSpecificTest = @obj.runPairedSamplettest;    
+0724 
+0725             obj.label = [obj.s1.name, <span class="string">'{'</span>,obj.s1ColName, <span class="string">'}-'</span>, <span class="keyword">...</span>
+0726                     obj.s2.name, <span class="string">'{'</span>,obj.s2ColName, <span class="string">'}'</span>, <span class="keyword">...</span>
+0727                     <span class="string">':t['</span>,obj.type,<span class="string">']'</span>];
+0728    
+0729                  
+0730         <span class="keyword">end</span>
+0731 
+0732         <span class="comment">%%  constructSingleSamplettest(sosObj,varargin) METHOD</span>
+0733         <a name="_sub7" href="#_subfunctions" class="code">function constructSingleSamplettest(obj,sosObj,varargin)</a>
+0734             <span class="comment">%initialize a single sample t-test object</span>
+0735             <span class="comment">%</span>
+0736             <span class="comment">% PARAMETERS:</span>
+0737             <span class="comment">% Required:</span>
+0738             <span class="comment">%   sosObj - sos Object test is to be associated with</span>
+0739             <span class="comment">%   sample1 - a sample object</span>
+0740             <span class="comment">%   s1ColName - name of data column in sample1</span>
+0741             <span class="comment">%   ** See also 'optional' but recommended 'targValue'</span>
+0742             <span class="comment">%</span>
+0743             <span class="comment">% Optional:</span>
+0744             <span class="comment">%   targValue/numeric - target value to test for equality with</span>
+0745             <span class="comment">%   desiredpvalCondition/string - desired condition for the ttest</span>
+0746             <span class="comment">%       pval. Either it should exceed (=&gt;) some value, be less</span>
+0747             <span class="comment">%       than '&lt;=' some condition, or be 'N/A' if there is no</span>
+0748             <span class="comment">%       desired condition.  Default is N/A.  Note that the</span>
+0749             <span class="comment">%       ordering of '=' and '&lt;' is important, so though '&lt;=' is</span>
+0750             <span class="comment">%       valid, '=&lt;' is not.</span>
+0751             <span class="comment">%   desiredpval - desired p-value to evaluate the condition</span>
+0752             <span class="comment">%       against.  Defaults to 0.05</span>
+0753             <span class="comment">%   tail - tail of test - left/right/both</span>
+0754             <span class="comment">%</span>
+0755             <span class="comment">% RETURNS:</span>
+0756             <span class="comment">%   Configured sosttest object.</span>
+0757 
+0758             p = inputParser;
+0759 
+0760             p.addRequired(<span class="string">'sosObj'</span>, <span class="keyword">...</span>
+0761                 @(sosObj)strcmp(class(sosObj),<span class="string">'sos'</span>));
+0762             p.addParamValue(<span class="string">'type'</span>,<span class="string">'null'</span>, <span class="keyword">...</span>
+0763                 @(type)sosttest.validTestType(type));
+0764             p.addParamValue(<span class="string">'sample1'</span>,<span class="string">'null'</span>, <span class="keyword">...</span>
+0765                         @(sample1)strcmp(class(sample1),<span class="string">'sample'</span>));
+0766             <span class="comment">%NaN will fail by default</span>
+0767             p.addParamValue(<span class="string">'s1ColName'</span>,NaN, <span class="keyword">...</span>
+0768                 @(s1ColName)ischar(s1ColName));
+0769             p.addParamValue(<span class="string">'targValue'</span>, 0.0, <span class="keyword">...</span>
+0770                 @(targValue)validateattributes(targValue, <span class="keyword">...</span>
+0771                     {<span class="string">'numeric'</span>}, {<span class="string">'scalar'</span>}));
+0772             p.addParamValue(<span class="string">'desiredpvalCondition'</span>,<span class="string">'N/A'</span>, <span class="keyword">...</span>
+0773                 @(desiredpvalCondition)any([strcmp(desiredpvalCondition,<span class="string">'&lt;='</span>), <span class="keyword">...</span>
+0774                             strcmp(desiredpvalCondition,<span class="string">'=&gt;'</span>), <span class="keyword">...</span>
+0775                             strcmp(desiredpvalCondition,<span class="string">'N/A'</span>)]));
+0776             p.addParamValue(<span class="string">'desiredpval'</span>, 0.05, <span class="keyword">...</span>
+0777                 @(desiredpval)validateattributes(desiredpval, <span class="keyword">...</span>
+0778                     {<span class="string">'numeric'</span>}, <span class="keyword">...</span>
+0779                     {<span class="string">'scalar'</span>, <span class="string">'positive'</span>, <span class="string">'&gt;='</span>, 0, <span class="string">'&lt;='</span>, 1}));
+0780             p.addParamValue(<span class="string">'tail'</span>,<span class="string">'both'</span>, <span class="keyword">...</span>
+0781                 @(tail)any([strcmp(tail,<span class="string">'both'</span>), strcmp(tail,<span class="string">'left'</span>),strcmp(tail,<span class="string">'right'</span>)]));
+0782             p.addParamValue(<span class="string">'name'</span>,<span class="string">'noname'</span>,@(name)ischar(name)); <span class="comment">% dealt with in the main constructor</span>
+0783             p.addParamValue(<span class="string">'thresh'</span>,NaN,@(thres)validateattributes(thres, <span class="keyword">...</span>
+0784                     {<span class="string">'numeric'</span>}, {<span class="string">'scalar'</span>}));               
+0785             
+0786             p.parse(sosObj,varargin{:});
+0787 
+0788 
+0789             sample1 = p.Results.sample1;
+0790             s1ColName = p.Results.s1ColName; <span class="comment">%#ok&lt;PROP&gt;</span>
+0791             obj.desiredpvalCondition = p.Results.desiredpvalCondition;
+0792             obj.targValue = p.Results.targValue;
+0793             obj.thresh = p.Results.thresh;
+0794             
+0795             <span class="keyword">if</span> strcmp(obj.desiredpvalCondition,<span class="string">'N/A'</span>)
+0796                 obj.desiredpvalConditionHandle = @sosttest.returnNaN;
+0797             <span class="keyword">elseif</span> strcmp(obj.desiredpvalCondition,<span class="string">'&lt;='</span>)
+0798                 obj.desiredpvalConditionHandle = @le;
+0799             <span class="keyword">elseif</span> strcmp(obj.desiredpvalCondition,<span class="string">'=&gt;'</span>)
+0800                 obj.desiredpvalConditionHandle = @ge;
+0801             <span class="keyword">end</span>
+0802 
+0803             <span class="comment">% can't have a desiredpval without a desiredpvalcondition</span>
+0804             <span class="keyword">if</span> strcmp(obj.desiredpvalCondition,<span class="string">'N/A'</span>)
+0805                 obj.desiredpval = NaN;
+0806             <span class="keyword">else</span>
+0807                 obj.desiredpval = p.Results.desiredpval;
+0808             <span class="keyword">end</span>
+0809 
+0810 
+0811             <span class="comment">% perform additional checks on the objects</span>
+0812             
+0813             present1 = sosObj.containsSample(sample1);
+0814             <span class="keyword">if</span> (present1 == 0 )
+0815                 error(<span class="string">'sos sosObject does not contain sample1'</span>);
+0816             <span class="keyword">end</span>        
+0817 
+0818             col1 = sample1.colName2colNum(s1ColName); <span class="comment">%#ok&lt;PROP&gt;</span>
+0819             <span class="keyword">if</span>(col1 == -1)
+0820                 error(<span class="string">'&lt;s1ColName&gt; not a column of data in &lt;sample1&gt;'</span>);
+0821             <span class="keyword">end</span>
+0822 
+0823             
+0824             <span class="keyword">if</span> isempty(sample1.data)
+0825                 error(<span class="string">'sample 1 does not contain items - did you fill it yet?'</span>);
+0826             <span class="keyword">end</span>
+0827             
+0828             
+0829             <span class="comment">%all variables check out, create the stats test</span>
+0830 
+0831             obj.s1 = sample1;
+0832             obj.s1ColName = s1ColName; <span class="comment">%#ok&lt;PROP&gt;</span>
+0833             obj.s1Col = col1;
+0834             obj.type = p.Results.type;
+0835             obj.tail = p.Results.tail;
+0836 
+0837             obj.runSpecificTest = @obj.runSingleSamplettest;   
+0838             
+0839             
+0840             obj.label = [obj.s1.name, <span class="string">'{'</span>,obj.s1ColName, <span class="string">'}-'</span>, <span class="keyword">...</span>
+0841                     num2str(obj.targValue),<span class="string">':t['</span>,obj.type,<span class="string">']'</span>];      
+0842         
+0843         <span class="keyword">end</span> <span class="comment">% constructSingleSamplettest</span>
+0844     <span class="keyword">end</span>
+0845     
+0846      
+0847     methods (Static)
+0848         
+0849         <span class="comment">%% userHypothesis = returnNaN(~,~) STATIC FUNCTION</span>
+0850         <a name="_sub8" href="#_subfunctions" class="code">function userHypothesis = returnNaN(~,~)</a>
+0851             <span class="comment">% returns NaN</span>
+0852             userHypothesis = NaN;
+0853         <span class="keyword">end</span>
+0854 
+0855         <span class="comment">%%  flag = validTestType(str) STATIC FUNCTION</span>
+0856         <a name="_sub9" href="#_subfunctions" class="code">function flag = validTestType(str)</a>
+0857             <span class="comment">% returns 1 if the name of type of test is 'single', 'paired',  or 'independent'; error otherwise.</span>
+0858             
+0859             flag = 0; <span class="comment">%#ok&lt;NASGU&gt;</span>
+0860             
+0861             <span class="keyword">if</span>(ischar(str) == false)
+0862                 error(<span class="string">'&lt;Type&gt; must be either &quot;single&quot;,&quot;paired&quot;, or &quot;independent&quot;'</span>);
+0863             <span class="keyword">end</span>
+0864             
+0865             <span class="keyword">if</span> (strcmp(str,<span class="string">'single'</span>) || strcmp(str,<span class="string">'paired'</span>) || <span class="keyword">...</span>
+0866                         strcmp(str,<span class="string">'independent'</span>))
+0867                 flag = 1;   
+0868             <span class="keyword">else</span>
+0869                 error(<span class="string">'&lt;Type&gt; must be either &quot;single&quot;,&quot;paired&quot;, or &quot;independent&quot;'</span>);
+0870             <span class="keyword">end</span>
+0871             
+0872         <span class="keyword">end</span>
+0873     <span class="keyword">end</span>
+0874     
+0875 <span class="keyword">end</span>
+0876</pre></div>
+<hr><address>Generated on Fri 27-Jan-2012 16:18:41 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

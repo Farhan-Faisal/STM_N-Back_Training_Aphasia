@@ -1,0 +1,537 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of soskstest</title>
+  <meta name="keywords" content="soskstest">
+  <meta name="description" content="- object for testing normality using a Kolmogorov-Smirnov test">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="#">src</a> &gt; soskstest.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for .\src&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>soskstest
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>- object for testing normality using a Kolmogorov-Smirnov test</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> - object for testing normality using a Kolmogorov-Smirnov test
+ copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut
+
+    This file is part of SOS
+
+    SOS is free software: you can redistribute it and/or modify
+    it for academic and non-commercial purposes
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.  For commercial or for-profit
+    uses, please contact the authors (sos@cnbc.cmu.edu).
+
+    SOS is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="soskstest.html" class="code" title="">soskstest</a>	- object for testing normality using a Kolmogorov-Smirnov test</li><li><a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>	- master print function that regulates cmd line output based on verbosity flags</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="genericStatTest.html" class="code" title="">genericStatTest</a>	- parent class for statistical test objects</li><li><a href="soskstest.html" class="code" title="">soskstest</a>	- object for testing normality using a Kolmogorov-Smirnov test</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function obj = soskstest(varargin)</a></li><li><a href="#_sub2" class="code">function [userHypothesis, prob, label] = runTest(obj,varargin)</a></li><li><a href="#_sub3" class="code">function [userHypothesis, prob, label] =</a></li><li><a href="#_sub4" class="code">function constructkstest(obj,sosObj,varargin)</a></li><li><a href="#_sub5" class="code">function userHypothesis = returnNaN(~,~)</a></li><li><a href="#_sub6" class="code">function flag = validTestType(str)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% - object for testing normality using a Kolmogorov-Smirnov test</span>
+0002 <span class="comment">% copyright 2009-2012 Blair Armstrong, Christine Watson, David Plaut</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    This file is part of SOS</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">%    SOS is free software: you can redistribute it and/or modify</span>
+0007 <span class="comment">%    it for academic and non-commercial purposes</span>
+0008 <span class="comment">%    under the terms of the GNU General Public License as published by</span>
+0009 <span class="comment">%    the Free Software Foundation, either version 3 of the License, or</span>
+0010 <span class="comment">%    (at your option) any later version.  For commercial or for-profit</span>
+0011 <span class="comment">%    uses, please contact the authors (sos@cnbc.cmu.edu).</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%    SOS is distributed in the hope that it will be useful,</span>
+0014 <span class="comment">%    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+0015 <span class="comment">%    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+0016 <span class="comment">%    GNU General Public License for more details.</span>
+0017 
+0018 <span class="comment">%    You should have received a copy of the GNU General Public License</span>
+0019 <span class="comment">%    along with SOS (see COPYING.txt).</span>
+0020 <span class="comment">%    If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+0021 
+0022 
+0023 classdef <a href="soskstest.html" class="code" title="">soskstest</a> &lt; handle
+0024     <span class="comment">% runs user-specified Kolmogorov-Smirnov tests to evaluate whether the</span>
+0025     <span class="comment">% distribution of values on a given dimension is uniform.</span>
+0026     <span class="comment">%   Note: test may be under-powered for sample sizes &lt; 10.  Requires at</span>
+0027     <span class="comment">%   least 2 bins in the histogram.</span>
+0028     <span class="comment">%   Requiring a p &gt; 0.001 to infer that a distribution is uniform is</span>
+0029     <span class="comment">%   probably more than sufficiently in most cases.  Considerably smaller</span>
+0030     <span class="comment">%   values may still yeild quite acceptable results.</span>
+0031 
+0032     <span class="comment">%</span>
+0033     <span class="comment">%PROPERTIES</span>
+0034     <span class="comment">%     sosObj % sos object the test is associated with</span>
+0035     <span class="comment">%     name % string label to associate with the test</span>
+0036     <span class="comment">%     s1 % sample1</span>
+0037     <span class="comment">%     s1ColName % column name of data in sample1</span>
+0038     <span class="comment">%     s1Col   % column index in sample1</span>
+0039     <span class="comment">%     type    % type of ztest (currently only 'matchUniform')</span>
+0040     <span class="comment">%     runSpecificTest % handle to specific test method</span>
+0041     <span class="comment">%     desiredpvalCondition % indicates the desired outcome of the test, either NaN, &lt;= or &gt;=</span>
+0042     <span class="comment">%     desiredpvalConditionHandle  % handle to the function that will evaluate whether the desiredpValCondition was met</span>
+0043     <span class="comment">%     desiredpval % desired p-val to test against</span>
+0044     <span class="comment">%     tail % tail of test. % Does nothing currently; must be modified for 'upper and 'lower</span>
+0045     <span class="comment">%     lastp % last p-value that was calcualted</span>
+0046     <span class="comment">%</span>
+0047     <span class="comment">%METHODS:</span>
+0048     <span class="comment">%   sosCorrelTest(sosObj,varargin)  %constructs an soskstest object of the specified type.</span>
+0049     <span class="comment">%   constructMatchCorrelztest(obj,sosObj,varargin)  %initialize object</span>
+0050     <span class="comment">%   [userHypothesis, prob, label] = runTest(obj,varargin) %runs the test</span>
+0051     <span class="comment">%   [userHypothesis, prob, label] =  runkstest(obj,varargin) % runs a%   kstest</span>
+0052     <span class="comment">%</span>
+0053     <span class="comment">%METHODS (Static)</span>
+0054     <span class="comment">%   userHypothesis = returnNaN(~,~)  % returns NaN</span>
+0055     <span class="comment">%   flag = validTestType(str) % returns 1 if the name of type of test is 'matchUniform'; error otherwise.</span>
+0056 
+0057     
+0058     <span class="comment">%% PROPERTIES</span>
+0059     properties
+0060         sosObj <span class="comment">% sos object the test is associated with</span>
+0061         name <span class="comment">% string label to associate with the test</span>
+0062         s1 <span class="comment">% sample1</span>
+0063         s1ColName <span class="comment">% column name of data in sample1</span>
+0064         s1Col   <span class="comment">% column index in sample1</span>
+0065         type    <span class="comment">% type of test('matchUniform')</span>
+0066         runSpecificTest <span class="comment">% handle to specific test method</span>
+0067         desiredpvalCondition <span class="comment">% indicates the desired outcome of the test, either NaN, &lt;= or &gt;=</span>
+0068         desiredpvalConditionHandle  <span class="comment">% handle to the function that will evaluate whether the desiredpValCondition was met</span>
+0069         desiredpval <span class="comment">% desired p-val to test against</span>
+0070         tail <span class="comment">% tail of test.  %currently does nothing, but must be recoded as 'upper' and 'lower'</span>
+0071         label <span class="comment">% label denoting what is being tested</span>
+0072         pdSpread <span class="comment">% 'sample' or 'allItems', as in the entropy constraint</span>
+0073         nbin <span class="comment">% number of bins in the pdSpread</span>
+0074         lastp <span class="comment">% last p-value reported by the test</span>
+0075     <span class="keyword">end</span> <span class="comment">% properties</span>
+0076 
+0077    <span class="comment">%% Properties (Constant)</span>
+0078     properties (Constant)
+0079         smallVal = 0.00000001 <span class="comment">% small value added to avoid case where a value is exactly equal the min or max range of the distribution</span>
+0080     <span class="keyword">end</span>
+0081     
+0082     
+0083     methods
+0084         
+0085         <span class="comment">%% sosCorrelTest CONSTRUCTOR</span>
+0086         <a name="_sub0" href="#_subfunctions" class="code">function obj = soskstest(varargin)</a>
+0087             <span class="comment">%constructs an soskstest object of the specified type.</span>
+0088             <span class="comment">%</span>
+0089             <span class="comment">%PARAMETERS:</span>
+0090             <span class="comment">% sosObj - sosObject test will be associated with</span>
+0091             <span class="comment">% 'type'/string, type of test - ('matchUniform' only currently)</span>
+0092             <span class="comment">% 'sample1'/sample - a sample associated with sosObj.</span>
+0093             <span class="comment">% ... Other parameters as required by the constructor for the</span>
+0094             <span class="comment">% specific type of t-test requested.  See those constructors</span>
+0095             <span class="comment">% for additional info.</span>
+0096             <span class="comment">%</span>
+0097             <span class="comment">% Returns a kstest object.</span>
+0098             
+0099 
+0100             <span class="comment">% perform basic checks for universally required components of</span>
+0101             <span class="comment">% the kstest</span>
+0102             p = inputParser;
+0103             p.addParamValue(<span class="string">'sosObj'</span>, <span class="string">'null'</span>,<span class="keyword">...</span>
+0104                 @(sosObj)strcmp(class(sosObj),<span class="string">'sos'</span>));
+0105             p.addParamValue(<span class="string">'type'</span>,<span class="string">'null'</span>, <span class="keyword">...</span>
+0106                 @(type)soskstest.validTestType(type));
+0107             p.addParamValue(<span class="string">'sample1'</span>,<span class="string">'null'</span>, <span class="keyword">...</span>
+0108                             @(sample1)strcmp(class(sample1),<span class="string">'sample'</span>));            
+0109             p.addParamValue(<span class="string">'name'</span>,<span class="string">'noname'</span>,@(name)ischar(name));
+0110             
+0111             <span class="comment">%keep all of the parameters for specific kstests</span>
+0112             p.KeepUnmatched = true;
+0113             p.parse(varargin{:});
+0114 
+0115             
+0116             
+0117             <span class="comment">%basic checks are passed, construct the specific type of t-test</span>
+0118             <span class="comment">%that has been requested</span>
+0119 
+0120            sosObj = p.Results.sosObj; <span class="comment">%#ok&lt;PROP&gt;</span>
+0121            
+0122             <span class="keyword">if</span>(strcmp(p.Results.type,<span class="string">'matchUniform'</span>))
+0123                 obj.constructkstest(sosObj,varargin{:}) <span class="comment">%#ok&lt;PROP&gt;</span>
+0124             <span class="keyword">else</span> 
+0125                error([<span class="string">'Specified &lt;type&gt;: '</span>,p.Results.type, <span class="keyword">...</span>
+0126                         <span class="string">' is not supported'</span>]);  
+0127             <span class="keyword">end</span>
+0128 
+0129             obj.lastp = NaN;
+0130             obj.sosObj = p.Results.sosObj;
+0131             
+0132             <span class="comment">% add the test's name.</span>
+0133             <span class="keyword">if</span> any(strcmp(p.UsingDefaults,<span class="string">'name'</span>))
+0134                  
+0135                  numTests = length(obj.sosObj.sosstattests);
+0136                 
+0137              obj.name = [<span class="string">'kstest_'</span>,num2str(numTests+1)];  
+0138              <span class="keyword">else</span>
+0139                  obj.name = p.Results.name;  
+0140              <span class="keyword">end</span>
+0141             
+0142         <span class="keyword">end</span> <span class="comment">% Constructor</span>
+0143         
+0144 
+0145         <span class="comment">%% [userHypothesis, prob, label] = runTest(obj,varargin) METHOD</span>
+0146         <a name="_sub1" href="#_subfunctions" class="code">function [userHypothesis, prob, label] = runTest(obj,varargin)</a>
+0147             <span class="comment">%runs the kstest</span>
+0148             <span class="comment">%</span>
+0149             <span class="comment">% PARAMETERS:</span>
+0150             <span class="comment">% 'reportStyle'/'short'|'full'/'none' - style of report to be</span>
+0151             <span class="comment">%           printed.  Either none, short or full</span>
+0152             <span class="comment">%</span>
+0153             <span class="comment">% RETURNS:</span>
+0154             <span class="comment">%   userHypothesis - whether the user's hypothesis has been met or not. NaN if no user hypothesis for the test.</span>
+0155             <span class="comment">%   prob - p-value from the kstest</span>
+0156             <span class="comment">%   label - string label denoting what was tested.</span>
+0157             
+0158             [userHypothesis, prob, label] = obj.runSpecificTest(varargin);
+0159             obj.lastp = prob;
+0160         <span class="keyword">end</span>
+0161         
+0162         
+0163         <span class="comment">%% [userHypothesis, prob, label] =  runkstest(varargin) METHOD</span>
+0164         <a name="_sub2" href="#_subfunctions" class="code">function [userHypothesis, prob, label] = </a><span class="keyword">...</span>
+0165                 runkstest(obj,varargin)
+0166             <span class="comment">%runs a kstest test</span>
+0167             <span class="comment">%</span>
+0168             <span class="comment">% PARAMETERS:</span>
+0169             <span class="comment">% 'reportStyle'/'short'|'full' - style of report to be printed.  Either short or long</span>
+0170             <span class="comment">%</span>
+0171             <span class="comment">% RETURNS:</span>
+0172             <span class="comment">%   userHypothesis - whether the user's hypothesis has been met or not. NaN if no user hypothesis for the test.</span>
+0173             <span class="comment">%   prob - p-value from the ttest</span>
+0174             <span class="comment">%   label - string label denoting what was tested.</span>
+0175                      
+0176             
+0177             varargin = varargin{1};
+0178                       
+0179             p = inputParser;
+0180             
+0181             p.addParamValue(<span class="string">'reportStyle'</span>,<span class="string">'short'</span>, <span class="keyword">...</span>
+0182                     @(reportStyle)any([strcmp(reportStyle,<span class="string">'short'</span>) <span class="keyword">...</span>
+0183                                     strcmp(reportStyle,<span class="string">'full'</span>) <span class="keyword">...</span>
+0184                                     strcmp(reportStyle,<span class="string">'none'</span>)]));
+0185             p.parse(varargin{:});
+0186 
+0187             
+0188             reportStyle = p.Results.reportStyle;
+0189 
+0190 
+0191             
+0192             <span class="comment">% calculates the initial entropy value for the scores in</span>
+0193             <span class="comment">% sample1&lt;sample1Col&gt;</span>
+0194             
+0195             scores = (obj.s1.zdata{obj.s1Col})';
+0196  
+0197             rawScores = (obj.s1.data{obj.s1Col})';
+0198             
+0199             <span class="comment">% get min and max values for the probability distribution:</span>
+0200             <span class="comment">%this procedure is different depending on whether we are using</span>
+0201             <span class="comment">%the sample as the range or allItems</span>
+0202             
+0203             <span class="keyword">if</span> strcmp(obj.pdSpread,<span class="string">'sample'</span>)
+0204                 minVal = min(scores);
+0205                 maxVal = max(scores);    
+0206                 minRaw = min(rawScores);
+0207                 maxRaw = max(rawScores);
+0208             <span class="keyword">elseif</span> strcmp(obj.pdSpread,<span class="string">'allItems'</span>)
+0209                 <span class="comment">%check in the population</span>
+0210                 minVal = min([obj.s1.population.zdata{obj.s1Col}]);
+0211                 maxVal = max([obj.s1.population.zdata{obj.s1Col}]);
+0212                 minRaw = min([obj.s1.population.data{obj.s1Col}]);
+0213                 maxRaw = max([obj.s1.population.data{obj.s1Col}]);
+0214                 
+0215                 <span class="comment">%check in all samples associated with the population (this</span>
+0216                 <span class="comment">%includes the original one</span>
+0217                 <span class="keyword">for</span> i=1:length(obj.s1.population.samples)
+0218                     minVal = min([minVal; <span class="keyword">...</span>
+0219                         obj.s1.population.samples(i).zdata{obj.s1Col}]);
+0220                     maxVal = max([maxVal; <span class="keyword">...</span>
+0221                         obj.s1.population.samples(i).zdata{obj.s1Col}]);  
+0222                     minRaw = min([minRaw; <span class="keyword">...</span>
+0223                         obj.s1.population.samples(i).data{obj.s1Col}]);
+0224                     maxRaw = max([maxRaw; <span class="keyword">...</span>
+0225                         obj.s1.population.samples(i).data{obj.s1Col}]);                      
+0226                 <span class="keyword">end</span>
+0227             <span class="keyword">else</span>
+0228                 error(<span class="string">'Unsupported pdSpread in kstest.  pdSpread must be &quot;sample&quot; or &quot;allItems&quot;'</span>);
+0229             <span class="keyword">end</span>
+0230                 
+0231             <span class="comment">% add a smallVal to avoid boundary cases</span>
+0232             minVal = minVal - obj.smallVal;
+0233             maxVal = maxVal + obj.smallVal;
+0234             
+0235             <span class="comment">%now have min and max values, determine size of each bin:</span>
+0236             
+0237             spread  = maxVal - minVal;            
+0238             binSize = spread/obj.nbin;
+0239             
+0240             <span class="comment">%smallVal added so that the last score is included (simulating</span>
+0241             <span class="comment">%&lt;= rather than &lt;</span>
+0242             bins = (minVal+0.5*binSize):binSize:(maxVal-0.5*binSize)+obj.smallVal;
+0243               
+0244             <span class="comment">% scale values to 0-1</span>
+0245             pd = hist(scores,bins)/length(scores);
+0246                           
+0247             pdScores = [];            
+0248             <span class="keyword">for</span> i=1:length(pd)
+0249                <span class="keyword">for</span> j=1:pd(i)*length(scores) 
+0250                    pdScores = [pdScores; bins(i)]; <span class="comment">%#ok&lt;AGROW&gt;</span>
+0251                <span class="keyword">end</span>
+0252             <span class="keyword">end</span>
+0253            
+0254             
+0255             yScores = cdf(<span class="string">'Uniform'</span>,bins,min(bins),max(bins));
+0256             
+0257             
+0258            [h,prob,stats,cutoff] = kstest(pdScores, [bins; yScores]');     <span class="comment">%#ok&lt;ASGLU,NASGU&gt;</span>
+0259 
+0260     <span class="comment">%       confirms that a uniform distribution fails to reject the null</span>
+0261     <span class="comment">%       [h,prob,ksstat,cutoff] = kstest(bins, [bins; yScores]');</span>
+0262             
+0263             
+0264             <span class="comment">% calculate entropy</span>
+0265             ent = pd*log((pd+1)')/length(pd);     
+0266             ent = -1* (ent - 1/length(pd)*log(1/length(pd)+1)) / <span class="keyword">...</span>
+0267                 (1*log(2)/length(pd) - 1/length(pd)*log(1/length(pd)+1));
+0268       
+0269              
+0270             userHypothesis = obj.desiredpvalConditionHandle(<span class="keyword">...</span>
+0271                                   prob,obj.desiredpval);
+0272              
+0273              label = [obj.s1.name, <span class="string">'{'</span>,obj.s1ColName, <span class="string">'}-'</span>, <span class="keyword">...</span>
+0274                     <span class="string">'{Uniform}'</span>];
+0275              
+0276              <span class="keyword">if</span> (isnan(userHypothesis))
+0277                  printHyp = <span class="string">'N/A'</span>;
+0278              <span class="keyword">elseif</span> userHypothesis == 1
+0279                  printHyp = <span class="string">'PASS'</span>;
+0280              <span class="keyword">elseif</span> userHypothesis == 0
+0281                  printHyp = <span class="string">'FAIL'</span>;
+0282              <span class="keyword">end</span>
+0283                  
+0284              
+0285              <span class="keyword">if</span> (strcmp(reportStyle,<span class="string">'short'</span>))
+0286                 <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">' UserHyp: '</span>, printHyp, <span class="string">'; '</span>, label, <span class="string">': '</span>, <span class="keyword">...</span>
+0287                      <span class="string">'ks['</span>,obj.type,<span class="string">']('</span>,num2str(length(obj.s1.zdata{obj.s1Col})),<span class="string">') = '</span>, <span class="keyword">...</span>
+0288                      num2str(stats), <span class="string">', p = '</span>, num2str(prob), <span class="keyword">...</span>
+0289                      <span class="string">' p-des: '</span>,num2str(obj.desiredpval)], <span class="keyword">...</span>
+0290                      <span class="string">'soskstest_runMatchUniformkstest'</span>);
+0291              <span class="keyword">elseif</span> (strcmp(reportStyle,<span class="string">'full'</span>))
+0292                  <a href="verbosePrint.html" class="code" title="function verbosePrint(msg,fieldName)">verbosePrint</a>([<span class="string">' UserHyp: '</span>, printHyp , <span class="keyword">...</span>
+0293                      <span class="string">'; '</span>, label, <span class="string">': '</span>, <span class="keyword">...</span>
+0294                      <span class="string">'ks['</span>,obj.type,<span class="string">']('</span>,num2str(length(obj.s1.zdata{obj.s1Col})),<span class="string">') = '</span>, <span class="keyword">...</span>
+0295                      num2str(stats), <span class="string">', p = '</span>, num2str(prob), <span class="keyword">...</span><span class="comment">  </span>
+0296                      <span class="string">' p-des: '</span>,num2str(obj.desiredpval), <span class="keyword">...</span>
+0297                      <span class="string">' ent = '</span>, num2str(ent),<span class="string">', targmin = '</span>,num2str(minRaw), <span class="keyword">...</span>
+0298                      <span class="string">', targmax = '</span>,num2str(maxRaw)], <span class="keyword">...</span>
+0299                      <span class="string">'soskstest_runMatchUniformkstest'</span>);
+0300              <span class="keyword">end</span>                            
+0301         <span class="keyword">end</span> 
+0302 
+0303         
+0304  
+0305         
+0306         <span class="comment">%% constructkstest(sosObj,varargin) METHOD</span>
+0307         <a name="_sub3" href="#_subfunctions" class="code">function constructkstest(obj,sosObj,varargin)</a>
+0308             <span class="comment">%initialize a kstest object.</span>
+0309             <span class="comment">%</span>
+0310             <span class="comment">% PARAMETERS:</span>
+0311             <span class="comment">% Required:</span>
+0312             <span class="comment">%   sosObj - sos Object test is to be associated with</span>
+0313             <span class="comment">%   sample1 - a sample object</span>
+0314             <span class="comment">%   s1ColName - name of data column in sample1</span>
+0315             <span class="comment">%</span>
+0316             <span class="comment">% Optional:</span>
+0317             <span class="comment">%   desiredpvalCondition/string - desired condition for the ttest</span>
+0318             <span class="comment">%       pval. Either it should exceed (=&gt;) some value, be less</span>
+0319             <span class="comment">%       than '&lt;=' some condition, or be 'N/A' if there is no</span>
+0320             <span class="comment">%       desired condition.  Default is N/A.  Note that the</span>
+0321             <span class="comment">%       ordering of '=' and '&lt;' is important, so though '&lt;=' is</span>
+0322             <span class="comment">%       valid, '=&lt;' is not.</span>
+0323             <span class="comment">%   desiredpval - desired p-value to evaluate the condition</span>
+0324             <span class="comment">%       against.  Defaults to 0.05</span>
+0325             <span class="comment">%   tail - tail of test - left/right/both</span>
+0326             <span class="comment">%   pdSpread -'sample' or 'allItems', as in the entropy</span>
+0327             <span class="comment">%   constraint</span>
+0328             <span class="comment">%   nbins - number of bins (min2, defaults to #items)</span>
+0329             <span class="comment">%</span>
+0330             <span class="comment">% RETURNS:</span>
+0331             <span class="comment">%   Configured sosCorrelTest object.</span>
+0332             
+0333 
+0334             p = inputParser;
+0335 
+0336             p.addRequired(<span class="string">'sosObj'</span>, <span class="keyword">...</span>
+0337                 @(sosObj)strcmp(class(sosObj),<span class="string">'sos'</span>));
+0338             p.addParamValue(<span class="string">'type'</span>,<span class="string">'null'</span>, <span class="keyword">...</span>
+0339                 @(type)soskstest.validTestType(type));
+0340             p.addParamValue(<span class="string">'sample1'</span>,<span class="string">'null'</span>, <span class="keyword">...</span>
+0341                         @(sample1)strcmp(class(sample1),<span class="string">'sample'</span>));
+0342             p.addParamValue(<span class="string">'s1ColName'</span>,NaN, <span class="keyword">...</span>
+0343                 @(s1ColName)ischar(s1ColName));
+0344             p.addParamValue(<span class="string">'desiredpvalCondition'</span>,<span class="string">'N/A'</span>, <span class="keyword">...</span>
+0345                 @(desiredpvalCondition)any([strcmp(desiredpvalCondition,<span class="string">'&lt;='</span>), <span class="keyword">...</span>
+0346                             strcmp(desiredpvalCondition,<span class="string">'=&gt;'</span>), <span class="keyword">...</span>
+0347                             strcmp(desiredpvalCondition,<span class="string">'N/A'</span>)]));
+0348             p.addParamValue(<span class="string">'desiredpval'</span>, 0.05, <span class="keyword">...</span>
+0349                 @(desiredpval)validateattributes(desiredpval, <span class="keyword">...</span>
+0350                     {<span class="string">'numeric'</span>}, <span class="keyword">...</span>
+0351                     {<span class="string">'scalar'</span>, <span class="string">'positive'</span>, <span class="string">'&gt;='</span>, 0, <span class="string">'&lt;='</span>, 1}));
+0352             p.addParamValue(<span class="string">'tail'</span>,<span class="string">'both'</span>, <span class="keyword">...</span>
+0353                 @(tail)any([strcmp(tail,<span class="string">'both'</span>), strcmp(tail,<span class="string">'left'</span>),strcmp(tail,<span class="string">'right'</span>)]));
+0354             p.addParamValue(<span class="string">'pdSpread'</span>,<span class="string">'null'</span>, <span class="keyword">...</span>
+0355                 @(pdSpread)any([strcmp(pdSpread,<span class="string">'sample'</span>), strcmp(pdSpread,<span class="string">'allItems'</span>)]));            
+0356             p.addParamValue(<span class="string">'name'</span>,<span class="string">'noname'</span>,@(name)ischar(name)); <span class="comment">% dealt with in the main constructor</span>
+0357             p.addParamValue(<span class="string">'nbin'</span>,2,@(nbin)validateattributes(nbin, {<span class="string">'numeric'</span>}, <span class="keyword">...</span>
+0358                 {<span class="string">'scalar'</span>, <span class="string">'integer'</span>, <span class="string">'positive'</span>, <span class="string">'&gt;'</span>, 0}));
+0359             p.parse(sosObj,varargin{:});
+0360 
+0361            
+0362             
+0363 
+0364             sample1 = p.Results.sample1;
+0365             s1ColName = p.Results.s1ColName; <span class="comment">%#ok&lt;PROP&gt;</span>
+0366             obj.desiredpvalCondition = p.Results.desiredpvalCondition;
+0367             obj.pdSpread = p.Results.pdSpread;
+0368             
+0369             
+0370             <span class="keyword">if</span> any(strcmp(p.UsingDefaults,<span class="string">'nbin'</span>))
+0371                 obj.nbin = p.Results.sample1.n;
+0372             <span class="keyword">else</span>
+0373                 <span class="keyword">if</span> p.Results.nbin &lt;= p.Results.sample1.n
+0374                     obj.nbin = p.Results.nbin;
+0375                 <span class="keyword">else</span>
+0376                     error(<span class="string">'Number of bins must be &lt;= number of observations in the sample'</span>);
+0377                 <span class="keyword">end</span>
+0378             <span class="keyword">end</span>
+0379             
+0380             <span class="keyword">if</span> obj.nbin &lt; 2
+0381                 error (<span class="string">'There must be at least 2 bins in the entropy calculation'</span>);
+0382             <span class="keyword">end</span>
+0383             
+0384             
+0385             <span class="keyword">if</span> strcmp(obj.desiredpvalCondition,<span class="string">'N/A'</span>)
+0386                 obj.desiredpvalConditionHandle = @sosksest.returnNaN;
+0387             <span class="keyword">elseif</span> strcmp(obj.desiredpvalCondition,<span class="string">'&lt;='</span>)
+0388                 obj.desiredpvalConditionHandle = @le;
+0389             <span class="keyword">elseif</span> strcmp(obj.desiredpvalCondition,<span class="string">'=&gt;'</span>)
+0390                 obj.desiredpvalConditionHandle = @ge;
+0391             <span class="keyword">end</span>
+0392 
+0393             <span class="comment">% can't have a desiredpval without a desiredpvalcondition</span>
+0394             <span class="keyword">if</span> strcmp(obj.desiredpvalCondition,<span class="string">'N/A'</span>)
+0395                 obj.desiredpval = NaN;
+0396             <span class="keyword">else</span>
+0397                 obj.desiredpval = p.Results.desiredpval;
+0398             <span class="keyword">end</span>
+0399 
+0400 
+0401             <span class="comment">% perform additional checks on the objects</span>
+0402             
+0403             present1 = sosObj.containsSample(sample1);
+0404             <span class="keyword">if</span> (present1 == 0 )
+0405                 error(<span class="string">'sos sosObject does not contain sample1'</span>);
+0406             <span class="keyword">end</span>
+0407 
+0408             col1 = sample1.colName2colNum(s1ColName); <span class="comment">%#ok&lt;PROP&gt;</span>
+0409             <span class="keyword">if</span>(col1 == -1)
+0410                 error(<span class="string">'&lt;s1ColName&gt; not a column of data in &lt;sample1&gt;'</span>);
+0411             <span class="keyword">end</span>
+0412             
+0413             <span class="keyword">if</span> isempty(sample1.data)
+0414                 error(<span class="string">'sample 1 does not contain items - did you fill it yet?'</span>);
+0415             <span class="keyword">end</span>
+0416  
+0417 
+0418             
+0419             <span class="keyword">if</span> sample1.n &lt; 2
+0420                 <span class="comment">% see note in the calculation for why the following is the</span>
+0421                 <span class="comment">% case</span>
+0422                 error(<span class="string">'The ks requires at least 2 items in the sample'</span>);
+0423             <span class="keyword">end</span>
+0424             
+0425             
+0426             obj.s1 = sample1;
+0427             obj.s1ColName = s1ColName; <span class="comment">%#ok&lt;PROP&gt;</span>
+0428             obj.s1Col = col1;
+0429             obj.type = p.Results.type;
+0430             obj.tail = p.Results.tail;
+0431 
+0432             obj.runSpecificTest = @obj.runkstest;
+0433             
+0434             obj.label = [obj.s1.name, <span class="string">'{'</span>,obj.s1ColName, <span class="string">'}-{Uniform}'</span>, <span class="keyword">...</span>
+0435                      <span class="keyword">...</span>
+0436                     <span class="string">':ks['</span>,obj.type,<span class="string">']'</span>];            
+0437           
+0438                 
+0439         <span class="keyword">end</span>
+0440  
+0441  
+0442     <span class="keyword">end</span>
+0443     
+0444      
+0445     methods (Static)
+0446         
+0447         <span class="comment">%% userHypothesis = returnNaN(~,~) STATIC FUNCTION</span>
+0448         <a name="_sub4" href="#_subfunctions" class="code">function userHypothesis = returnNaN(~,~)</a>
+0449             <span class="comment">% returns NaN</span>
+0450             userHypothesis = NaN;
+0451         <span class="keyword">end</span>
+0452 
+0453         <span class="comment">%%  flag = validTestType(str) STATIC FUNCTION</span>
+0454         <a name="_sub5" href="#_subfunctions" class="code">function flag = validTestType(str)</a>
+0455             <span class="comment">% returns 1 if the name of type of test is 'matchUniform'; error otherwise.</span>
+0456             
+0457             flag = 0; <span class="comment">%#ok&lt;NASGU&gt;</span>
+0458             
+0459             <span class="keyword">if</span>(ischar(str) == false)
+0460                 error(<span class="string">'&lt;Type&gt; must be &quot;matchUniform&quot;'</span>);
+0461             <span class="keyword">end</span>
+0462             
+0463             <span class="keyword">if</span> (strcmp(str,<span class="string">'matchUniform'</span>))
+0464                 flag = 1;   
+0465             <span class="keyword">else</span>
+0466                 error(<span class="string">'&lt;Type&gt; must be &quot;matchUniform&quot;'</span>);
+0467             <span class="keyword">end</span>
+0468             
+0469         <span class="keyword">end</span>
+0470     <span class="keyword">end</span>
+0471     
+0472 <span class="keyword">end</span>
+0473</pre></div>
+<hr><address>Generated on Fri 27-Jan-2012 16:18:41 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

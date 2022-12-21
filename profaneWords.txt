@@ -78,7 +78,7 @@ barf
 barface
 barfface
 bast
-bastard 
+bastard
 bazongas
 bazooms
 beaner
@@ -149,6 +149,8 @@ breast
 breastjob
 breastlover
 breastman
+britain
+bro
 brothel
 bugger
 buggered
@@ -1345,6 +1347,7 @@ weenie
 weewee
 welcher
 welfare
+western
 wetb
 wetback
 wetspot

@@ -1,5 +1,5 @@
 **______________________________________________________________**
-- Author: Farhan Bin Faisal
+- Programmer: Farhan Bin Faisal
 - Files: preprocess.ipynb, wordListMaker.m, postWuggy.ipynb, generateConditions.ipynb
 - Date Created: 10 November 2022
 - Meltzer Lab
